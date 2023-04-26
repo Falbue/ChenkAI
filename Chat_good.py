@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter as tk
 # from tkinter.ttk import *
-from tkinter.scrolledtext import ScrolledText
+from tkinter.scrolledtext import ScrolledText 
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
 import openai
@@ -38,7 +38,7 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
-ver: 0.4"""
+ver: 0.5"""
 
 # настройка кнопок
 def create_button(frame, text, command):
@@ -74,23 +74,13 @@ def btn_send_command():
     # очищаем поле ввода
     message_input.delete("1.0", END)
     # выводим вопрос в консоль
-    print("User:Требуется написать статью на тему "Что такое криптовалюта и как ее использовать Необходимо уделить внимание следующим вопросам:
-Что такое криптовалюта и как она работает?
-Какие виды криптовалют существуют?
-Как покупать и продавать криптовалюту?
-Как использовать криптовалюту в повседневной жизни?
-Какие преимущества и риски связаны с использованием криптовалюты?
-Требования к статье:
-Оригинальность текста – не менее 90%;
-Грамотность и безошибочность текста;
-Наличие вступления и заключения;". Статья должна содержать не менее 5000 символов и быть оформлена в соответствии с правилами SEO.
-  " + question)
+    print("User: " + question)
 
     text_chat.configure(state="normal")
     text_chat.insert(END, '\n')
     text_chat.insert(END, user + ": ", "bold")
     text_chat.insert(END, question, "user")
-    text_chat.tag_configure("user", background=bg_color)
+    text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
     text_chat.insert(END, '\n')
     text_chat.configure(state="disabled")
 
@@ -107,6 +97,7 @@ def btn_send_command():
     completion = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[{"role": "assistant", "content": question}]) 
+
   # выводим ответ, который вернул OpenAI, в консоль
     print(completion.choices[0].message.content)
     
@@ -116,7 +107,10 @@ def btn_send_command():
     text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
      
     text_chat.insert(END, bot + ": ", "bold")
+
     text_chat.insert(END, answer, "bot")
+    #add_text(0)
+
     text_chat.insert(END, '\n')
     text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
     text_chat.configure(state="disabled")
