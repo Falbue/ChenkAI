@@ -7,7 +7,7 @@ from tkinter.simpledialog import askinteger
 import openai
 
 # устанавливаем ключ API для OpenAI
-openai.api_key = "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"
+openai.api_key = "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"
 
 # переменные для цветовой гаммы и размера шрифта
 bg_color = "#FFFFFF"
@@ -22,10 +22,11 @@ bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
 font_size = 12
 
-user = 'User'
+user = 'You'
 bot = 'Bot'
 
-# hello = "hello"
+delay = 25
+delay_state = "ВКЛ"
 
 welcome_text = """Привет. Это ChenkGPT
 
@@ -38,12 +39,13 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
-ver: 0.5"""
+ver: 0.6"""
 
 # настройка кнопок
 def create_button(frame, text, command):
     button = Button(
         frame,
+        activebackground=bg_color_dark,
         font=("Arial", 16),
         bg='white',
         fg=fg_color,
@@ -54,6 +56,25 @@ def create_button(frame, text, command):
         highlightbackground="black"
     )
     return button
+
+# Подсветка синтаксиса
+def code_sintaxis():
+    if (code == 1):
+        start = "1.0"
+        while True:
+            start = text_chat.search("```", start+"3", END)
+            if not start:
+                break
+        
+            end = text_chat.search("```", start + "3", END)
+            if not end:
+                break
+        
+            # Добавляем тег к найденному тексту
+            text_chat.tag_add("code", start + "3", end)
+
+            # Продолжаем поиск со следующей позиции
+            start = end
 
 
 # функция, которая вызывается при нажатии кнопки "Отправить"
@@ -103,21 +124,54 @@ def btn_send_command():
     
     answer = completion.choices[0].message.content
 
-    text_chat.configure(state="normal")
-    text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
-     
-    text_chat.insert(END, bot + ": ", "bold")
+    def show_text_slowly(text):
+        global delay
+        text_chat.configure(state="normal")
+        text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
 
-    text_chat.insert(END, answer, "bot")
-    #add_text(0)
+        text_chat.insert(END, bot + ": ", "bold")
 
-    text_chat.insert(END, '\n')
-    text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
-    text_chat.configure(state="disabled")
+        for i, char in enumerate(text):
+            text_chat.insert(END, char, "bot")
+            text_chat.see("end")
+            root_chat.update() 
+            root_chat.after(delay)
 
+        text_chat.insert(END, '\n')
+        text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
+        text_chat.tag_configure("code", background = "#565656")
+        text_chat.configure(state="disabled")
+
+    show_text_slowly(answer)
     text_chat.see(END)
 
     root_chat.update()
+
+
+def colors_objects(): # объекты, которые меняют цвета
+    text_chat.configure(bg=bg_color, fg=fg_color)
+    message_input.configure(bg=bg_color, fg=fg_color)
+
+    btn_send.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
+    btn_settings.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
+    btn_clear_chat.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
+
+    root_chat.configure(bg=bg_color_dark)
+
+    frame_btn.configure(bg=bg_color_dark)
+    frame_chat.configure(bg=bg_color_dark)
+
+
+    check = text_chat.get("1.0", END)
+    check = check.strip('\n')
+    print(check)
+    if check == welcome_text:
+      text_chat.configure(state="normal")
+      text_chat.configure(fg = bg_color_dark)
+      text_chat.configure(state="disabled")
+
+    text_chat.tag_configure("user", background=bg_color)
+    text_chat.tag_configure("bot", background=bg_color_dark)
 
 
 # функция для изменения цветовой гаммы
@@ -129,14 +183,6 @@ def change_colors():
     bg_color = askcolor()[1]
     fg_color = "#FFFFFF" if ((int(bg_color[1:3], 16), int(bg_color[3:5], 16), int(bg_color[5:7], 16)) < (127, 127, 127)) else "#000000"
 
-    text_chat.configure(bg=bg_color, fg=fg_color)
-    message_input.configure(bg=bg_color, fg=fg_color)
-
-    btn_send.configure(bg=bg_color, fg=fg_color)
-    btn_settings.configure(bg=bg_color, fg=fg_color)
-    btn_clear_chat.configure(bg=bg_color, fg=fg_color)
-
-    
     #Более тёмные объекты
     r, g, b = tuple(int(bg_color[i:i+2], 16) for i in (1, 3, 5))
     r = max(r - 30, 0)
@@ -144,13 +190,7 @@ def change_colors():
     b = max(b - 30, 0)
     bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
-    root_chat.configure(bg=bg_color_dark)
-
-    frame_btn.configure(bg=bg_color_dark)
-    frame_chat.configure(bg=bg_color_dark)
-
-    text_chat.tag_configure("bot", background=bg_color_dark)
-
+    colors_objects()
     settings_window.destroy()
 
 
@@ -161,20 +201,9 @@ def clear_colors():
 
   bg_color = "white"
   fg_color = "#000000"
-  bg_color_dark = 'gray95'
+  bg_color_dark = 'gray90'
 
-  root_chat.configure(bg=bg_color_dark)
-  text_chat.configure(bg=bg_color, fg=fg_color)
-  text_chat.tag_configure("bot", background=bg_color_dark)
-  message_input.configure(bg=bg_color, fg=fg_color)
-
-  btn_send.configure(bg=bg_color, fg=fg_color)
-  btn_settings.configure(bg=bg_color, fg=fg_color)
-  btn_clear_chat.configure(bg=bg_color, fg=fg_color)
-
-  frame_btn.configure(bg=bg_color_dark)
-  frame_btn.configure(bg=bg_color_dark)
-
+  colors_objects()
   settings_window.destroy()
 
 
@@ -192,7 +221,7 @@ def change_font_size():
 
 
 
- # добавим функционал изменения цвета и размера шрифта
+ # добавим настройки окна
 def settings():
     global settings_window
     global bg_color
@@ -202,35 +231,67 @@ def settings():
     # создаем новое окно с настройками
     settings_window = Toplevel()
     settings_window.geometry("300x300")
+    settings_window.resizable(width=False, height=False)
     settings_window.title("Настройки")
     
-    frame_settings = Frame(settings_window)
-    frame_button_color = Frame(frame_settings, height=30)
 
+    frame_button_color = Frame(settings_window, height=30)
     btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
     btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
-
-    btn_font_size = create_button(frame_settings, text="Изменить размер шрифта", command=change_font_size)
-    btn_close = create_button(frame_settings, text="Закрыть", command=settings_window.destroy)
-
-    frame_button_color.pack(side=TOP, fill=X, padx=5, pady=5)
     btn_color.grid(row=0, column=0, padx=5, pady=5)
     btn_clear.grid(row=0, column=1, padx=5, pady=5)
 
+    btn_font_size = create_button(settings_window, text="Изменить размер шрифта", command=change_font_size)
     btn_font_size.pack(side=TOP, fill=X, padx=5, pady=5)
+
+    def animations_text():
+      global delay, delay_state
+
+      if (delay_state == "ВКЛ"):
+        delay_state="ВЫКЛ"
+        btn_delay.config(text=delay_state)
+        delay = 0
+      else:
+        delay_state = "ВКЛ"
+        btn_delay.config(text=delay_state)
+        delay = 25
+
+    frame_delay = Frame(settings_window)
+    label_delay = Label(
+      frame_delay,
+      text = "Анимация текста:",
+      font=("Arial", 16,"bold"),
+      bg=bg_color_dark)
+    btn_delay = create_button(
+      frame_delay,
+      text = delay_state,
+      command = animations_text)
+    label_delay.grid(row=0, column=0, padx=5, pady=5)
+    btn_delay.grid(row=0, column=1, padx=5, pady=10)
+
+    btn_close = create_button(settings_window, text="Закрыть", command=settings_window.destroy)
     btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
 
-    frame_settings.pack(fill=BOTH, expand=True)
+
+    # Установка фреймов
+    frame_button_color.pack(side=TOP, fill=X, padx=5, pady=5)
+    frame_delay.pack(fill=X, padx=5, pady=5)
 
 
+    # Настойки объектов
     btn_color.configure(bg=bg_color, fg=fg_color)
     btn_clear.configure(bg=bg_color, fg=fg_color)
     btn_font_size.configure(bg=bg_color, fg=fg_color)
     btn_close.configure(bg=bg_color, fg=fg_color)
+    btn_delay.configure(bg=bg_color, fg=fg_color)
+    label_delay.configure(fg = fg_color)
 
     frame_button_color.configure(bg=bg_color)
-    frame_settings.configure(bg=bg_color_dark)
+    settings_window.configure(bg=bg_color_dark)
     frame_button_color.configure(bg=bg_color_dark)
+    frame_delay.configure(bg=bg_color_dark)
+
+
 
 def clear_chat():
     text_chat.configure(state="normal")
@@ -321,6 +382,7 @@ def hello_window():
   var_username = BooleanVar()
   chek_username.config(variable=var_username)
   username.bind('<FocusIn>', username_click) # Событие при нажатии на поле ввода
+  username.bind('<Return>', lambda event: place_username())
 
   username.pack(side="left")
   chek_username.pack(side="left", pady=10)
@@ -336,6 +398,7 @@ def hello_window():
     font=("Arial", 14), 
     fg = "gray60")
   botname.insert(0, 'Введите имя чат-бота:') # Устанавливаем текст по умолчанию
+
   chek_botname = Checkbutton(
     frame_bot,
     state = 'disabled',
@@ -343,6 +406,7 @@ def hello_window():
   var_botname = BooleanVar()
   chek_botname.config(variable=var_botname)
   botname.bind('<FocusIn>', botname_click) # Событие при нажатии на поле ввода
+  botname.bind('<Return>', lambda event: place_botname())
   
   botname.pack(side="left")
   chek_botname.pack(side="left", pady=10)
