@@ -137,7 +137,7 @@ def btn_send_command():
             root_chat.update() 
             root_chat.after(delay)
 
-        text_chat.insert(END, '\n')
+        text_chat.insert(END, '\n', "bot")
         text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
         text_chat.tag_configure("code", background = "#565656")
         text_chat.configure(state="disabled")
