@@ -7,7 +7,7 @@ from tkinter.simpledialog import askinteger
 import openai
 
 # устанавливаем ключ API для OpenAI
-openai.api_key = "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"
+openai.api_key = "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"
 
 # переменные для цветовой гаммы и размера шрифта
 bg_color = "#FFFFFF"
