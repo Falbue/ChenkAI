@@ -5,13 +5,20 @@ from tkinter.scrolledtext import ScrolledText
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
 import openai
+import os
 
 # устанавливаем ключ API для OpenAI
-openai.api_key = "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"
 
 # переменные для цветовой гаммы и размера шрифта
 bg_color = "#FFFFFF"
 fg_color = "#000000"
+
+
+login = ''
+passw = ''
+api = ''
+user = ''
+bot = ''
 
 #Более тёмные объекты
 r, g, b = tuple(int(bg_color[i:i+2], 16) for i in (1, 3, 5))
@@ -22,14 +29,11 @@ bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
 font_size = 12
 
-user = 'You'
-bot = 'Bot'
 
 delay = 25
 delay_state = "ВКЛ"
 
 welcome_text = """Привет. Это ChenkGPT
-#testк
 
 Инструкция:
 1. Если окно зависло, значит бот грузит Ваш запрос
@@ -300,6 +304,7 @@ def clear_chat():
     text_chat.configure(state="disabled",fg=bg_color_dark)
 
 
+
 # ------------------------------------------
 def hello_window():
   def username_click(event):
@@ -361,8 +366,11 @@ def hello_window():
  # Создаём окно приветствия
   root_hello_window = Tk()
   root_hello_window.title('Приветствие') # Заголовок окна
+  root_hello_window.overrideredirect(True)
   root_hello_window.resizable(width=False, height=False) # Убираем возможность изменять размеры окна
   root_hello_window.geometry('400x300') # Задаём размер окна
+  icon = PhotoImage(file = "icon.png")
+  root_hello_window.iconphoto(False, icon)
   root_hello_window.eval('tk::PlaceWindow . center') # Окно окажется по центру экрана
 
   # Поле ввода Вашего имени
@@ -387,7 +395,7 @@ def hello_window():
 
   username.pack(side="left")
   chek_username.pack(side="left", pady=10)
-  frame_user.pack()
+  frame_user.pack(pady = 25)
 
   # Поле ввода имени бота
   frame_bot = Frame()
@@ -439,17 +447,219 @@ def hello_window():
   root_hello_window.mainloop() # Запускаем цикл обработки событий окна
 
 
+# Вход и регистрация
+#-----------------------------------
+root_login = Tk()
+root_login.resizable(width=False, height=False) # Убираем возможность изменять размеры окна
+icon = PhotoImage(file = "icon.png")
+root_login.iconphoto(False, icon)
+root_login.title('Вход')
+root_login.geometry('200x350')
+
+def on_close():
+    exit()
+
+# обработчик события закрытия главного окна
+root_login.protocol("WM_DELETE_WINDOW", on_close)
 
 
-hello_window()
+def save_data():
+    # получаем данные из текстовых полей
+    username = entry_username.get()
+    password = entry_password.get()
+    confirm_password = entry_confirm_password.get()
+    api_key = entry_api_key.get()
+
+    # проверяем на повтор логина
+    if os.path.exists('user_data.chnk'):
+        with open('user_data.chnk', 'r') as file:
+            logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
+        if username in logins:
+            error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+            return
+        else:
+            logins.add(username)
+    else:
+        logins = {username}
+
+    # проверяем совпадение паролей
+    if password != confirm_password:
+        error_message_login.config(text='Пароли не совпадают')
+        return
+    # проверяем длину пароля
+    if len(password) < 5:
+        error_message_login.config(text='Пароль должен быть не короче 5 символов')
+        return
+    # проверяем логин на английские символы
+    if not all(c.isalpha() and ord(c) < 128 for c in username):
+        error_message_login.config(text='Логин может содержать только английские буквы')
+        return
+    # проверяем длину api ключа
+    if len(api_key) < 40:
+        error_message_login.config(text='API ключ должен быть не короче 40 символов')
+        return
+
+    # сохраняем данные в файл
+    with open('user_data.chnk', 'a') as file:
+        file.write('login: ' + username + '\n')
+        file.write('password: ' + password + '\n')
+        file.write('api: ' + api_key + '\n')
+        file.write('user: ' + 'User' + '\n')
+        file.write('bot: ' + 'Bot' + '\n')
+        file.write('\n')
+
+    success_message_login.config(text='Регистрация прошла успешно')
+
+
+def check_data():
+    global login, passw, api, user, bot
+    # получаем данные из текстовых полей
+    username_sign = entry_username_sign.get()
+    password_sign = entry_password_sign.get()
+
+    # проверяем совпадение логинов и паролей
+    with open('user_data.chnk', 'r') as file:
+        lines = file.readlines()
+        for i in range(0, len(lines), 6):
+            login = lines[i+0].replace('login: ','').strip()
+            passw = lines[i+1].replace('password: ','').strip()
+            api = lines[i+2].replace('api: ','').strip()
+            user = lines[i+3].replace('user: ','').strip()
+            bot = lines[i+4].replace('bot: ','').strip()
+            if username_sign == login and password_sign == passw:
+                success_message_sign.config(text='Авторизация успешна')
+                root_login.destroy()
+                return
+    error_message_sign.config(text='Неверный логин или пароль')
+
+    
+
+def clear_error_message(event):
+    error_message_login.config(text='')
+    error_message_sign.config(text='')
+
+
+def login():
+  btn_sign.config(state = 'normal')
+  btn_login.config(state = 'disabled')
+  sign_frame.pack_forget()
+  login_frame.pack()
+def sign():
+  btn_sign.config(state = 'disabled')
+  btn_login.config(state = 'normal')
+  sign_frame.pack()
+  login_frame.pack_forget()
+
+
+
+shift_frame = Frame(root_login)
+
+btn_sign = Button(
+    text='Войти',
+    relief = 'solid',
+    border = 0,
+    state = 'disabled',
+    command = sign)
+shift_text = Label(
+    text=' / ')
+btn_login = Button(
+    text='Регистрация',
+    relief = 'solid',
+    border = 0,
+    command = login)
+
+btn_sign.place(x = 10)
+shift_text.place(x = 50)
+btn_login.place(x = 70)
+shift_frame.pack(side=TOP, pady =20)
+
+
+sign_frame = Frame(root_login)
+
+# создаем метки и текстовые поля для ввода данных
+label_username_sign = Label(sign_frame, text='Логин:')
+label_username_sign.pack(side=TOP)
+entry_username_sign = Entry(sign_frame)
+entry_username_sign.pack(pady=5)
+
+label_password_sign = Label(sign_frame, text='Пароль:')
+label_password_sign.pack(side=TOP)
+entry_password_sign = Entry(sign_frame, show='*')
+entry_password_sign.pack(pady=5)
+
+# создаем кнопку для отправки данных
+button_submit_sign = Button(sign_frame, text='Войти', bg='#3366CC', fg='#FFF', command=check_data)
+button_submit_sign.pack(pady=10)
+
+# создаем метку для вывода сообщений об ошибках или успехе
+error_message_sign = Label(sign_frame, fg='red')
+error_message_sign.pack(side=TOP)
+success_message_sign = Label(sign_frame, fg='green')
+success_message_sign.pack(side=TOP)
+
+entry_username_sign.bind('<Button-1>', clear_error_message)
+entry_password_sign.bind('<Button-1>', clear_error_message)
+
+sign_frame.pack(side=TOP, fill=BOTH, expand=True)
+
+
+login_frame = Frame()
+
+# создаем метки и текстовые поля для ввода данных
+label_username = Label(login_frame, text='Логин:')
+label_username.pack()
+entry_username = Entry(login_frame)
+entry_username.pack(pady=5)
+
+label_password = Label(login_frame, text='Пароль:')
+label_password.pack()
+entry_password = Entry(login_frame, show='*')
+entry_password.pack(pady=5)
+
+label_confirm_password = Label(login_frame, text='Подтвердите пароль:')
+label_confirm_password.pack()
+entry_confirm_password = Entry(login_frame, show='*')
+entry_confirm_password.pack(pady=5)
+
+label_api_key = Label(login_frame, text='API ключ:')
+label_api_key.pack()
+entry_api_key = Entry(login_frame)
+entry_api_key.pack(pady=5)
+
+# создаем кнопку для отправки данных
+button_submit_login = Button(login_frame, text='Зарегистрироваться', bg='#3366CC', fg='#FFF', command=save_data)
+button_submit_login.pack(pady=10)
+
+# создаем метку для вывода сообщений об ошибках или успехе
+error_message_login = Label(login_frame, fg='red', wraplength=150)
+error_message_login.pack(pady=5)
+success_message_login = Label(login_frame, fg='green')
+success_message_login.pack(pady=5)
+
+entry_username.bind('<Button-1>', clear_error_message)
+entry_password.bind('<Button-1>', clear_error_message)
+entry_confirm_password.bind('<Button-1>', clear_error_message)
+entry_api_key.bind('<Button-1>', clear_error_message)
+
+
+
+root_login.mainloop()
+
+
+# -------------------------------------
+# hello_window()
 # создаем главное окно
+openai.api_key = api
 root_chat = Tk()
 root_chat.overrideredirect(False)
+icon = PhotoImage(file = "icon.png")
+root_chat.iconphoto(False, icon)
 root_chat.title('ChenkGPT')
 root_chat.geometry('600x800')
 root_chat.config(bg=bg_color_dark)
 
 frame_chat = Frame()
+print(api)
 
 # создаем текстовое поле для чата
 text_chat = Text(
