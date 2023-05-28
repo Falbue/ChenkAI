@@ -305,7 +305,7 @@ def hello_window():
   def username_click(event):
     global user
 
-    chek_username.configure(state='normal')
+    chek_username.configure(state='normal') # Галочка
 
     if username.get() == 'Введите ваше имя:':
       username.configure(fg = 'black')
@@ -378,7 +378,8 @@ def hello_window():
   chek_username = Checkbutton(
     frame_user,
     state='disabled',
-    command = place_username) # Кнопка "Выбрать"
+    command = place_username,
+    variable = True) # Кнопка "Выбрать"
   var_username = BooleanVar()
   chek_username.config(variable=var_username)
   username.bind('<FocusIn>', username_click) # Событие при нажатии на поле ввода
