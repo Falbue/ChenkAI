@@ -722,8 +722,10 @@ message_input = Text(
     relief = 'solid', 
     border = 1)
 
+expand_button_frame.pack(fill ='x')
+expand_button.pack(side=RIGHT, padx=20)
 # устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
-message_input.pack(fill='x', padx=20, pady=20)
+message_input.pack(fill='x', padx=20)
 
 
 frame_btn = Frame(root_chat,height=40)
