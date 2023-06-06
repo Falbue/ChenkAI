@@ -166,6 +166,7 @@ def colors_objects(): # объекты, которые меняют цвета
 
     frame_btn.configure(bg=bg_color_dark)
     frame_chat.configure(bg=bg_color_dark)
+    expand_button_frame.configure(bg = bg_color_dark)
 
 
     check = text_chat.get("1.0", END)
