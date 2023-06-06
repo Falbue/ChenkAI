@@ -747,9 +747,6 @@ btn_settings.place(relx=0, rely=0.5, anchor=W)
 btn_send.place(relx=0.5, rely=0.5, anchor=CENTER)
 btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
 
-# создаем кнопку для изменения размера окна ввода сообщений
-expand_button = Button(root_chat, text='Expand', command=expand_text_input)
-expand_button.pack(side=LEFT, padx=(20, 0), pady=20)
 
 # запускаем графический интерфейс
 root_chat.mainloop()
