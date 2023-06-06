@@ -45,7 +45,7 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
-ver: 0.7"""
+ver: 0.8.1"""
 
 # настройка кнопок
 def create_button(frame, text, command):
