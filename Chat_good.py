@@ -309,8 +309,16 @@ def clear_chat():
 
 # создаем функцию для изменения размера окна ввода сообщений
 def expand_text_input():
-    message_input.config(height=20)  # увеличиваем высоту окна ввода сообщений
-    message_input.lift()  # выносим окно ввода сообщений на передний план
+    global expand_button_text
+    if (expand_button_text == "↑"):
+        expand_button_text = "↓"
+        expand_button.config(text = expand_button_text)
+        message_input.config(height=20)  # увеличиваем высоту окна ввода сообщений
+
+    elif (expand_button_text == "↓"):
+        expand_button_text = '↑'
+        expand_button.config(text = expand_button_text)
+        message_input.config(height=3)
 
 
 
