@@ -161,6 +161,7 @@ def colors_objects(): # объекты, которые меняют цвета
     btn_send.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
     btn_settings.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
     btn_clear_chat.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
+    expand_button.configure(bg = bg_color, activebackground = bg_color_dark, fg = fg_color)
 
     root_chat.configure(bg=bg_color_dark)
 
