@@ -706,7 +706,10 @@ text_chat.config(yscrollcommand=scrollbar_chat.set)
 # scrollbar_chat.pack(side=RIGHT, fill=Y) нужно настроить цвета
 text_chat.pack(fill=BOTH, expand=True)
 
-
+expand_button_frame = Frame(bg = bg_color_dark)
+# создаем кнопку для изменения размера окна ввода сообщений
+expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
+expand_button.config(font=("Arial", 10,"bold"))
 
 # создаем окно ввода сообщений
 message_input = Text(
