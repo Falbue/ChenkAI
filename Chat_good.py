@@ -33,6 +33,8 @@ font_size = 12
 delay = 25
 delay_state = "ВКЛ"
 
+expand_button_text = "↑"
+
 welcome_text = """Привет. Это ChenkGPT
 
 Инструкция:
