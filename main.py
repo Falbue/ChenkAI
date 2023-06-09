@@ -45,7 +45,6 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
-<<<<<<< HEAD:Chat_good.py
 ver: 0.8.1"""
 
 # настройка кнопок
