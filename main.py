@@ -388,6 +388,7 @@ def save_data():
     success_message_login.config(text='Регистрация прошла успешно')
 
 
+
 def check_data():
     global login, passw, api, user, bot
     # получаем данные из текстовых полей
@@ -478,6 +479,7 @@ entry_username_sign.bind('<Button-1>', clear_error_message)
 entry_password_sign.bind('<Button-1>', clear_error_message)
 
 sign_frame.pack(side=TOP, fill=BOTH, expand=True)
+
 
 
 login_frame = Frame()
