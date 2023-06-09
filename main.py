@@ -331,7 +331,7 @@ root_login.resizable(width=False, height=False) # Убираем возможн�
 icon = PhotoImage(file = "icon.png")
 root_login.iconphoto(False, icon)
 root_login.title('Вход')
-root_login.geometry('200x350')
+root_login.geometry('300x400')
 
 def on_close():
     exit()
