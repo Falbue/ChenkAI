@@ -157,6 +157,7 @@ def btn_send_command():
 def colors_objects(): # объекты, которые меняют цвета
     text_chat.configure(bg=bg_color, fg=fg_color)
     message_input.configure(bg=bg_color, fg=fg_color)
+    scrollbar_chat.configure(background = bg_color, troughcolor = bg_color_dark)
 
     btn_send.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
     btn_settings.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
@@ -550,19 +551,24 @@ text_chat = Text(
     border = 1, 
     selectbackground="#87CEFA")
 
-frame_chat.pack(padx=20, fill=BOTH, expand=True)
+frame_chat.pack(padx=(20, 0), fill=BOTH, expand=True)
 text_chat.insert(END,welcome_text)
 text_chat.config(state='disabled',fg=bg_color_dark)
-# создаем слайдер для текст чата
-scrollbar_chat = Scrollbar(frame_chat)
 
+# создаем слайдер для текст чата
+scrollbar_chat = Scrollbar(
+    frame_chat,
+     width=20,
+     background = bg_color,
+     troughcolor = bg_color_dark)
+scrollbar_chat.pack(side=RIGHT, fill='y')
 # устанавливаем связь между слайдером и текстом чата
 scrollbar_chat.config(command=text_chat.yview)
+
 # устанавливаем параметры для текстового поля и добавляем на главное окно
 text_chat.config(yscrollcommand=scrollbar_chat.set)
 
 # устанавливаем параметры для слайдера и добавляем на главное окно
-# scrollbar_chat.pack(side=RIGHT, fill=Y) нужно настроить цвета
 text_chat.pack(fill=BOTH, expand=True)
 
 expand_button_frame = Frame(bg = bg_color_dark)
