@@ -46,10 +46,7 @@ welcome_text = """Привет. Это ChenkGPT
 
 Falbue <3
 <<<<<<< HEAD:Chat_good.py
-ver: 0.8"""
-=======
 ver: 0.8.1"""
->>>>>>> origin/main:main.py
 
 # настройка кнопок
 def create_button(frame, text, command):
