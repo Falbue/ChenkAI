@@ -533,6 +533,7 @@ icon = PhotoImage(file = "icon.png")
 root_chat.iconphoto(False, icon)
 root_chat.title('ChenkGPT')
 root_chat.geometry('400x600')
+root_chat.wm_minsize(400, 600)
 root_chat.config(bg=bg_color_dark)
 
 frame_chat = Frame()
