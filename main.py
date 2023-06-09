@@ -465,7 +465,7 @@ entry_password_sign = Entry(sign_frame, show='*')
 entry_password_sign.pack(pady=5)
 
 # создаем кнопку для отправки данных
-button_submit_sign = Button(sign_frame, text='Войти', bg='#3366CC', fg='#FFF', command=check_data)
+button_submit_sign = create_button(sign_frame, text='Войти', command=check_data)
 button_submit_sign.pack(pady=10)
 
 # создаем метку для вывода сообщений об ошибках или успехе
@@ -504,7 +504,7 @@ entry_api_key = Entry(login_frame)
 entry_api_key.pack(pady=5)
 
 # создаем кнопку для отправки данных
-button_submit_login = Button(login_frame, text='Зарегистрироваться', bg='#3366CC', fg='#FFF', command=save_data)
+button_submit_login = create_button(login_frame, text='Зарегистрироваться', command=save_data)
 button_submit_login.pack(pady=10)
 
 # создаем метку для вывода сообщений об ошибках или успехе
