@@ -33,6 +33,8 @@ font_size = 12
 delay = 25
 delay_state = "ВКЛ"
 
+expand_button_text = "↑"
+
 welcome_text = """Привет. Это ChenkGPT
 
 Инструкция:
@@ -43,7 +45,11 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
+<<<<<<< HEAD:Chat_good.py
 ver: 0.8"""
+=======
+ver: 0.8.1"""
+>>>>>>> origin/main:main.py
 
 # настройка кнопок
 def create_button(frame, text, command):
@@ -159,11 +165,13 @@ def colors_objects(): # объекты, которые меняют цвета
     btn_send.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
     btn_settings.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
     btn_clear_chat.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color)
+    expand_button.configure(bg = bg_color, activebackground = bg_color_dark, fg = fg_color)
 
     root_chat.configure(bg=bg_color_dark)
 
     frame_btn.configure(bg=bg_color_dark)
     frame_chat.configure(bg=bg_color_dark)
+    expand_button_frame.configure(bg = bg_color_dark)
 
 
     check = text_chat.get("1.0", END)
@@ -302,6 +310,20 @@ def clear_chat():
     text_chat.delete("1.0", END)
     text_chat.insert(END,welcome_text)
     text_chat.configure(state="disabled",fg=bg_color_dark)
+
+
+# создаем функцию для изменения размера окна ввода сообщений
+def expand_text_input():
+    global expand_button_text
+    if (expand_button_text == "↑"):
+        expand_button_text = "↓"
+        expand_button.config(text = expand_button_text)
+        message_input.config(height=20)  # увеличиваем высоту окна ввода сообщений
+
+    elif (expand_button_text == "↓"):
+        expand_button_text = '↑'
+        expand_button.config(text = expand_button_text)
+        message_input.config(height=3)
 
 
 
@@ -655,7 +677,7 @@ root_chat.overrideredirect(False)
 icon = PhotoImage(file = "icon.png")
 root_chat.iconphoto(False, icon)
 root_chat.title('ChenkGPT')
-root_chat.geometry('600x800')
+root_chat.geometry('400x600')
 root_chat.config(bg=bg_color_dark)
 
 frame_chat = Frame()
@@ -689,7 +711,10 @@ text_chat.config(yscrollcommand=scrollbar_chat.set)
 # scrollbar_chat.pack(side=RIGHT, fill=Y) нужно настроить цвета
 text_chat.pack(fill=BOTH, expand=True)
 
-
+expand_button_frame = Frame(bg = bg_color_dark)
+# создаем кнопку для изменения размера окна ввода сообщений
+expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
+expand_button.config(font=("Arial", 10,"bold"))
 
 # создаем окно ввода сообщений
 message_input = Text(
@@ -702,8 +727,10 @@ message_input = Text(
     relief = 'solid', 
     border = 1)
 
+expand_button_frame.pack(fill ='x')
+expand_button.pack(side=RIGHT, padx=20)
 # устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
-message_input.pack(fill='x', padx=20, pady=20)
+message_input.pack(fill='x', padx=20)
 
 
 frame_btn = Frame(root_chat,height=40)
@@ -724,6 +751,7 @@ root_chat.bind('<Control-Return>', lambda event: btn_send.invoke())
 btn_settings.place(relx=0, rely=0.5, anchor=W)
 btn_send.place(relx=0.5, rely=0.5, anchor=CENTER)
 btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
+
 
 # запускаем графический интерфейс
 root_chat.mainloop()
