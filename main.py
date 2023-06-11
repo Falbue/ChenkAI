@@ -1,7 +1,5 @@
 from tkinter import *
 import tkinter as tk
-# from tkinter.ttk import *
-from tkinter.scrolledtext import ScrolledText 
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
 import openai
