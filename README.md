@@ -1,1 +1,1 @@
-Бот работающий на базе api openai
+Hello, world!
