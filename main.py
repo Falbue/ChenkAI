@@ -33,6 +33,7 @@ delay_state = "ВКЛ"
 
 expand_button_text = "↑"
 
+text_error = ''
 welcome_text = """Привет. Это ChenkGPT
 
 Инструкция:
@@ -83,73 +84,63 @@ def code_sintaxis():
 
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
-    text_chat.config( bg=bg_color,fg=fg_color)
-    check = text_chat.get("1.0", END)
-    check = check.strip('\n')
-    print(check)
-    if check == welcome_text:
-      text_chat.configure(state="normal")
-      text_chat.delete("1.0", END)
-      text_chat.configure(state="disabled")
-
-    # получаем вопрос, который пользователь задал боту
-    question = message_input.get("1.0", END)
-    if question.endswith('\n'):
-      question = question.strip('\n')
-    # очищаем поле ввода
-    message_input.delete("1.0", END)
-    # выводим вопрос в консоль
-    print("User: " + question)
-
-    text_chat.configure(state="normal")
-    text_chat.insert(END, '\n')
-    text_chat.insert(END, user + ": ", "bold")
-    text_chat.insert(END, question, "user")
-    text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
-    text_chat.insert(END, '\n')
-    text_chat.configure(state="disabled")
-
-    # устанавливаем placeholder, который появится в поле чата
-    text_chat.tag_configure("bold", font=("Arial", font_size, "bold"))
-    text_chat.configure(state="normal")
-    text_chat.insert(END, '\n')
-    text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
-    text_chat.configure(state="disabled")
-    text_chat.see(END)
-    root_chat.update()
-
-    # отправляем вопрос на обработку OpenAI
-    completion = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[{"role": "assistant", "content": question}]) 
-
-  # выводим ответ, который вернул OpenAI, в консоль
-    print(completion.choices[0].message.content)
-    
-    answer = completion.choices[0].message.content
-
-    def show_text_slowly(text):
-        global delay
+    global text_error
+    try:
+        text_chat.config(bg=bg_color, fg=fg_color)
+        check = text_chat.get("1.0", END).strip('\n')
+        if check == welcome_text:
+            text_chat.configure(state="normal")
+            text_chat.delete("1.0", END)
+            text_chat.configure(state="disabled")
+        question = message_input.get("1.0", END).strip('\n')
+        message_input.delete("1.0", END)
+        print("User: " + question)
         text_chat.configure(state="normal")
-        text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
-
-        text_chat.insert(END, bot + ": ", "bold")
-
-        for i, char in enumerate(text):
-            text_chat.insert(END, char, "bot")
-            text_chat.see("end")
-            root_chat.update() 
-            root_chat.after(delay)
-
-        text_chat.insert(END, '\n', "bot")
-        text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
-        text_chat.tag_configure("code", background = "#565656")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, user + ": ", "bold")
+        text_chat.insert(END, question, "user")
+        text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
+        text_chat.insert(END, '\n')
         text_chat.configure(state="disabled")
+        text_chat.tag_configure("bold", font=("Arial", font_size, "bold"))
+        text_chat.configure(state="normal")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
+        text_chat.configure(state="disabled")
+        text_chat.see(END)
+        root_chat.update()
+        completion = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "assistant", "content": question}]
+        )
+        print(completion.choices[0].message.content)
+        answer = completion.choices[0].message.content
 
-    show_text_slowly(answer)
-    text_chat.see(END)
-
-    root_chat.update()
+        def show_text_slowly(text):
+            global delay
+            text_chat.configure(state="normal")
+            text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
+            text_chat.insert(END, bot + ": ", "bold")
+            for i, char in enumerate(text):
+                text_chat.insert(END, char, "bot")
+                text_chat.see("end")
+                root_chat.update()
+                root_chat.after(delay)
+            text_chat.insert(END, '\n', "bot")
+            text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
+            text_chat.tag_configure("code", background = "#565656")
+            text_chat.configure(state="disabled")
+        show_text_slowly(answer)
+        text_chat.see(END)
+        root_chat.update()
+    except Exception as e:
+        text_chat.configure(state="normal")
+        text_chat.delete("1.0", END)
+        text_chat.insert(END, str(e), "error")
+        text_chat.tag_configure("error", font=("Arial", font_size, "bold"), foreground="#FF0000")
+        text_chat.configure(state="disabled")
+        text_error = e
+        print(e)
 
 
 def colors_objects(): # объекты, которые меняют цвета
