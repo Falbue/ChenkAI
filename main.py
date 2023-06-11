@@ -135,9 +135,12 @@ def btn_send_command():
         root_chat.update()
     except Exception as e:
         text_chat.configure(state="normal")
-        text_chat.delete("1.0", END)
+        text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
+        text_chat.insert(END, bot + ": ", "bold")
+        text_chat.insert(END, "Извините, возникла ошибка:" + "\n", "null")
         text_chat.insert(END, str(e), "error")
         text_chat.tag_configure("error", font=("Arial", font_size, "bold"), foreground="#FF0000")
+        text_chat.insert(END, '\n')
         text_chat.configure(state="disabled")
         text_error = e
         print(e)
