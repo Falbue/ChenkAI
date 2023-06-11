@@ -324,6 +324,13 @@ def expand_text_input():
 
 
 
+
+
+
+
+
+
+
 # Вход и регистрация
 #-----------------------------------
 root_login = Tk()
@@ -331,13 +338,35 @@ root_login.resizable(width=False, height=False) # Убираем возможн�
 icon = PhotoImage(file = "icon.png")
 root_login.iconphoto(False, icon)
 root_login.title('Вход')
-root_login.geometry('300x400')
+root_login.geometry('400x600')
 
 def on_close():
     exit()
 
 # обработчик события закрытия главного окна
 root_login.protocol("WM_DELETE_WINDOW", on_close)
+
+
+def entry_design(frame):
+    entry = Entry(
+        frame,
+        font=("Arial", 16),
+        bg='white',
+        fg=fg_color,
+        relief='solid',
+        border=1,
+        highlightbackground="black"
+    )
+    return entry
+
+def label_design(frame, text):
+    label = Label(
+        frame,
+        text=text,
+        font=('Arial',14)
+        )
+    return label
+
 
 
 def save_data():
