@@ -326,11 +326,14 @@ def expand_text_input():
 # Вход и регистрация
 #-----------------------------------
 root_login = Tk()
-root_login.resizable(width=False, height=False) # Убираем возможность изменять размеры окна
-icon = PhotoImage(file = "icon.png")
-root_login.iconphoto(False, icon)
+try:
+    icon = PhotoImage(file = "icon.png")
+    root_login.iconphoto(False, icon)
+except:
+    print("Ошибка загрузки иконки")
 root_login.title('Вход')
 root_login.geometry('400x600')
+root_login.resizable(width=False, height=False)
 
 def on_close():
     exit()
@@ -577,9 +580,11 @@ root_login.mainloop()
 # создаем главное окно
 openai.api_key = api
 root_chat = Tk()
-root_chat.overrideredirect(False)
-icon = PhotoImage(file = "icon.png")
-root_chat.iconphoto(False, icon)
+try:
+    icon = PhotoImage(file = "icon.png")
+    root_chat.iconphoto(False, icon)
+except:
+    print("Ошибка загрузки иконки")
 root_chat.title('ChenkGPT')
 root_chat.geometry('400x600')
 root_chat.wm_minsize(400, 600)
