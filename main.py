@@ -119,6 +119,28 @@ def code_sintaxis():
             start = end
 
 
+def update_data(token, username, repo_name, file_name, content, commit_message):
+    global token_git, username_git
+    g = Github(token_git)
+
+    repo = g.get_user(username_git).get_repo(repo_name)
+    try:
+        contents = repo.get_contents(file_name)
+        old_content = contents.decoded_content.decode()
+        new_content = old_content + '\n' + content
+        repo.update_file(contents.path, commit_message, new_content, contents.sha, branch="main")
+        print(f'{file_name} has been updated in {repo_name} repository')
+    except Exception as e:
+        print(f'Ошибка обновления файла {file_name} в {repo_name} репозитории: {e}')
+
+def delete_data(filename):
+    if os.path.exists(filename):
+        os.remove(filename)
+        print(f"File {filename} deleted successfully")
+    else:
+        print(f"File {filename} does not exist")
+
+
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
     global text_error
