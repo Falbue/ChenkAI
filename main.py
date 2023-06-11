@@ -1,9 +1,11 @@
+import os
 from tkinter import *
 import tkinter as tk
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
+
 import openai
-import os
+from github import Github
 
 # устанавливаем ключ API для OpenAI
 
@@ -11,6 +13,13 @@ import os
 bg_color = "#FFFFFF"
 fg_color = "#000000"
 
+# Данные для гитхаба
+token_git = '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'
+username_git = 'Falbue'
+repo_name = 'chenk-data'
+file_name = 'data.txt'
+
+shift = 4
 
 login = ''
 passw = ''
