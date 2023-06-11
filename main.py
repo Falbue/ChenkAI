@@ -71,6 +71,34 @@ def create_button(frame, text, command):
     )
     return button
 
+# Определяем функцию для шифрования текста
+def encrypt(text_api, shift):
+    result = ""
+    for i in range(len(text_api)):
+        char = text_api[i]
+        if char.isalpha():
+            if char.isupper():
+                result += chr((ord(char) + shift - 65) % 26 + 65)
+            else:
+                result += chr((ord(char) + shift - 97) % 26 + 97)
+        else:
+            result += char
+    return result
+
+def decrypt(text_api, shift):
+    result = ""
+    for i in range(len(text_api)):
+        char = text_api[i]
+        if char.isalpha():
+            if char.isupper():
+                result += chr((ord(char) - shift - 65) % 26 + 65)
+            else:
+                result += chr((ord(char) - shift - 97) % 26 + 97)
+        else:
+            result += char
+    return result
+
+
 # Подсветка синтаксиса
 def code_sintaxis():
     if (code == 1):
