@@ -450,99 +450,118 @@ def login():
   btn_sign.config(state = 'normal')
   btn_login.config(state = 'disabled')
   sign_frame.pack_forget()
-  login_frame.pack()
+  login_frame.pack(pady=20)
+  button_submit_sign.pack_forget()
+  button_submit_login.pack(side=BOTTOM,pady=5)
+
 def sign():
   btn_sign.config(state = 'disabled')
   btn_login.config(state = 'normal')
-  sign_frame.pack()
+  sign_frame.pack(pady=20)
   login_frame.pack_forget()
+  button_submit_login.pack_forget()
+  button_submit_sign.pack(side=BOTTOM, pady=5)
 
 
 
 shift_frame = Frame(root_login)
 
 btn_sign = Button(
+    shift_frame,
     text='Войти',
+    font=("Arial", 16),
     relief = 'solid',
     border = 0,
     state = 'disabled',
     command = sign)
 shift_text = Label(
+    shift_frame,
+    font=("Arial", 16),
     text=' / ')
 btn_login = Button(
+    shift_frame,
     text='Регистрация',
+    font=("Arial", 16),
     relief = 'solid',
     border = 0,
     command = login)
 
-btn_sign.place(x = 10)
-shift_text.place(x = 50)
-btn_login.place(x = 70)
-shift_frame.pack(side=TOP, pady =20)
+btn_sign.pack(side=LEFT)
+shift_text.pack(side=LEFT)
+btn_login.pack(side=LEFT)
+shift_frame.pack(side="top", anchor="nw")
 
 
 sign_frame = Frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
-label_username_sign = Label(sign_frame, text='Логин:')
+label_username_sign = label_design(sign_frame, text='Логин:')
 label_username_sign.pack(side=TOP)
-entry_username_sign = Entry(sign_frame)
-entry_username_sign.pack(pady=5)
+entry_username_sign = entry_design(sign_frame)
+entry_username_sign.pack(pady=10)
 
-label_password_sign = Label(sign_frame, text='Пароль:')
+label_password_sign = label_design(sign_frame, text='Пароль:')
 label_password_sign.pack(side=TOP)
-entry_password_sign = Entry(sign_frame, show='*')
-entry_password_sign.pack(pady=5)
+entry_password_sign = entry_design(sign_frame)
+entry_password_sign.config(show='*')
+entry_password_sign.pack(pady=10)
+
 
 # создаем кнопку для отправки данных
-button_submit_sign = create_button(sign_frame, text='Войти', command=check_data)
-button_submit_sign.pack(pady=10)
+button_submit_sign = create_button(root_login, text='Войти', command=check_data)
+button_submit_sign.config(width=20)
+button_submit_sign.pack(side=BOTTOM, pady=5)
+
 
 # создаем метку для вывода сообщений об ошибках или успехе
-error_message_sign = Label(sign_frame, fg='red')
-error_message_sign.pack(side=TOP)
-success_message_sign = Label(sign_frame, fg='green')
-success_message_sign.pack(side=TOP)
+error_message_sign = Label(sign_frame, fg='red', font=("System",16), wraplength=300)
+error_message_sign.pack(side=TOP, pady=50)
+success_message_sign = Label(sign_frame, fg='green', font=("System",16), wraplength=300)
+success_message_sign.pack(side=TOP, pady=50)
 
 entry_username_sign.bind('<Button-1>', clear_error_message)
 entry_password_sign.bind('<Button-1>', clear_error_message)
 
-sign_frame.pack(side=TOP, fill=BOTH, expand=True)
+sign_frame.pack(side=TOP, fill=BOTH, expand=True, pady=20)
 
 
 
 login_frame = Frame()
 
 # создаем метки и текстовые поля для ввода данных
-label_username = Label(login_frame, text='Логин:')
+label_username = label_design(login_frame, text='Логин:')
 label_username.pack()
-entry_username = Entry(login_frame)
-entry_username.pack(pady=5)
+entry_username = entry_design(login_frame)
+entry_username.pack(pady=10)
 
-label_password = Label(login_frame, text='Пароль:')
+label_password = label_design(login_frame, text='Пароль:')
 label_password.pack()
-entry_password = Entry(login_frame, show='*')
-entry_password.pack(pady=5)
+entry_password = entry_design(login_frame)
+entry_password.config(show='*')
+entry_password.pack(pady=10)
 
-label_confirm_password = Label(login_frame, text='Подтвердите пароль:')
+label_confirm_password = label_design(login_frame, text='Подтвердите пароль:')
 label_confirm_password.pack()
-entry_confirm_password = Entry(login_frame, show='*')
-entry_confirm_password.pack(pady=5)
+entry_confirm_password = entry_design(login_frame)
+entry_confirm_password.config(show='*')
+entry_confirm_password.pack(pady=10)
 
-label_api_key = Label(login_frame, text='API ключ:')
+label_api_key = label_design(login_frame, text='API ключ:')
 label_api_key.pack()
-entry_api_key = Entry(login_frame)
-entry_api_key.pack(pady=5)
+entry_api_key = entry_design(login_frame)
+entry_api_key.pack(pady=10)
+
 
 # создаем кнопку для отправки данных
-button_submit_login = create_button(login_frame, text='Зарегистрироваться', command=save_data)
-button_submit_login.pack(pady=10)
+button_submit_login = create_button(root_login, text='Зарегистрироваться', command=save_data)
+button_submit_login.config(width=20)
+
 
 # создаем метку для вывода сообщений об ошибках или успехе
-error_message_login = Label(login_frame, fg='red', wraplength=150)
-error_message_login.pack(pady=5)
-success_message_login = Label(login_frame, fg='green')
-success_message_login.pack(pady=5)
+error_message_login = Label(login_frame, fg='red', wraplength=300, font=("System",16))
+error_message_login.pack(pady=20)
+success_message_login = Label(login_frame, fg='green', font=("System",16), wraplength=300)
+success_message_login.pack(pady=20)
 
 entry_username.bind('<Button-1>', clear_error_message)
 entry_password.bind('<Button-1>', clear_error_message)
@@ -550,8 +569,15 @@ entry_confirm_password.bind('<Button-1>', clear_error_message)
 entry_api_key.bind('<Button-1>', clear_error_message)
 
 
-
 root_login.mainloop()
+
+
+
+
+
+
+
+
 
 
 # -------------------------------------
