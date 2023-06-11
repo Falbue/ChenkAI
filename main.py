@@ -424,51 +424,66 @@ def label_design(frame, text):
 
 
 def save_data():
+    global login, passw, api, user, bot
+    global token, username, repo_name, file_name, content, commit_message
     # получаем данные из текстовых полей
-    username = entry_username.get()
-    password = entry_password.get()
+    login = entry_username.get()
+    passw = entry_password.get()
     confirm_password = entry_confirm_password.get()
-    api_key = entry_api_key.get()
+    api = entry_api_key.get()
+
 
     # проверяем на повтор логина
     if os.path.exists('user_data.chnk'):
         with open('user_data.chnk', 'r') as file:
             logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
-        if username in logins:
+        if login in logins:
             error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
             return
         else:
-            logins.add(username)
+            logins.add(login)
     else:
-        logins = {username}
+        logins = {login}
 
     # проверяем совпадение паролей
-    if password != confirm_password:
+    if passw != confirm_password:
         error_message_login.config(text='Пароли не совпадают')
         return
     # проверяем длину пароля
-    if len(password) < 5:
+    if len(passw) < 5:
         error_message_login.config(text='Пароль должен быть не короче 5 символов')
         return
     # проверяем логин на английские символы
-    if not all(c.isalpha() and ord(c) < 128 for c in username):
+    if not all(c.isalpha() and ord(c) < 128 for c in login):
         error_message_login.config(text='Логин может содержать только английские буквы')
         return
     # проверяем длину api ключа
-    if len(api_key) < 40:
+    if len(api) < 40:
         error_message_login.config(text='API ключ должен быть не короче 40 символов')
         return
 
     # сохраняем данные в файл
     with open('user_data.chnk', 'a') as file:
-        file.write('login: ' + username + '\n')
-        file.write('password: ' + password + '\n')
-        file.write('api: ' + api_key + '\n')
+        file.write('login: ' + login + '\n')
+        file.write('password: ' + passw + '\n')
+        file.write('api: ' + api + '\n')
         file.write('user: ' + 'User' + '\n')
         file.write('bot: ' + 'Bot' + '\n')
         file.write('\n')
-
     success_message_login.config(text='Регистрация прошла успешно')
+    user = 'User'
+    bot = 'Bot'
+
+    text_api = api
+    encrypted_api = encrypt(text_api, shift)
+    print (encrypted_api)
+
+    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + encrypted_api + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n'
+    commit_message = login + ' registration'
+    update_data(token_git, username_git, repo_name, file_name, content, commit_message)
+
+    root_login.destroy()
+
 
 
 
@@ -478,20 +493,40 @@ def check_data():
     username_sign = entry_username_sign.get()
     password_sign = entry_password_sign.get()
 
+    # Аутентификация с использованием access token
+    g = Github("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")
+
+    # Получение репозитория по имени владельца и имени репозитория
+    repo = g.get_repo("Falbue/chenk-data")
+
+    # Получение содержимого файла по его имени и SHA-хешу последнего коммита
+    file_content = repo.get_contents("data.txt").decoded_content
+
+    # Сохранение содержимого в файл на локальном диске
+    with open("data.txt", "wb") as f:
+        f.write(file_content)
+
+
+
     # проверяем совпадение логинов и паролей
-    with open('user_data.chnk', 'r') as file:
+    with open('data.txt', 'r') as file:
         lines = file.readlines()
         for i in range(0, len(lines), 6):
             login = lines[i+0].replace('login: ','').strip()
             passw = lines[i+1].replace('password: ','').strip()
-            api = lines[i+2].replace('api: ','').strip()
+            text_api = lines[i+2].replace('api: ','').strip()
             user = lines[i+3].replace('user: ','').strip()
             bot = lines[i+4].replace('bot: ','').strip()
+
+            decrypt(text_api, shift)
+            api = decrypt(text_api, shift)
+            print (api)
             if username_sign == login and password_sign == passw:
                 success_message_sign.config(text='Авторизация успешна')
                 root_login.destroy()
                 return
     error_message_sign.config(text='Неверный логин или пароль')
+    delete_data('data.txt')
 
     
 
@@ -658,6 +693,7 @@ text_chat = Text(
     height=1,
     wrap="word",
     font=("Arial", font_size),
+    padx = 5,
     # state='disabled',
     bg=bg_color,
     fg=fg_color,
@@ -696,10 +732,12 @@ message_input = Text(
     wrap="word",
     height=3,
     font=("Arial", font_size),
+    padx = 5,
     bg=bg_color,
     fg=fg_color,
     relief = 'solid', 
     border = 1)
+
 
 expand_button_frame.pack(fill ='x')
 expand_button.pack(side=RIGHT, padx=20)
