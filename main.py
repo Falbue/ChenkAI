@@ -491,7 +491,7 @@ def check_data():
     password_sign = entry_password_sign.get()
 
     # Аутентификация с использованием access token
-    g = Github("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")
+    g = Github(token_git)
 
     # Получение репозитория по имени владельца и имени репозитория
     repo = g.get_repo("Falbue/chenk-data")
@@ -523,7 +523,6 @@ def check_data():
                 root_login.destroy()
                 return
     error_message_sign.config(text='Неверный логин или пароль')
-    delete_data('data.txt')
 
     
 
@@ -669,6 +668,7 @@ root_login.mainloop()
 # -------------------------------------
 # hello_window()
 # создаем главное окно
+delete_data('data.txt')
 openai.api_key = api
 root_chat = Tk()
 try:
