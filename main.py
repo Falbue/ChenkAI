@@ -14,7 +14,7 @@ bg_color = "#FFFFFF"
 fg_color = "#000000"
 
 # Данные для гитхаба
-token_git = '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'
+token_git = 'klt_CxpoPFvnOs4zvMpUkWakMVlCBPC5KK0Fj3ET'
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
