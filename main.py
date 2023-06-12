@@ -99,6 +99,11 @@ def decrypt(text_api, shift):
     return result
 
 
+text_api = token_git
+text_api = decrypt(text_api, shift)
+token_git = text_api
+print(token_git)
+
 # Подсветка синтаксиса
 def code_sintaxis():
     if (code == 1):
