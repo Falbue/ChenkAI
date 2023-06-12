@@ -14,7 +14,7 @@ bg_color = "#FFFFFF"
 fg_color = "#000000"
 
 # Данные для гитхаба
-token_git = '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'
+token_git = 'klt_CxpoPFvnOs4zvMpUkWakMVlCBPC5KK0Fj3ET'
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
@@ -98,6 +98,11 @@ def decrypt(text_api, shift):
             result += char
     return result
 
+
+text_api = token_git
+text_api = decrypt(text_api, shift)
+token_git = text_api
+print(token_git)
 
 # Подсветка синтаксиса
 def code_sintaxis():
@@ -433,17 +438,17 @@ def save_data():
     api = entry_api_key.get()
 
 
-    # проверяем на повтор логина
-    if os.path.exists('user_data.chnk'):
-        with open('user_data.chnk', 'r') as file:
-            logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
-        if login in logins:
-            error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
-            return
-        else:
-            logins.add(login)
-    else:
-        logins = {login}
+    # проверяем на повтор логина сделать проверку с файлом гитхаба
+    # if os.path.exists('user_data.chnk'):
+    #     with open('user_data.chnk', 'r') as file:
+    #         logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
+    #     if login in logins:
+    #         error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+    #         return
+    #     else:
+    #         logins.add(login)
+    # else:
+    #     logins = {login}
 
     # проверяем совпадение паролей
     if passw != confirm_password:
@@ -462,14 +467,6 @@ def save_data():
         error_message_login.config(text='API ключ должен быть не короче 40 символов')
         return
 
-    # сохраняем данные в файл
-    with open('user_data.chnk', 'a') as file:
-        file.write('login: ' + login + '\n')
-        file.write('password: ' + passw + '\n')
-        file.write('api: ' + api + '\n')
-        file.write('user: ' + 'User' + '\n')
-        file.write('bot: ' + 'Bot' + '\n')
-        file.write('\n')
     success_message_login.config(text='Регистрация прошла успешно')
     user = 'User'
     bot = 'Bot'
@@ -479,7 +476,7 @@ def save_data():
     print (encrypted_api)
 
     content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + encrypted_api + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n'
-    commit_message = login + ' registration'
+    commit_message = login + ' Зарегестрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
 
     root_login.destroy()
@@ -494,7 +491,7 @@ def check_data():
     password_sign = entry_password_sign.get()
 
     # Аутентификация с использованием access token
-    g = Github("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")
+    g = Github(token_git)
 
     # Получение репозитория по имени владельца и имени репозитория
     repo = g.get_repo("Falbue/chenk-data")
@@ -526,7 +523,6 @@ def check_data():
                 root_login.destroy()
                 return
     error_message_sign.config(text='Неверный логин или пароль')
-    delete_data('data.txt')
 
     
 
@@ -672,6 +668,7 @@ root_login.mainloop()
 # -------------------------------------
 # hello_window()
 # создаем главное окно
+delete_data('data.txt')
 openai.api_key = api
 root_chat = Tk()
 try:
