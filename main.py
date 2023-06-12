@@ -467,14 +467,6 @@ def save_data():
         error_message_login.config(text='API ключ должен быть не короче 40 символов')
         return
 
-    # сохраняем данные в файл
-    with open('user_data.chnk', 'a') as file:
-        file.write('login: ' + login + '\n')
-        file.write('password: ' + passw + '\n')
-        file.write('api: ' + api + '\n')
-        file.write('user: ' + 'User' + '\n')
-        file.write('bot: ' + 'Bot' + '\n')
-        file.write('\n')
     success_message_login.config(text='Регистрация прошла успешно')
     user = 'User'
     bot = 'Bot'
