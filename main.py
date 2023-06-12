@@ -438,17 +438,17 @@ def save_data():
     api = entry_api_key.get()
 
 
-    # проверяем на повтор логина
-    if os.path.exists('user_data.chnk'):
-        with open('user_data.chnk', 'r') as file:
-            logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
-        if login in logins:
-            error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
-            return
-        else:
-            logins.add(login)
-    else:
-        logins = {login}
+    # проверяем на повтор логина сделать проверку с файлом гитхаба
+    # if os.path.exists('user_data.chnk'):
+    #     with open('user_data.chnk', 'r') as file:
+    #         logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
+    #     if login in logins:
+    #         error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+    #         return
+    #     else:
+    #         logins.add(login)
+    # else:
+    #     logins = {login}
 
     # проверяем совпадение паролей
     if passw != confirm_password:
