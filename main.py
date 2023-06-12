@@ -476,7 +476,7 @@ def save_data():
     print (encrypted_api)
 
     content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + encrypted_api + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n'
-    commit_message = login + ' registration'
+    commit_message = login + ' Зарегестрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
 
     root_login.destroy()
