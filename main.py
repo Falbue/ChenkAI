@@ -43,7 +43,11 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-welcome_text = """Привет. Это ChenkGPT
+version ='x.x.x'
+online = ''
+
+welcome_text = f"""Привет. Это ChenkGPT
+
 
 Инструкция:
 1. Если окно зависло, значит бот грузит Ваш запрос
@@ -53,7 +57,8 @@ welcome_text = """Привет. Это ChenkGPT
 4. По всем вопросам обращаться на почту: ChenkGPT@gmail.com
 
 Falbue <3
-ver: 0.8.3"""
+version: """
+
 
 # настройка кнопок
 def create_button(frame, text, command):
@@ -102,7 +107,6 @@ def decrypt(text_api, shift):
 text_api = token_git
 text_api = decrypt(text_api, shift)
 token_git = text_api
-print(token_git)
 
 # Подсветка синтаксиса
 def code_sintaxis():
@@ -124,6 +128,8 @@ def code_sintaxis():
             start = end
 
 
+
+
 def update_data(token, username, repo_name, file_name, content, commit_message):
     global token_git, username_git
     g = Github(token_git)
@@ -134,7 +140,7 @@ def update_data(token, username, repo_name, file_name, content, commit_message):
         old_content = contents.decoded_content.decode()
         new_content = old_content + '\n' + content
         repo.update_file(contents.path, commit_message, new_content, contents.sha, branch="main")
-        print(f'{file_name} has been updated in {repo_name} repository')
+        print(f'{file_name} обновлеён в репозитории {repo_name}')
     except Exception as e:
         print(f'Ошибка обновления файла {file_name} в {repo_name} репозитории: {e}')
 
@@ -144,6 +150,8 @@ def delete_data(filename):
         print(f"File {filename} deleted successfully")
     else:
         print(f"File {filename} does not exist")
+
+
 
 
 # функция, которая вызывается при нажатии кнопки "Отправить"
@@ -222,14 +230,28 @@ def colors_objects(): # объекты, которые меняют цвета
 
     root_chat.configure(bg=bg_color_dark)
 
+    frame_root_chat.configure(bg = bg_color_dark)
     frame_btn.configure(bg=bg_color_dark)
     frame_chat.configure(bg=bg_color_dark)
     expand_button_frame.configure(bg = bg_color_dark)
 
 
+
+    btn_color.configure(bg=bg_color, fg=fg_color)
+    btn_clear.configure(bg=bg_color, fg=fg_color)
+    btn_font_size.configure(bg=bg_color, fg=fg_color)
+    btn_close.configure(bg=bg_color, fg=fg_color)
+    btn_delay.configure(bg=bg_color, fg=fg_color)
+    label_delay.configure(fg = fg_color, bg = bg_color_dark)
+
+    frame_button_color.configure(bg=bg_color)
+    settings_window.configure(bg=bg_color_dark)
+    frame_button_color.configure(bg=bg_color_dark)
+    frame_delay.configure(bg=bg_color_dark)
+
+
     check = text_chat.get("1.0", END)
     check = check.strip('\n')
-    print(check)
     if check == welcome_text:
       text_chat.configure(state="normal")
       text_chat.configure(fg = bg_color_dark)
@@ -256,7 +278,6 @@ def change_colors():
     bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
     colors_objects()
-    settings_window.destroy()
 
 
 def clear_colors():
@@ -269,7 +290,6 @@ def clear_colors():
   bg_color_dark = 'gray90'
 
   colors_objects()
-  settings_window.destroy()
 
 
 
@@ -282,81 +302,36 @@ def change_font_size():
     text_chat.update()
     message_input.configure(font=("Arial", font_size))
 
-    settings_window.destroy()
-
 
 
  # добавим настройки окна
 def settings():
-    global settings_window
+    # global settings_window
     global bg_color
     global fg_color
     global font_size
+
+    frame_root_chat.pack_forget()
+    settings_window.pack(fill=BOTH, expand=YES)
+    root_chat.resizable(False, False)
     
-    # создаем новое окно с настройками
-    settings_window = Toplevel()
-    settings_window.geometry("300x300")
-    settings_window.resizable(width=False, height=False)
-    settings_window.title("Настройки")
+def animations_text():
+    global delay, delay_state
+
+    if (delay_state == "ВКЛ"):
+      delay_state="ВЫКЛ"
+      btn_delay.config(text=delay_state)
+      delay = 0
+    else:
+      delay_state = "ВКЛ"
+      btn_delay.config(text=delay_state)
+      delay = 25
+
+def close_setting():
+    frame_root_chat.pack(fill=BOTH, expand=YES)
+    settings_window.pack_forget()
+    root_chat.resizable(True, True)
     
-
-    frame_button_color = Frame(settings_window, height=30)
-    btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
-    btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
-    btn_color.grid(row=0, column=0, padx=5, pady=5)
-    btn_clear.grid(row=0, column=1, padx=5, pady=5)
-
-    btn_font_size = create_button(settings_window, text="Изменить размер шрифта", command=change_font_size)
-    btn_font_size.pack(side=TOP, fill=X, padx=5, pady=5)
-
-    def animations_text():
-      global delay, delay_state
-
-      if (delay_state == "ВКЛ"):
-        delay_state="ВЫКЛ"
-        btn_delay.config(text=delay_state)
-        delay = 0
-      else:
-        delay_state = "ВКЛ"
-        btn_delay.config(text=delay_state)
-        delay = 25
-
-    frame_delay = Frame(settings_window)
-    label_delay = Label(
-      frame_delay,
-      text = "Анимация текста:",
-      font=("Arial", 16,"bold"),
-      bg=bg_color_dark)
-    btn_delay = create_button(
-      frame_delay,
-      text = delay_state,
-      command = animations_text)
-    label_delay.grid(row=0, column=0, padx=5, pady=5)
-    btn_delay.grid(row=0, column=1, padx=5, pady=10)
-
-    btn_close = create_button(settings_window, text="Закрыть", command=settings_window.destroy)
-    btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
-
-
-    # Установка фреймов
-    frame_button_color.pack(side=TOP, fill=X, padx=5, pady=5)
-    frame_delay.pack(fill=X, padx=5, pady=5)
-
-
-    # Настойки объектов
-    btn_color.configure(bg=bg_color, fg=fg_color)
-    btn_clear.configure(bg=bg_color, fg=fg_color)
-    btn_font_size.configure(bg=bg_color, fg=fg_color)
-    btn_close.configure(bg=bg_color, fg=fg_color)
-    btn_delay.configure(bg=bg_color, fg=fg_color)
-    label_delay.configure(fg = fg_color)
-
-    frame_button_color.configure(bg=bg_color)
-    settings_window.configure(bg=bg_color_dark)
-    frame_button_color.configure(bg=bg_color_dark)
-    frame_delay.configure(bg=bg_color_dark)
-
-
 
 def clear_chat():
     text_chat.configure(state="normal")
@@ -385,27 +360,6 @@ def expand_text_input():
 
 
 
-
-
-# Вход и регистрация
-#-----------------------------------
-root_login = Tk()
-try:
-    icon = PhotoImage(file = "icon.png")
-    root_login.iconphoto(False, icon)
-except:
-    print("Ошибка загрузки иконки")
-root_login.title('Вход')
-root_login.geometry('400x600')
-root_login.resizable(width=False, height=False)
-
-def on_close():
-    exit()
-
-# обработчик события закрытия главного окна
-root_login.protocol("WM_DELETE_WINDOW", on_close)
-
-
 def entry_design(frame):
     entry = Entry(
         frame,
@@ -427,28 +381,45 @@ def label_design(frame, text):
     return label
 
 
+def check_duplicate_login(login):
+    with open(file_name, 'r') as f:
+        for line in f:
+            if 'login: ' in line:
+                saved_login = line.replace('login: ','').strip()
+                if login == saved_login:
+                    return True
+    return False
+
 
 def save_data():
     global login, passw, api, user, bot
     global token, username, repo_name, file_name, content, commit_message
-    # получаем данные из текстовых полей
+
+    # Аутентификация с использованием access token
+    g = Github(token_git)
+
+    # Получение репозитория по имени владельца и имени репозитория
+    repo = g.get_repo("Falbue/chenk-data")
+
+    # Получение содержимого файла по его имени и SHA-хешу последнего коммита
+    file_content = repo.get_contents("data.txt").decoded_content
+
+    # Сохранение содержимого в файл на локальном диске
+    with open("data.txt", "wb") as f:
+        f.write(file_content)
+
+
     login = entry_username.get()
+
+    if check_duplicate_login(login):
+        error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+        return
     passw = entry_password.get()
     confirm_password = entry_confirm_password.get()
     api = entry_api_key.get()
 
 
-    # проверяем на повтор логина сделать проверку с файлом гитхаба
-    # if os.path.exists('user_data.chnk'):
-    #     with open('user_data.chnk', 'r') as file:
-    #         logins = set(line.split(':')[1].strip() for line in file if line.startswith('login:'))
-    #     if login in logins:
-    #         error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
-    #         return
-    #     else:
-    #         logins.add(login)
-    # else:
-    #     logins = {login}
+    
 
     # проверяем совпадение паролей
     if passw != confirm_password:
@@ -473,19 +444,24 @@ def save_data():
 
     text_api = api
     encrypted_api = encrypt(text_api, shift)
-    print (encrypted_api)
 
     content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + encrypted_api + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n'
-    commit_message = login + ' Зарегестрировался'
+    commit_message = login + ' зарегистрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
+    # file.close()
+    os.remove("data.txt")
 
-    root_login.destroy()
+
+    root_login.pack_forget()
+    frame_root_chat.pack(fill=BOTH, expand=YES)
+    root_chat.resizable(True, True)
+
 
 
 
 
 def check_data():
-    global login, passw, api, user, bot
+    global login, passw, api, user, bot, version, welcome_text
     # получаем данные из текстовых полей
     username_sign = entry_username_sign.get()
     password_sign = entry_password_sign.get()
@@ -503,26 +479,39 @@ def check_data():
     with open("data.txt", "wb") as f:
         f.write(file_content)
 
-
-
     # проверяем совпадение логинов и паролей
-    with open('data.txt', 'r') as file:
-        lines = file.readlines()
-        for i in range(0, len(lines), 6):
-            login = lines[i+0].replace('login: ','').strip()
-            passw = lines[i+1].replace('password: ','').strip()
-            text_api = lines[i+2].replace('api: ','').strip()
-            user = lines[i+3].replace('user: ','').strip()
-            bot = lines[i+4].replace('bot: ','').strip()
+    try:
+        with open('data.txt', 'r') as file:
+            lines = file.readlines()
+            for i in range(0, len(lines), 8):
+                login = lines[i+0].replace('login: ','').strip()
+                passw = lines[i+1].replace('password: ','').strip()
+                text_api = lines[i+2].replace('api: ','').strip()
+                user = lines[i+3].replace('user: ','').strip()
+                bot = lines[i+4].replace('bot: ','').strip()
+                version = lines[i+5].replace('version: ','').strip()
+                # online = lines[i*6].replace('online: ','').strip()
 
-            decrypt(text_api, shift)
-            api = decrypt(text_api, shift)
-            print (api)
-            if username_sign == login and password_sign == passw:
-                success_message_sign.config(text='Авторизация успешна')
-                root_login.destroy()
-                return
+                decrypt(text_api, shift)
+                api = decrypt(text_api, shift)
+                if username_sign == login and password_sign == passw:
+                    success_message_sign.config(text='Авторизация успешна')
+                    openai.api_key = api
+                    root_login.pack_forget()
+                    frame_root_chat.pack(fill=BOTH, expand=YES)
+                    root_chat.resizable(True, True)
+                    file.close()
+                    os.remove("data.txt")
+                    welcome_text = welcome_text + f"{version}"
+                    clear_chat()
+                    return
+                    
+    except Exception as e:
+        error_message_sign.config(text='Неверный логин или пароль')
     error_message_sign.config(text='Неверный логин или пароль')
+    file.close()
+    os.remove("data.txt")
+
 
     
 
@@ -537,7 +526,7 @@ def login():
   sign_frame.pack_forget()
   login_frame.pack(pady=20)
   button_submit_sign.pack_forget()
-  button_submit_login.pack(side=BOTTOM,pady=5)
+  button_submit_login.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 def sign():
   btn_sign.config(state = 'disabled')
@@ -545,10 +534,185 @@ def sign():
   sign_frame.pack(pady=20)
   login_frame.pack_forget()
   button_submit_login.pack_forget()
-  button_submit_sign.pack(side=BOTTOM, pady=5)
+  button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
 
+
+
+
+
+
+
+def on_resize(event):
+    width = event.width
+    if width > max_width:
+        settings_window.configure(width=400)
+        btn_settings.place_forget()
+    else:
+        # settings_window.pack_forget()
+        settings_window.pack_propagate(0)
+        settings_window.configure(width=0)
+        
+
+
+
+
+# -------------------------------------
+# hello_window()
+# создаем главное окно
+root_chat = Tk()
+try:
+    icon = PhotoImage(file = "icon.png")
+    root_chat.iconphoto(False, icon)
+except:
+    print("Ошибка загрузки иконки")
+root_chat.title('ChenkGPT')
+root_chat.geometry('400x600')
+root_chat.wm_minsize(400, 600)
+root_chat.resizable(False, False)
+root_chat.config(bg=bg_color_dark)
+# root_chat.bind("<Configure>", on_resize) Доделать
+
+screen_width = root_chat.winfo_screenwidth()
+max_width = int(screen_width * 0.7)
+
+
+frame_root_chat = Frame(root_chat, bg = bg_color_dark)
+
+
+
+
+frame_chat = Frame(frame_root_chat)
+
+# создаем текстовое поле для чата
+text_chat = Text(
+    frame_chat,
+    height=1,
+    wrap="word",
+    font=("Arial", font_size),
+    padx = 5,
+    # state='disabled',
+    bg=bg_color,
+    fg=fg_color,
+    relief='solid',
+    border = 1, 
+    selectbackground="#87CEFA")
+
+frame_chat.pack(padx=(20, 0), fill=BOTH, expand=True)
+text_chat.config(state='disabled',fg=bg_color_dark)
+
+# создаем слайдер для текст чата
+scrollbar_chat = Scrollbar(
+    frame_chat,
+     width=20,
+     background = bg_color,
+     troughcolor = bg_color_dark)
+scrollbar_chat.pack(side=RIGHT, fill='y')
+# устанавливаем связь между слайдером и текстом чата
+scrollbar_chat.config(command=text_chat.yview)
+
+# устанавливаем параметры для текстового поля и добавляем на главное окно
+text_chat.config(yscrollcommand=scrollbar_chat.set)
+
+# устанавливаем параметры для слайдера и добавляем на главное окно
+text_chat.pack(fill=BOTH, expand=True)
+
+expand_button_frame = Frame(frame_root_chat, bg = bg_color_dark)
+# создаем кнопку для изменения размера окна ввода сообщений
+expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
+expand_button.config(font=("Arial", 10,"bold"))
+
+# создаем окно ввода сообщений
+message_input = Text(
+    frame_root_chat,
+    wrap="word",
+    height=3,
+    font=("Arial", font_size),
+    padx = 5,
+    bg=bg_color,
+    fg=fg_color,
+    relief = 'solid', 
+    border = 1)
+
+
+
+expand_button_frame.pack(fill ='x')
+expand_button.pack(side=RIGHT, padx=20)
+# устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
+message_input.pack(fill='x', padx=20)
+
+
+frame_btn = Frame(frame_root_chat,height=40)
+frame_btn.config(bg=bg_color_dark)
+frame_btn.pack(fill='x', pady=20, padx=20)
+
+
+# создаем кнопки с помощью функции
+btn_settings = create_button(frame_btn, 'Настройки', settings)
+btn_send = create_button(frame_btn, 'Отправить', btn_send_command)
+btn_clear_chat = create_button(frame_btn, 'Очистить', clear_chat)
+
+# устанавливаем фокус на окно ввода сообщений
+message_input.focus()
+# устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
+message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
+
+btn_settings.place(relx=0, rely=0.5, anchor=W)
+btn_send.place(relx=0.5, rely=0.5, anchor=CENTER)
+btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
+
+
+
+
+
+
+settings_window = Frame(root_chat)
+settings_window.pack(side = LEFT, fill='y')
+settings_window.pack_propagate(0)
+
+btn_font_size = create_button(settings_window, text="Изменить размер шрифта", command=change_font_size)
+btn_font_size.pack(side=TOP, padx=5, pady=5)
+
+frame_button_color = Frame(settings_window, height=30)
+btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
+btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
+btn_color.grid(row=0, column=0, padx=5, pady=5)
+btn_clear.grid(row=0, column=1, padx=5, pady=5)
+
+    
+frame_delay = Frame(settings_window)
+label_delay = Label(
+  frame_delay,
+  text = "Анимация текста:",
+  font=("Arial", 16,"bold"))
+btn_delay = create_button(
+  frame_delay,
+  text = delay_state,
+  command = animations_text)
+label_delay.grid(row=0, column=0, padx=5, pady=5)
+btn_delay.grid(row=0, column=1, padx=5, pady=10)
+
+btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
+btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+
+
+# Установка фреймов
+frame_button_color.pack(side=TOP, padx=5, pady=5)
+frame_delay.pack(padx=5, pady=5)
+
+
+
+
+
+
+
+
+
+
+
+root_login = Frame(root_chat)
+root_login.pack(side = RIGHT, fill=BOTH, expand=YES)
 shift_frame = Frame(root_login)
 
 btn_sign = Button(
@@ -594,8 +758,8 @@ entry_password_sign.pack(pady=10)
 
 # создаем кнопку для отправки данных
 button_submit_sign = create_button(root_login, text='Войти', command=check_data)
-button_submit_sign.config(width=20)
-button_submit_sign.pack(side=BOTTOM, pady=5)
+button_submit_sign.config()
+button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
 # создаем метку для вывода сообщений об ошибках или успехе
@@ -611,7 +775,7 @@ sign_frame.pack(side=TOP, fill=BOTH, expand=True, pady=20)
 
 
 
-login_frame = Frame()
+login_frame = Frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
 label_username = label_design(login_frame, text='Логин:')
@@ -639,7 +803,6 @@ entry_api_key.pack(pady=10)
 
 # создаем кнопку для отправки данных
 button_submit_login = create_button(root_login, text='Зарегистрироваться', command=save_data)
-button_submit_login.config(width=20)
 
 
 # создаем метку для вывода сообщений об ошибках или успехе
@@ -652,114 +815,6 @@ entry_username.bind('<Button-1>', clear_error_message)
 entry_password.bind('<Button-1>', clear_error_message)
 entry_confirm_password.bind('<Button-1>', clear_error_message)
 entry_api_key.bind('<Button-1>', clear_error_message)
-
-
-root_login.mainloop()
-
-
-
-
-
-
-
-
-
-
-# -------------------------------------
-# hello_window()
-# создаем главное окно
-delete_data('data.txt')
-openai.api_key = api
-root_chat = Tk()
-try:
-    icon = PhotoImage(file = "icon.png")
-    root_chat.iconphoto(False, icon)
-except:
-    print("Ошибка загрузки иконки")
-root_chat.title('ChenkGPT')
-root_chat.geometry('400x600')
-root_chat.wm_minsize(400, 600)
-root_chat.config(bg=bg_color_dark)
-
-frame_chat = Frame()
-print(api)
-
-# создаем текстовое поле для чата
-text_chat = Text(
-    frame_chat,
-    height=1,
-    wrap="word",
-    font=("Arial", font_size),
-    padx = 5,
-    # state='disabled',
-    bg=bg_color,
-    fg=fg_color,
-    relief='solid',
-    border = 1, 
-    selectbackground="#87CEFA")
-
-frame_chat.pack(padx=(20, 0), fill=BOTH, expand=True)
-text_chat.insert(END,welcome_text)
-text_chat.config(state='disabled',fg=bg_color_dark)
-
-# создаем слайдер для текст чата
-scrollbar_chat = Scrollbar(
-    frame_chat,
-     width=20,
-     background = bg_color,
-     troughcolor = bg_color_dark)
-scrollbar_chat.pack(side=RIGHT, fill='y')
-# устанавливаем связь между слайдером и текстом чата
-scrollbar_chat.config(command=text_chat.yview)
-
-# устанавливаем параметры для текстового поля и добавляем на главное окно
-text_chat.config(yscrollcommand=scrollbar_chat.set)
-
-# устанавливаем параметры для слайдера и добавляем на главное окно
-text_chat.pack(fill=BOTH, expand=True)
-
-expand_button_frame = Frame(bg = bg_color_dark)
-# создаем кнопку для изменения размера окна ввода сообщений
-expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
-expand_button.config(font=("Arial", 10,"bold"))
-
-# создаем окно ввода сообщений
-message_input = Text(
-    root_chat,
-    wrap="word",
-    height=3,
-    font=("Arial", font_size),
-    padx = 5,
-    bg=bg_color,
-    fg=fg_color,
-    relief = 'solid', 
-    border = 1)
-
-
-expand_button_frame.pack(fill ='x')
-expand_button.pack(side=RIGHT, padx=20)
-# устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
-message_input.pack(fill='x', padx=20)
-
-
-frame_btn = Frame(root_chat,height=40)
-frame_btn.config(bg=bg_color_dark)
-frame_btn.pack(fill='x', pady=20, padx=20)
-
-
-# создаем кнопки с помощью функции
-btn_settings = create_button(frame_btn, 'Настройки', settings)
-btn_send = create_button(frame_btn, 'Отправить', btn_send_command)
-btn_clear_chat = create_button(frame_btn, 'Очистить', clear_chat)
-
-# устанавливаем фокус на окно ввода сообщений
-message_input.focus()
-# устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
-root_chat.bind('<Control-Return>', lambda event: btn_send.invoke())
-
-btn_settings.place(relx=0, rely=0.5, anchor=W)
-btn_send.place(relx=0.5, rely=0.5, anchor=CENTER)
-btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
 
 
 # запускаем графический интерфейс
