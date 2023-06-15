@@ -3,6 +3,9 @@ from tkinter import *
 import tkinter as tk
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
+from distutils.version import LooseVersion
+import time
+import pywinauto
 
 import openai
 from github import Github
@@ -43,7 +46,8 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version ='x.x.x'
+version = '1.0.0'
+latest_version = ''
 online = ''
 
 welcome_text = f"""Привет. Это ChenkGPT
@@ -243,6 +247,7 @@ def colors_objects(): # объекты, которые меняют цвета
     btn_close.configure(bg=bg_color, fg=fg_color)
     btn_delay.configure(bg=bg_color, fg=fg_color)
     label_delay.configure(fg = fg_color, bg = bg_color_dark)
+    btn_update.configure(fg = fg_color, bg = bg_color)
 
     frame_button_color.configure(bg=bg_color)
     settings_window.configure(bg=bg_color_dark)
@@ -302,11 +307,26 @@ def change_font_size():
     text_chat.update()
     message_input.configure(font=("Arial", font_size))
 
+def update_chenkgpt():
+    # путь к exe файлу на рабочем столе
+    path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/installer.exe"
+    # запуск exe файла
+    os.startfile(path)
+    # ждем, пока файл откроется
+    time.sleep(1)
+    # находим идентификатор окна файла
+    window = pywinauto.Desktop(backend="uia").window(title=path)
+    try:
+        # выводим окно файла по верх всех окон
+        window.set_foreground()
+    except:
+        print('Похуй')
+    root_chat.destroy()
+    
 
 
  # добавим настройки окна
 def settings():
-    # global settings_window
     global bg_color
     global fg_color
     global font_size
@@ -314,6 +334,14 @@ def settings():
     frame_root_chat.pack_forget()
     settings_window.pack(fill=BOTH, expand=YES)
     root_chat.resizable(False, False)
+
+    if LooseVersion(latest_version) < LooseVersion(version):
+        print(f"{latest_version} меньше чем {version}")
+    elif LooseVersion(latest_version) > LooseVersion(version):
+        print(f"{latest_version} больше чем {version}")
+    else:
+        print(f"{latest_version} равны {version}")
+        btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
     
 def animations_text():
     global delay, delay_state
@@ -413,6 +441,7 @@ def save_data():
 
     if check_duplicate_login(login):
         error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+        os.remove("data.txt")
         return
     passw = entry_password.get()
     confirm_password = entry_confirm_password.get()
@@ -424,18 +453,22 @@ def save_data():
     # проверяем совпадение паролей
     if passw != confirm_password:
         error_message_login.config(text='Пароли не совпадают')
+        os.remove("data.txt")
         return
     # проверяем длину пароля
     if len(passw) < 5:
         error_message_login.config(text='Пароль должен быть не короче 5 символов')
+        os.remove("data.txt")
         return
     # проверяем логин на английские символы
     if not all(c.isalpha() and ord(c) < 128 for c in login):
         error_message_login.config(text='Логин может содержать только английские буквы')
+        os.remove("data.txt")
         return
     # проверяем длину api ключа
     if len(api) < 40:
         error_message_login.config(text='API ключ должен быть не короче 40 символов')
+        os.remove("data.txt")
         return
 
     success_message_login.config(text='Регистрация прошла успешно')
@@ -461,7 +494,7 @@ def save_data():
 
 
 def check_data():
-    global login, passw, api, user, bot, version, welcome_text
+    global login, passw, api, user, bot, version, welcome_text, latest_version
     # получаем данные из текстовых полей
     username_sign = entry_username_sign.get()
     password_sign = entry_password_sign.get()
@@ -471,9 +504,14 @@ def check_data():
 
     # Получение репозитория по имени владельца и имени репозитория
     repo = g.get_repo("Falbue/chenk-data")
-
     # Получение содержимого файла по его имени и SHA-хешу последнего коммита
     file_content = repo.get_contents("data.txt").decoded_content
+
+    repo = g.get_repo("Falbue/ChenkGPT")
+    latest_release = repo.get_latest_release()
+    latest_version = latest_release.tag_name
+    latest_version = version[0:]
+    print(f"Последняя версия {latest_version}")
 
     # Сохранение содержимого в файл на локальном диске
     with open("data.txt", "wb") as f:
@@ -483,14 +521,13 @@ def check_data():
     try:
         with open('data.txt', 'r') as file:
             lines = file.readlines()
-            for i in range(0, len(lines), 8):
+            for i in range(0, len(lines), 7):
                 login = lines[i+0].replace('login: ','').strip()
                 passw = lines[i+1].replace('password: ','').strip()
                 text_api = lines[i+2].replace('api: ','').strip()
                 user = lines[i+3].replace('user: ','').strip()
                 bot = lines[i+4].replace('bot: ','').strip()
                 version = lines[i+5].replace('version: ','').strip()
-                # online = lines[i*6].replace('online: ','').strip()
 
                 decrypt(text_api, shift)
                 api = decrypt(text_api, shift)
@@ -553,17 +590,14 @@ def on_resize(event):
         # settings_window.pack_forget()
         settings_window.pack_propagate(0)
         settings_window.configure(width=0)
-        
-
-
-
+              
 
 # -------------------------------------
 # hello_window()
 # создаем главное окно
 root_chat = Tk()
 try:
-    icon = PhotoImage(file = "icon.png")
+    icon = PhotoImage(file = "ico.png")
     root_chat.iconphoto(False, icon)
 except:
     print("Ошибка загрузки иконки")
@@ -695,6 +729,8 @@ btn_delay.grid(row=0, column=1, padx=5, pady=10)
 
 btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+
+btn_update = create_button(settings_window, text='Обновить', command = update_chenkgpt)
 
 
 # Установка фреймов
