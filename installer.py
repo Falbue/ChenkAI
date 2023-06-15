@@ -54,8 +54,9 @@ def update():
             r = requests.get(file_url)
             with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
                 f.write(r.content)
-    lbl.pack_forget()
-    btn.pack(expand=True)
+                lbl.pack_forget()
+                btn.pack(expand=True)
+    
 
 def close():
     path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe"
