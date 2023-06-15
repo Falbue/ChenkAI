@@ -3,14 +3,11 @@ from tkinter import *
 import tkinter as tk
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
-from distutils.version import LooseVersion
 import time
-import pywinauto
+import requests
 
 import openai
 from github import Github
-
-# устанавливаем ключ API для OpenAI
 
 # переменные для цветовой гаммы и размера шрифта
 bg_color = "#FFFFFF"
@@ -46,8 +43,8 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version = '1.0.0'
-latest_version = ''
+version = '0.9.0'
+latest_version = '1.0.0'
 online = ''
 
 welcome_text = f"""Привет. Это ChenkGPT
@@ -307,7 +304,81 @@ def change_font_size():
     text_chat.update()
     message_input.configure(font=("Arial", font_size))
 
+
+
+def compare_versions(version, latest_version):
+    v1_parts = [int(x) for x in version.split(".")]
+    v2_parts = [int(x) for x in latest_version.split(".")]
+    for i in range(min(len(v1_parts), len(v2_parts))):
+        if v1_parts[i] < v2_parts[i]:
+            return -1
+        elif v1_parts[i] > v2_parts[i]:
+            return 1
+    if len(v1_parts) < len(v2_parts):
+        print('1')
+        return -1
+    elif len(v1_parts) > len(v2_parts):
+        print('2')
+        return 1
+    else:
+        return 0
+
 def update_chenkgpt():
+    updating_vesion = latest_version
+    g = Github(token_git)
+    repo = g.get_repo("Falbue/chenk-data")
+
+    file_content = repo.get_contents("data.txt").decoded_content
+    with open("data.txt", "wb") as f:
+        f.write(file_content)
+
+    with open("data.txt", "r") as f:
+        for i, line in enumerate(f):
+            if f"login: {login}" in line:
+                stroke = i
+                print(f"Строка c логином '{f.name}' на {i+1}-й строке")
+    file = repo.get_contents("data.txt")
+    contents = file.decoded_content.decode("utf-8")
+    lines = contents.split("\n")
+
+    # Изменение строки номер 5
+    lines[stroke+5] = f'version: {updating_vesion}'
+
+    # Объединение строк в новый контент файла
+    new_contents = "\n".join(lines)
+
+    repo.update_file(
+        path="data.txt",
+        message="test",
+        content=new_contents,
+        sha=file.sha
+    )
+
+    # путь к рабочему столу
+    desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+    # имя новой папки
+    folder_name = 'ChenkGPT'
+    # полный путь к новой папке
+    new_folder_path = os.path.join(desktop_path, folder_name)
+
+    # проверяем, существует ли уже папка
+    if not os.path.exists(new_folder_path):
+        # создание новой папки
+        os.mkdir(new_folder_path)
+    else:
+        print(f"Папка {folder_name} уже существует на рабочем столе.")
+
+    repo = g.get_repo('Falbue/ChenkGPT')
+    releases = repo.get_releases()
+    latest_release = releases[0]
+
+    for asset in latest_release.get_assets():
+        if asset.name.endswith(".exe"):
+            file_url = asset.browser_download_url
+            r = requests.get(file_url)
+            with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
+                f.write(r.content)
+
     # путь к exe файлу на рабочем столе
     path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/installer.exe"
     # запуск exe файла
@@ -315,18 +386,22 @@ def update_chenkgpt():
     # ждем, пока файл откроется
     time.sleep(1)
     # находим идентификатор окна файла
-    window = pywinauto.Desktop(backend="uia").window(title=path)
+    # window = pywinauto.Desktop(backend="uia").window(title=path)
     try:
         # выводим окно файла по верх всех окон
         window.set_foreground()
     except:
         print('Похуй')
+    os.remove("data.txt")
     root_chat.destroy()
     
 
 
  # добавим настройки окна
 def settings():
+    y = compare_versions(version, latest_version)
+    # y = -1
+    print(y)
     global bg_color
     global fg_color
     global font_size
@@ -335,13 +410,12 @@ def settings():
     settings_window.pack(fill=BOTH, expand=YES)
     root_chat.resizable(False, False)
 
-    if LooseVersion(latest_version) < LooseVersion(version):
-        print(f"{latest_version} меньше чем {version}")
-    elif LooseVersion(latest_version) > LooseVersion(version):
+
+    if y == -1:
         print(f"{latest_version} больше чем {version}")
+        btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
     else:
         print(f"{latest_version} равны {version}")
-        btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
     
 def animations_text():
     global delay, delay_state
@@ -492,7 +566,6 @@ def save_data():
 
 
 
-
 def check_data():
     global login, passw, api, user, bot, version, welcome_text, latest_version
     # получаем данные из текстовых полей
@@ -510,9 +583,8 @@ def check_data():
     repo = g.get_repo("Falbue/ChenkGPT")
     latest_release = repo.get_latest_release()
     latest_version = latest_release.tag_name
-    latest_version = version[0:]
+    latest_version = latest_version[1:]
     print(f"Последняя версия {latest_version}")
-
     # Сохранение содержимого в файл на локальном диске
     with open("data.txt", "wb") as f:
         f.write(file_content)
@@ -541,6 +613,7 @@ def check_data():
                     os.remove("data.txt")
                     welcome_text = welcome_text + f"{version}"
                     clear_chat()
+                    print(version)
                     return
                     
     except Exception as e:
@@ -577,7 +650,10 @@ def sign():
 
 
 
-
+try:
+    os.remove("installer.exe")
+except:
+    print('Файл уже удалён')
 
 
 
