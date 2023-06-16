@@ -742,7 +742,7 @@ expand_button.config(font=("Arial", 10,"bold"))
 
 
 expand_button_frame.pack(fill ='x')
-expand_button.pack(side=RIGHT, padx=20)
+expand_button.pack(side=RIGHT, padx=20, pady=5)
 # устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
 
 
@@ -776,7 +776,7 @@ btn_settings.pack(side=LEFT)
 message_input.pack(side='left', fill='both', expand=True, padx=5)
 btn_send.pack(side=LEFT)
 
-frame_btn.pack(fill='x', pady=5, padx=20)
+frame_btn.pack(fill='x', padx=20, pady=5)
 # btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
 
 
