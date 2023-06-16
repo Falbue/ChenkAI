@@ -109,26 +109,6 @@ text_api = token_git
 text_api = decrypt(text_api, shift)
 token_git = text_api
 
-# Подсветка синтаксиса
-def code_sintaxis():
-    if (code == 1):
-        start = "1.0"
-        while True:
-            start = text_chat.search("```", start+"3", END)
-            if not start:
-                break
-        
-            end = text_chat.search("```", start + "3", END)
-            if not end:
-                break
-        
-            # Добавляем тег к найденному тексту
-            text_chat.tag_add("code", start + "3", end)
-
-            # Продолжаем поиск со следующей позиции
-            start = end
-
-
 
 
 def update_data(token, username, repo_name, file_name, content, commit_message):
@@ -194,14 +174,29 @@ def btn_send_command():
             text_chat.configure(state="normal")
             text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
             text_chat.insert(END, bot + ": ", "bold")
+    
+            in_quotes = False                       # новая переменная для проверки, находимся ли мы внутри кавычек
+    
             for i, char in enumerate(text):
-                text_chat.insert(END, char, "bot")
+                if char == "`":
+                    in_quotes = not in_quotes         # меняем значение переменной на противоположное при встрече новой кавычки
+                    if in_quotes:
+                        text_chat.tag_add("quote", "end-1c")     # добавляем тег "quote", если находимся внутри кавычек
+                    else:
+                        text_chat.tag_remove("quote", "end-1c")  # удаляем тег "quote", если уже вышли за пределы кавычек
+                text_chat.insert(END, char, "bot" if not in_quotes else "quote")   # проверяем значение переменной и добавляем соответствующий тег
                 text_chat.see("end")
                 root_chat.update()
+        
+                if char != "```" and in_quotes:       # меняем цвет только для текста в кавычках
+                    text_chat.tag_configure("quote", background="black", foreground = 'white')
+                else:
+                    text_chat.tag_configure("quote", foreground="white")
+            
                 root_chat.after(delay)
+    
             text_chat.insert(END, '\n', "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
-            text_chat.tag_configure("code", background = "#565656")
             text_chat.configure(state="disabled")
         show_text_slowly(answer)
         text_chat.see(END)
@@ -238,18 +233,19 @@ def colors_objects(): # объекты, которые меняют цвета
 
 
 
-    btn_color.configure(bg=bg_color, fg=fg_color)
-    btn_clear.configure(bg=bg_color, fg=fg_color)
-    btn_font_size.configure(bg=bg_color, fg=fg_color)
-    btn_close.configure(bg=bg_color, fg=fg_color)
+    btn_color.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
+    btn_clear.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
+    btn_font_size.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
+    btn_close.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
     btn_delay.configure(bg=bg_color, fg=fg_color)
     label_delay.configure(fg = fg_color, bg = bg_color_dark)
-    btn_update.configure(fg = fg_color, bg = bg_color)
+    btn_update.configure(fg = fg_color, bg = bg_color, activebackground=bg_color_dark)
 
     frame_button_color.configure(bg=bg_color)
     settings_window.configure(bg=bg_color_dark)
     frame_button_color.configure(bg=bg_color_dark)
     frame_delay.configure(bg=bg_color_dark)
+    lbl_news_update.configure(fg = bg_color, bg = bg_color_dark)
 
 
     check = text_chat.get("1.0", END)
@@ -416,9 +412,13 @@ def settings():
 
 
     if y == -1:
+        lbl_news_update.config(text = 'Доступно обновление!')
+        lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} больше чем {version}")
         btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
     else:
+        lbl_news_update.config(text = 'Обновлений не найдено')
+        lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} равны {version}")
     
 def animations_text():
@@ -457,7 +457,7 @@ def expand_text_input():
     elif (expand_button_text == "↓"):
         expand_button_text = '↑'
         expand_button.config(text = expand_button_text)
-        message_input.config(height=3)
+        message_input.config(height=2)
 
 
 
@@ -653,7 +653,6 @@ def sign():
 
 
 
-
 try:
     os.remove("installer.exe")
 except:
@@ -720,30 +719,17 @@ text_chat.config(state='disabled',fg=bg_color_dark)
 scrollbar_chat = Scrollbar(
     frame_chat,
      width=20,
-     background = bg_color,
-     troughcolor = bg_color_dark)
+     background = 'red',
+     troughcolor = 'red')
 scrollbar_chat.pack(side=RIGHT, fill='y')
 # устанавливаем связь между слайдером и текстом чата
 scrollbar_chat.config(command=text_chat.yview)
-
 # устанавливаем параметры для текстового поля и добавляем на главное окно
 text_chat.config(yscrollcommand=scrollbar_chat.set)
-
 # устанавливаем параметры для слайдера и добавляем на главное окно
 text_chat.pack(fill=BOTH, expand=True)
-
 expand_button_frame = Frame(frame_root_chat, bg = bg_color_dark)
 # создаем кнопку для изменения размера окна ввода сообщений
-expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
-expand_button.config(font=("Arial", 10,"bold"))
-
-
-
-
-
-expand_button_frame.pack(fill ='x')
-expand_button.pack(side=RIGHT, padx=20, pady=5)
-# устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
 
 
 
@@ -759,25 +745,29 @@ message_input = Text(
     bg=bg_color,
     fg=fg_color,
     relief = 'solid', )
-frame_btn.config(bg=bg_color_dark)
-
-
-# создаем кнопки с помощью функции
-btn_settings = create_button(frame_btn, '\u2699', settings)
-btn_send = create_button(frame_btn, '→', btn_send_command)
-btn_clear_chat = create_button(frame_btn, 'Очистить', clear_chat)
-
 # устанавливаем фокус на окно ввода сообщений
 message_input.focus()
 # устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
 message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
 
+
+
+frame_btn.config(bg=bg_color_dark)
+# создаем кнопки с помощью функции
+btn_settings = create_button(frame_btn, '\u2699', settings)
+btn_send = create_button(frame_btn, '→', btn_send_command)
+
+
+expand_button = create_button(frame_btn, text=expand_button_text, command=expand_text_input)
+expand_button.config(font=("Arial", 16,"bold"))
+expand_button.pack(side=LEFT, padx = 5)
+
 btn_settings.pack(side=LEFT)
 message_input.pack(side='left', fill='both', expand=True, padx=5)
 btn_send.pack(side=LEFT)
 
-frame_btn.pack(fill='x', padx=20, pady=5)
-# btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
+frame_btn.pack(fill='x', padx=(0, 5), pady=5)
+
 
 
 
@@ -810,15 +800,24 @@ btn_delay = create_button(
 label_delay.grid(row=0, column=0, padx=5, pady=5)
 btn_delay.grid(row=0, column=1, padx=5, pady=10)
 
+btn_clear_chat = create_button(settings_window, 'Очистить', clear_chat)
+
 btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
 
+lbl_news_update = Label(
+    settings_window, 
+    text = '',
+    fg = bg_color_dark,
+    bg = bg_color,
+    font=("Arial", 16,"bold"))
 btn_update = create_button(settings_window, text='Обновить', command = update_chenkgpt)
 
 
 # Установка фреймов
 frame_button_color.pack(side=TOP, padx=5, pady=5)
 frame_delay.pack(padx=5, pady=5)
+btn_clear_chat.pack()
 
 
 
