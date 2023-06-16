@@ -374,7 +374,7 @@ def update_chenkgpt():
 
     repo.update_file(
         path="data.txt",
-        message="test",
+        message=f"{login} обновил версию приложения",
         content=new_contents,
         sha=file.sha
     )
@@ -412,10 +412,10 @@ def settings():
 
 
     if y == -1:
-        lbl_news_update.config(text = 'Доступно обновление!')
-        lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} больше чем {version}")
         btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+        lbl_news_update.config(text = 'Доступно обновление!')
+        lbl_news_update.pack(side=BOTTOM)
     else:
         lbl_news_update.config(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
