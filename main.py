@@ -326,8 +326,37 @@ def compare_versions(version, latest_version):
 def update_chenkgpt():
     updating_vesion = latest_version
     g = Github(token_git)
-    repo = g.get_repo("Falbue/chenk-data")
 
+    # путь к рабочему столу
+    desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+    # имя новой папки
+    folder_name = 'ChenkGPT'
+    # полный путь к новой папке
+    new_folder_path = os.path.join(desktop_path, folder_name)
+
+    # проверяем, существует ли уже папка
+    if not os.path.exists(new_folder_path):
+        # создание новой папки
+        os.mkdir(new_folder_path)
+    else:
+        print(f"Папка {folder_name} уже существует на рабочем столе.")
+
+    repo = g.get_repo('Falbue/ChenkGPT')
+    release_name = 'Version 1.1.0'
+    releases = repo.get_releases()
+    for release in releases:
+        if release.title == release_name:
+            target_release = release
+            break   
+
+    for asset in target_release.get_assets():
+        if asset.name.endswith(".exe"):
+            file_url = asset.browser_download_url
+            r = requests.get(file_url)
+            with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
+                f.write(r.content)
+
+    repo = g.get_repo("Falbue/chenk-data")
     file_content = repo.get_contents("data.txt").decoded_content
     with open("data.txt", "wb") as f:
         f.write(file_content)
@@ -353,31 +382,6 @@ def update_chenkgpt():
         content=new_contents,
         sha=file.sha
     )
-
-    # путь к рабочему столу
-    desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-    # имя новой папки
-    folder_name = 'ChenkGPT'
-    # полный путь к новой папке
-    new_folder_path = os.path.join(desktop_path, folder_name)
-
-    # проверяем, существует ли уже папка
-    if not os.path.exists(new_folder_path):
-        # создание новой папки
-        os.mkdir(new_folder_path)
-    else:
-        print(f"Папка {folder_name} уже существует на рабочем столе.")
-
-    repo = g.get_repo('Falbue/ChenkGPT')
-    releases = repo.get_releases()
-    latest_release = releases[0]
-
-    for asset in latest_release.get_assets():
-        if asset.name.endswith(".exe"):
-            file_url = asset.browser_download_url
-            r = requests.get(file_url)
-            with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
-                f.write(r.content)
 
     # путь к exe файлу на рабочем столе
     path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/installer.exe"
@@ -701,15 +705,15 @@ text_chat = Text(
     height=1,
     wrap="word",
     font=("Arial", font_size),
-    padx = 5,
+    padx = 20,
     # state='disabled',
     bg=bg_color,
     fg=fg_color,
-    relief='solid',
+    relief='flat',
     border = 1, 
     selectbackground="#87CEFA")
 
-frame_chat.pack(padx=(20, 0), fill=BOTH, expand=True)
+frame_chat.pack(fill=BOTH, expand=True)
 text_chat.config(state='disabled',fg=bg_color_dark)
 
 # создаем слайдер для текст чата
@@ -733,34 +737,34 @@ expand_button_frame = Frame(frame_root_chat, bg = bg_color_dark)
 expand_button = create_button(expand_button_frame, text=expand_button_text, command=expand_text_input)
 expand_button.config(font=("Arial", 10,"bold"))
 
-# создаем окно ввода сообщений
-message_input = Text(
-    frame_root_chat,
-    wrap="word",
-    height=3,
-    font=("Arial", font_size),
-    padx = 5,
-    bg=bg_color,
-    fg=fg_color,
-    relief = 'solid', 
-    border = 1)
+
 
 
 
 expand_button_frame.pack(fill ='x')
 expand_button.pack(side=RIGHT, padx=20)
 # устанавливаем параметры для окна ввода сообщений и добавляем на главное окно
-message_input.pack(fill='x', padx=20)
+
 
 
 frame_btn = Frame(frame_root_chat,height=40)
+# создаем окно ввода сообщений
+message_input = Text(
+    frame_btn,
+    wrap="word",
+    height=2,
+    font=("Arial", font_size),
+    padx = 5,
+    width=10,
+    bg=bg_color,
+    fg=fg_color,
+    relief = 'solid', )
 frame_btn.config(bg=bg_color_dark)
-frame_btn.pack(fill='x', pady=20, padx=20)
 
 
 # создаем кнопки с помощью функции
-btn_settings = create_button(frame_btn, 'Настройки', settings)
-btn_send = create_button(frame_btn, 'Отправить', btn_send_command)
+btn_settings = create_button(frame_btn, '\u2699', settings)
+btn_send = create_button(frame_btn, '→', btn_send_command)
 btn_clear_chat = create_button(frame_btn, 'Очистить', clear_chat)
 
 # устанавливаем фокус на окно ввода сообщений
@@ -768,9 +772,12 @@ message_input.focus()
 # устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
 message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
 
-btn_settings.place(relx=0, rely=0.5, anchor=W)
-btn_send.place(relx=0.5, rely=0.5, anchor=CENTER)
-btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
+btn_settings.pack(side=LEFT)
+message_input.pack(side='left', fill='both', expand=True, padx=5)
+btn_send.pack(side=LEFT)
+
+frame_btn.pack(fill='x', pady=5, padx=20)
+# btn_clear_chat.place(relx=1, rely=0.5, anchor=E)
 
 
 
@@ -911,7 +918,6 @@ label_api_key = label_design(login_frame, text='API ключ:')
 label_api_key.pack()
 entry_api_key = entry_design(login_frame)
 entry_api_key.pack(pady=10)
-
 
 # создаем кнопку для отправки данных
 button_submit_login = create_button(root_login, text='Зарегистрироваться', command=save_data)
