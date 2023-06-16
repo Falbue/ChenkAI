@@ -5,6 +5,7 @@ from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
 import time
 import requests
+import threading
 
 import openai
 from github import Github
@@ -46,6 +47,9 @@ text_error = ''
 version = '0.9.0'
 latest_version = '1.0.0'
 online = ''
+
+question = ''
+answer = ''
 
 welcome_text = f"""Привет. Это ChenkGPT
 
@@ -134,42 +138,16 @@ def delete_data(filename):
 
 
 
-
-# функция, которая вызывается при нажатии кнопки "Отправить"
-def btn_send_command():
-    global text_error
-    try:
-        text_chat.config(bg=bg_color, fg=fg_color)
-        check = text_chat.get("1.0", END).strip('\n')
-        if check == welcome_text:
-            text_chat.configure(state="normal")
-            text_chat.delete("1.0", END)
-            text_chat.configure(state="disabled")
-        question = message_input.get("1.0", END).strip('\n')
-        message_input.delete("1.0", END)
-        print("User: " + question)
-        text_chat.configure(state="normal")
-        text_chat.insert(END, '\n')
-        text_chat.insert(END, user + ": ", "bold")
-        text_chat.insert(END, question, "user")
-        text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
-        text_chat.insert(END, '\n')
-        text_chat.configure(state="disabled")
-        text_chat.tag_configure("bold", font=("Arial", font_size, "bold"))
-        text_chat.configure(state="normal")
-        text_chat.insert(END, '\n')
-        text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
-        text_chat.configure(state="disabled")
-        text_chat.see(END)
-        root_chat.update()
-        completion = openai.ChatCompletion.create(
+def send_api():
+    global answer
+    completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
-        )
-        print(completion.choices[0].message.content)
-        answer = completion.choices[0].message.content
+            )
+    print(completion.choices[0].message.content)
+    answer = completion.choices[0].message.content
 
-        def show_text_slowly(text):
+    def show_text_slowly(text):
             global delay
             text_chat.configure(state="normal")
             text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
@@ -189,16 +167,50 @@ def btn_send_command():
                 root_chat.update()
         
                 if char != "```" and in_quotes:       # меняем цвет только для текста в кавычках
-                    text_chat.tag_configure("quote", background="black", foreground = 'white')
+                    text_chat.tag_configure("quote", background="black", foreground = 'white', selectbackground="#87CEFA")
                 else:
-                    text_chat.tag_configure("quote", foreground="white")
+                    text_chat.tag_configure("quote", foreground="white", selectbackground="#87CEFA")
             
                 root_chat.after(delay)
     
             text_chat.insert(END, '\n', "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
-        show_text_slowly(answer)
+    show_text_slowly(answer)
+    message_input.configure(state = 'normal')
+
+
+
+# функция, которая вызывается при нажатии кнопки "Отправить"
+def btn_send_command():
+    global text_error, question
+    try:
+        text_chat.config(bg=bg_color, fg=fg_color)
+        check = text_chat.get("1.0", END).strip('\n')
+        if check == welcome_text:
+            text_chat.configure(state="normal")
+            text_chat.delete("1.0", END)
+            text_chat.configure(state="disabled")
+        question = message_input.get("1.0", END).strip('\n')
+        message_input.delete("1.0", END)
+        message_input.config(state = 'disabled')
+        print("User: " + question)
+        text_chat.configure(state="normal")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, user + ": ", "bold")
+        text_chat.insert(END, question, "user")
+        text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
+        text_chat.insert(END, '\n')
+        text_chat.configure(state="disabled")
+        text_chat.tag_configure("bold", font=("Arial", font_size, "bold"))
+        text_chat.configure(state="normal")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
+        text_chat.configure(state="disabled")
+        text_chat.see(END)
+        root_chat.update()
+        thread = threading.Thread(target=send_api)
+        thread.start() 
         text_chat.see(END)
         root_chat.update()
     except Exception as e:
@@ -607,6 +619,7 @@ def check_data():
 
                 decrypt(text_api, shift)
                 api = decrypt(text_api, shift)
+                print (api)
                 if username_sign == login and password_sign == passw:
                     success_message_sign.config(text='Авторизация успешна')
                     openai.api_key = api
@@ -800,7 +813,7 @@ btn_delay = create_button(
 label_delay.grid(row=0, column=0, padx=5, pady=5)
 btn_delay.grid(row=0, column=1, padx=5, pady=10)
 
-btn_clear_chat = create_button(settings_window, 'Очистить', clear_chat)
+btn_clear_chat = create_button(settings_window, 'Очистить чат', clear_chat)
 
 btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
