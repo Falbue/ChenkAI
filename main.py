@@ -11,6 +11,7 @@ import threading
 import openai
 from github import Github
 
+game_over = False
 # переменные для цветовой гаммы и размера шрифта
 bg_color = "#FFFFFF"
 fg_color = "#000000"
