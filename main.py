@@ -616,7 +616,6 @@ def check_data():
                 text_api = lines[i+2].replace('api: ','').strip()
                 user = lines[i+3].replace('user: ','').strip()
                 bot = lines[i+4].replace('bot: ','').strip()
-                version = lines[i+5].replace('version: ','').strip()
 
                 decrypt(text_api, shift)
                 api = decrypt(text_api, shift)
