@@ -244,15 +244,16 @@ def colors_objects(): # объекты, которые меняют цвета
     expand_button_frame.configure(bg = bg_color_dark)
 
 
-
     btn_color.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
     btn_clear.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
     btn_font_size.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
+    btn_sapper.config(bg = bg_color, fg = fg_color, activebackground = bg_color_dark)
     btn_close.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark)
     btn_delay.configure(bg=bg_color, fg=fg_color)
     label_delay.configure(fg = fg_color, bg = bg_color_dark)
     btn_update.configure(fg = fg_color, bg = bg_color, activebackground=bg_color_dark)
 
+    setting_frame.config(bg = bg_color_dark)
     frame_button_color.configure(bg=bg_color)
     settings_window.configure(bg=bg_color_dark)
     frame_button_color.configure(bg=bg_color_dark)
