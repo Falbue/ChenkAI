@@ -1,6 +1,7 @@
 import os
 from tkinter import *
 import tkinter as tk
+import random
 from tkinter.colorchooser import askcolor
 from tkinter.simpledialog import askinteger
 import time
