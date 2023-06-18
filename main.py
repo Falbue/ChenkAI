@@ -46,7 +46,7 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version = '0.9.0'
+version = '1.1.4'
 latest_version = '1.0.0'
 online = ''
 
