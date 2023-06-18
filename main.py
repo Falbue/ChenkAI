@@ -46,7 +46,7 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version = '1.1.4'
+version = '1.1.3'
 latest_version = '1.0.0'
 online = ''
 
@@ -842,7 +842,6 @@ text_chat = Text(
     relief='flat',
     border = 1, 
     selectbackground="#87CEFA")
-text_chat.tag_bind("quote", "<Button-1>", copy_quote)
 
 frame_chat.pack(fill=BOTH, expand=True)
 text_chat.config(state='disabled',fg=bg_color_dark)
