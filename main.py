@@ -139,7 +139,6 @@ def delete_data(filename):
         print(f"File {filename} does not exist")
 
 
-
 def send_api():
     global answer
     completion = openai.ChatCompletion.create(
@@ -843,9 +842,12 @@ text_chat = Text(
     relief='flat',
     border = 1, 
     selectbackground="#87CEFA")
+text_chat.tag_bind("quote", "<Button-1>", copy_quote)
 
 frame_chat.pack(fill=BOTH, expand=True)
 text_chat.config(state='disabled',fg=bg_color_dark)
+
+lbl_copy = Label(text='Текст скопирован')
 
 # создаем слайдер для текст чата
 scrollbar_chat = Scrollbar(
@@ -910,17 +912,19 @@ settings_window = Frame(root_chat)
 settings_window.pack(side = LEFT, fill='y')
 settings_window.pack_propagate(0)
 
-btn_font_size = create_button(settings_window, text="Изменить размер шрифта", command=change_font_size)
-btn_font_size.pack(side=TOP, padx=5, pady=5)
+setting_frame = Frame(settings_window, bg=bg_color)
 
-frame_button_color = Frame(settings_window, height=30)
+btn_font_size = create_button(setting_frame, text="Изменить размер шрифта", command=change_font_size)
+btn_font_size.pack(side=TOP, padx=5, pady=5, fill=X)
+
+frame_button_color = Frame(setting_frame, height=30)
 btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
 btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
 btn_color.grid(row=0, column=0, padx=5, pady=5)
 btn_clear.grid(row=0, column=1, padx=5, pady=5)
 
     
-frame_delay = Frame(settings_window)
+frame_delay = Frame(setting_frame)
 label_delay = Label(
   frame_delay,
   text = "Анимация текста:",
@@ -932,7 +936,9 @@ btn_delay = create_button(
 label_delay.grid(row=0, column=0, padx=5, pady=5)
 btn_delay.grid(row=0, column=1, padx=5, pady=10)
 
-btn_clear_chat = create_button(settings_window, 'Очистить чат', clear_chat)
+btn_clear_chat = create_button(setting_frame, 'Очистить чат', clear_chat)
+
+btn_sapper = create_button(setting_frame, 'Сапёр', sapper)
 
 btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
@@ -947,9 +953,11 @@ btn_update = create_button(settings_window, text='Обновить', command = u
 
 
 # Установка фреймов
-frame_button_color.pack(side=TOP, padx=5, pady=5)
-frame_delay.pack(padx=5, pady=5)
-btn_clear_chat.pack()
+setting_frame.pack()
+frame_button_color.pack(side=TOP, padx=5, pady=5, fill=X)
+frame_delay.pack(padx=5, pady=5, fill=X)
+btn_clear_chat.pack(pady=10, fill=X)
+btn_sapper.pack(pady = 10, fill=X)
 
 
 
