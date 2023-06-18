@@ -430,7 +430,7 @@ def settings():
         lbl_news_update.config(text = 'Доступно обновление!')
         lbl_news_update.pack(side=BOTTOM)
     else:
-        lbl_news_update.config(text = 'Обновлений не найдено')
+        lbl_news_update.config(text = 'Обновлений не найдено', bg = bg_color)
         lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} равны {version}")
     
