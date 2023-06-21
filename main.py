@@ -220,11 +220,12 @@ def send_api():
             line_number = 0
             for i, char in enumerate(text):
                 line_number += 1
-                if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``": # проверяем наличие тройных кавычек
-                    in_triple_quotes = not in_triple_quotes # меняем значение переменной на противоположное при встрече тройных кавычек
+                if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``":
+                    in_triple_quotes = not in_triple_quotes
+                    text_chat.insert("end", "\n")  # добавляем перенос строки
                     if in_triple_quotes:
                         print(line_number)
-                        text_chat.tag_add("quote", "end")  # добавляем тег "quote", если находимся внутри тройных кавычек
+                        text_chat.tag_add("quote", "end")  # добавляем тег "quote" на следующую строку
                     else:
                         text_chat.tag_remove("quote", "end-1c")  # удаляем тег "quote", если уже вышли за пределы тройных кавычек
                 text_chat.insert(END, char, "bot" if not in_quotes and not in_triple_quotes else "quote")  # проверяем значение переменных и добавляем соответствующий тег
