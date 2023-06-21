@@ -37,7 +37,10 @@ g = max(g - 30, 0)
 b = max(b - 30, 0)
 bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
-font_size = 12
+font_size = 16
+options_size = [8, 10 , 12, 14, 16, 18, 20]
+fonts = "Arial"
+options = ["Arial", "Consolas", "Calibri", "Courier"]
 
 
 delay = 25
@@ -46,7 +49,7 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version = '1.1.5'
+version = '1.1.6'
 latest_version = '1.0.0'
 online = ''
 
