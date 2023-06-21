@@ -880,14 +880,15 @@ text_chat = Text(
     frame_chat,
     height=1,
     wrap="word",
-    font=("Arial", font_size),
+    font=(fonts, font_size-4),
     padx = 20,
-    # state='disabled',
+    pady = (20),
     bg=bg_color,
     fg=fg_color,
     relief='flat',
     border = 1, 
-    selectbackground="#87CEFA")
+    selectbackground="#87CEFA",
+    cursor="arrow")
 
 frame_chat.pack(fill=BOTH, expand=True)
 text_chat.config(state='disabled',fg=bg_color_dark)
@@ -918,7 +919,7 @@ message_input = Text(
     frame_btn,
     wrap="word",
     height=2,
-    font=("Arial", font_size),
+    font=(fonts, font_size-4),
     padx = 5,
     width=10,
     bg=bg_color,
@@ -938,7 +939,7 @@ btn_send = create_button(frame_btn, '→', btn_send_command)
 
 
 expand_button = create_button(frame_btn, text=expand_button_text, command=expand_text_input)
-expand_button.config(font=("Arial", 16,"bold"))
+expand_button.config(font=(fonts, 16,"bold"))
 expand_button.pack(side=LEFT, padx = 5)
 
 btn_settings.pack(side=LEFT)
