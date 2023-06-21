@@ -1164,5 +1164,20 @@ entry_confirm_password.bind('<Button-1>', clear_error_message)
 entry_api_key.bind('<Button-1>', clear_error_message)
 
 
+
+frame_info = Frame(root_login)
+
+lbl_info = Label(
+    frame_info,
+    text = info,
+    font = (fonts, font_size-4),
+    anchor="e",
+    wraplength=390, justify=LEFT)
+lbl_info.pack()
+
+btn_exit = create_button(frame_info, text = "Выйти", command = close_info)
+btn_exit.pack(side=BOTTOM, fill='x', pady=5, padx=5)
+
+
 # запускаем графический интерфейс
 root_chat.mainloop()
