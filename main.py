@@ -347,7 +347,7 @@ def change_colors():
     b = max(b - 30, 0)
     bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
-    colors_objects()
+    mutable_objects()
 
 
 def clear_colors():
