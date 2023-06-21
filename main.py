@@ -462,8 +462,6 @@ def update_chenkgpt():
     os.startfile(path)
     # ждем, пока файл откроется
     time.sleep(1)
-    # находим идентификатор окна файла
-    # window = pywinauto.Desktop(backend="uia").window(title=path)
     try:
         # выводим окно файла по верх всех окон
         window.set_foreground()
@@ -494,7 +492,7 @@ def settings():
         lbl_news_update.config(text = 'Доступно обновление!')
         lbl_news_update.pack(side=BOTTOM)
     else:
-        lbl_news_update.config(text = 'Обновлений не найдено', bg = bg_color)
+        lbl_news_update.config(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} равны {version}")
     
@@ -543,25 +541,7 @@ def expand_text_input():
 
 
 
-def entry_design(frame):
-    entry = Entry(
-        frame,
-        font=("Arial", 16),
-        bg='white',
-        fg=fg_color,
-        relief='solid',
-        border=1,
-        highlightbackground="black"
-    )
-    return entry
 
-def label_design(frame, text):
-    label = Label(
-        frame,
-        text=text,
-        font=('Arial',14)
-        )
-    return label
 
 
 def check_duplicate_login(login):
