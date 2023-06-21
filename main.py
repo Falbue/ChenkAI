@@ -1055,35 +1055,38 @@ btn_sapper.pack(pady = 10, fill=X)
 
 
 
-
+# Регистрация------------------
 root_login = Frame(root_chat)
-root_login.pack(side = RIGHT, fill=BOTH, expand=YES)
+root_login.pack(side = RIGHT, fill=BOTH, expand=YES)###########################################
+# frame_root_chat.pack(fill=BOTH, expand=YES)
 shift_frame = Frame(root_login)
 
 btn_sign = Button(
     shift_frame,
     text='Войти',
-    font=("Arial", 16),
+    font=(fonts, 16),
     relief = 'solid',
     border = 0,
     state = 'disabled',
     command = sign)
 shift_text = Label(
     shift_frame,
-    font=("Arial", 16),
+    font=(fonts, 16),
     text=' / ')
 btn_login = Button(
     shift_frame,
     text='Регистрация',
-    font=("Arial", 16),
+    font=(fonts, 16),
     relief = 'solid',
     border = 0,
     command = login)
+btn_help = create_button(shift_frame,text = "?", command = open_help)
 
 btn_sign.pack(side=LEFT)
 shift_text.pack(side=LEFT)
 btn_login.pack(side=LEFT)
-shift_frame.pack(side="top", anchor="nw")
+btn_help.pack(side = RIGHT, padx = (0, 5))
+shift_frame.pack(side="top", anchor="nw", fill='x')
 
 
 sign_frame = Frame(root_login)
