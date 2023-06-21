@@ -359,19 +359,24 @@ def clear_colors():
   fg_color = "#000000"
   bg_color_dark = 'gray90'
 
-  colors_objects()
+  mutable_objects()
 
 
 
 # функция для изменения размера шрифта
-def change_font_size():
+def select_font_size(value_size):
     global font_size
-    font_size = askinteger("Изменить размер шрифта", "Введите новый размер шрифта:", initialvalue=font_size)
-    text_chat.tag_configure("user", font=("Arial", font_size))
-    text_chat.tag_configure("bot", font=("Arial", font_size))
-    text_chat.update()
-    message_input.configure(font=("Arial", font_size))
+    font_size = value_size
+    print(font_size)
+    mutable_objects()
+    
 
+def select_fonts(value):
+    global fonts
+    fonts = value
+    print(fonts)
+    mutable_objects()
+    
 
 
 def compare_versions(version, latest_version):
