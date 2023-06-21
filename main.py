@@ -235,7 +235,7 @@ def send_api():
                 
                 root_chat.after(delay)
 
-            text_chat.insert(END, '\n', "bot")
+            text_chat.insert(END, '\n\n', "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
     show_text_slowly(answer)
