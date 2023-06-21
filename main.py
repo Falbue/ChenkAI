@@ -69,22 +69,81 @@ welcome_text = f"""Привет. Это ChenkGPT
 Falbue <3
 version: """
 
+info = f'''Что это?
+
+ChenkGPT - это бот, созданный на основе api компании "openai"
+Модель, на которой работает ChenkGPT, аналогична модели ChatGPT
+
+Для чего предназначен ChenkGPT?
+
+ChenkGPT был создан, для студентов ЧэНКа, что бы облегчить создание сайтов, и написание кода
+Ботом так же можно пользоваться и дома, если Вам нужно
+
+Как пользоваться?
+
+Нужно зарегестрироваться или войти, и можно приступать к взаимодействию с Ботом
+
+
+
+По всем вопросом обращаться:
+chenkgpt@gmail.com'''
+
+
+def open_help():
+    login_frame.pack_forget()
+    sign_frame.pack_forget()
+    shift_frame.pack_forget()
+    button_submit_sign.pack_forget()
+    button_submit_login.pack_forget()
+
+    frame_info.pack(fill=BOTH, expand=True)
+
+def close_info():
+    frame_info.pack_forget()
+    shift_frame.pack(side="top", anchor="nw", fill='x')
+    sign()
+
 
 # настройка кнопок
 def create_button(frame, text, command):
     button = Button(
         frame,
         activebackground=bg_color_dark,
-        font=("Arial", 16),
+        font=(fonts, font_size),
         bg='white',
         fg=fg_color,
         text=text,
         command=command,
         relief='solid',
         border=1,
-        highlightbackground="black"
+        highlightbackground=fg_color
     )
+    button.bind("<Enter>", lambda event: button.config(bg=bg_color_dark))
+    button.bind("<Leave>", lambda event: button.config(bg=bg_color))
     return button
+
+def entry_design(frame):
+    entry = Entry(
+        frame,
+        font=(fonts, 16),
+        bg='white',
+        fg=fg_color,
+        relief='solid',
+        border=1,
+    )
+    entry.bind("<FocusIn>", lambda event: entry.config(bg=bg_color_dark))
+    entry.bind("<FocusOut>", lambda event: entry.config(bg=bg_color))
+    return entry
+
+def label_design(frame, text):
+    label = Label(
+        frame,
+        text=text,
+        font=('Arial',14)
+        )
+    return label
+
+
 
 # Определяем функцию для шифрования текста
 def encrypt(text_api, shift):
