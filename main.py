@@ -953,33 +953,74 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
 
 
-
-settings_window = Frame(root_chat)
+# Насройки------------------
+settings_window = Frame(root_chat, bg=bg_color_dark)
 settings_window.pack(side = LEFT, fill='y')
 settings_window.pack_propagate(0)
 
-setting_frame = Frame(settings_window, bg=bg_color)
+setting_frame = Frame(settings_window, bg=bg_color_dark)
 
-btn_font_size = create_button(setting_frame, text="Изменить размер шрифта", command=change_font_size)
-btn_font_size.pack(side=TOP, padx=5, pady=5, fill=X)
+frame_font_setting = Frame(setting_frame, bg = bg_color_dark)
+frame_font_setting.pack(fill=X)
+lbl_font = Label(
+    frame_font_setting,
+    bg = bg_color_dark,
+    fg =fg_color,
+    text = "Шрифт:",
+    font = (fonts, font_size, "bold")
+    )
+lbl_font.grid(row=0, column=0, padx=(0, 5), pady=5)
 
-frame_button_color = Frame(setting_frame, height=30)
+
+# Создаем переменную tk.StringVar
+var = StringVar()
+var.set(options[0])  # Задаем начальное значение
+# Создаем виджет OptionMenu
+option_menu = OptionMenu(frame_font_setting, var, *options, command=select_fonts,)
+option_menu.config(
+    font = (fonts, font_size),
+    relief='solid',
+    border=1,
+    bg = bg_color,
+    activebackground = bg_color_dark,
+    highlightbackground = 'black',
+    highlightthickness = 0)
+option_menu["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
+option_menu.grid(row=0, column=1, padx=5, pady=5)
+
+var_size = StringVar()
+var_size.set(options_size[4])
+
+option_menu_size = OptionMenu(frame_font_setting, var_size, *options_size, command=select_font_size)
+option_menu_size.config(
+    font = (fonts, font_size),
+    relief='solid',
+    border=1,
+    bg = bg_color,
+    activebackground = bg_color_dark, 
+    highlightbackground = 'black',
+    highlightthickness = 0)
+option_menu_size["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
+option_menu_size.grid(row=0, column=2, padx=5, pady=5)
+
+frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
 btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
 btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
-btn_color.grid(row=0, column=0, padx=5, pady=5)
+btn_color.grid(row=0, column=0, padx=(0, 5), pady=5)
 btn_clear.grid(row=0, column=1, padx=5, pady=5)
 
     
-frame_delay = Frame(setting_frame)
+frame_delay = Frame(setting_frame, bg=bg_color_dark)
 label_delay = Label(
   frame_delay,
+  bg = bg_color_dark,
   text = "Анимация текста:",
-  font=("Arial", 16,"bold"))
+  font=(fonts, 16,"bold"))
 btn_delay = create_button(
   frame_delay,
   text = delay_state,
   command = animations_text)
-label_delay.grid(row=0, column=0, padx=5, pady=5)
+label_delay.grid(row=0, column=0, padx=(0, 5), pady=5)
 btn_delay.grid(row=0, column=1, padx=5, pady=10)
 
 btn_clear_chat = create_button(setting_frame, 'Очистить чат', clear_chat)
