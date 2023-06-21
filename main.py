@@ -823,6 +823,7 @@ def sapper():
                 self.buttons[i][j].configure(text='🚩')
     root_sapper = tk.Tk()
     root_sapper.title('Minesweeper')
+    root_sapper.resizable(False, False)
     game = Minesweeper(root_sapper)
     root_sapper.mainloop()
 
