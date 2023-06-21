@@ -1033,16 +1033,16 @@ btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
 lbl_news_update = Label(
     settings_window, 
     text = '',
-    fg = bg_color_dark,
-    bg = bg_color,
-    font=("Arial", 16,"bold"))
+    fg = bg_color,
+    bg = bg_color_dark,
+    font=(fonts, font_size,"bold"))
 btn_update = create_button(settings_window, text='Обновить', command = update_chenkgpt)
 
 
 # Установка фреймов
 setting_frame.pack()
-frame_button_color.pack(side=TOP, padx=5, pady=5, fill=X)
-frame_delay.pack(padx=5, pady=5, fill=X)
+frame_button_color.pack(side=TOP, pady=5, fill=X)
+frame_delay.pack( pady=5, fill=X)
 btn_clear_chat.pack(pady=10, fill=X)
 btn_sapper.pack(pady = 10, fill=X)
 
