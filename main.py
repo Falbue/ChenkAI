@@ -1,3 +1,5 @@
+version = '1.1.7'
+
 import os
 from tkinter import *
 import tkinter as tk
@@ -17,7 +19,7 @@ bg_color = "#FFFFFF"
 fg_color = "#000000"
 
 # Данные для гитхаба
-token_git = 'klt_CxpoPFvnOs4zvMpUkWakMVlCBPC5KK0Fj3ET'
+token_git = 'klt_bpGFDtb4bwPdlm2FjM85HZXyGMvCAV0SIl6u'  # До первого сентября
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
@@ -49,7 +51,6 @@ delay_state = "ВКЛ"
 expand_button_text = "↑"
 
 text_error = ''
-version = '1.1.6'
 latest_version = '1.0.0'
 online = ''
 
@@ -118,8 +119,8 @@ def create_button(frame, text, command):
         border=1,
         highlightbackground=fg_color
     )
-    button.bind("<Enter>", lambda event: button.config(bg=bg_color_dark))
-    button.bind("<Leave>", lambda event: button.config(bg=bg_color))
+    button.bind("<Enter>", lambda event: button.configure(bg=bg_color_dark))
+    button.bind("<Leave>", lambda event: button.configure(bg=bg_color))
     return button
 
 def entry_design(frame):
@@ -131,8 +132,8 @@ def entry_design(frame):
         relief='solid',
         border=1,
     )
-    entry.bind("<FocusIn>", lambda event: entry.config(bg=bg_color_dark))
-    entry.bind("<FocusOut>", lambda event: entry.config(bg=bg_color))
+    entry.bind("<FocusIn>", lambda event: entry.configure(bg=bg_color_dark))
+    entry.bind("<FocusOut>", lambda event: entry.configure(bg=bg_color))
     return entry
 
 def label_design(frame, text):
@@ -203,12 +204,16 @@ def delete_data(filename):
 
 def send_api():
     global answer
-    completion = openai.ChatCompletion.create(
+    try:
+        completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
             )
-    print(completion.choices[0].message.content)
-    answer = completion.choices[0].message.content
+        print(completion.choices[0].message.content)
+        answer = completion.choices[0].message.content
+    except Exception as e:
+        answer = e
+
 
     def show_text_slowly(text):
             global delay
@@ -222,7 +227,6 @@ def send_api():
                 line_number += 1
                 if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``":
                     in_triple_quotes = not in_triple_quotes
-                    text_chat.insert("end", "\n")  # добавляем перенос строки
                     if in_triple_quotes:
                         print(line_number)
                         text_chat.tag_add("quote", "end")  # добавляем тег "quote" на следующую строку
@@ -235,7 +239,7 @@ def send_api():
                 
                 root_chat.after(delay)
 
-            text_chat.insert(END, '\n\n', "bot")
+            text_chat.insert(END, "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
     show_text_slowly(answer)
@@ -246,7 +250,7 @@ def send_api():
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
     global text_error, question
-    text_chat.config(bg=bg_color, fg=fg_color)
+    text_chat.configure(bg=bg_color, fg=fg_color)
     check = text_chat.get("1.0", END).strip('\n')
     if check == welcome_text:
         text_chat.configure(state="normal")
@@ -254,7 +258,7 @@ def btn_send_command():
         text_chat.configure(state="disabled")
     question = message_input.get("1.0", END).strip('\n')
     message_input.delete("1.0", END)
-    message_input.config(state = 'disabled')
+    message_input.configure(state = 'disabled')
     print("User: " + question)
     text_chat.configure(state="normal")
     text_chat.insert(END, '\n')
@@ -300,19 +304,19 @@ def mutable_objects(): # Изменяемые объекты
 
     btn_color.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
     btn_clear.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
-    btn_sapper.config(bg = bg_color, fg = fg_color, activebackground = bg_color_dark, font = (fonts, font_size))
+    btn_sapper.configure(bg = bg_color, fg = fg_color, activebackground = bg_color_dark, font = (fonts, font_size))
     btn_close.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
-    btn_delay.configure(bg=bg_color, fg=fg_color, font = (fonts, font_size))
+    btn_delay.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
     label_delay.configure(fg = fg_color, bg = bg_color_dark, font = (fonts, font_size, "bold"))
     btn_update.configure(fg = fg_color, bg = bg_color, activebackground=bg_color_dark, font = (fonts, font_size))
 
-    setting_frame.config(bg = bg_color_dark)
+    setting_frame.configure(bg = bg_color_dark)
     frame_font_setting.configure(bg = bg_color_dark)
     lbl_font.configure(fg = fg_color, bg = bg_color_dark, font = (fonts, font_size, "bold"))
-    option_menu.configure(bg = bg_color, activebackground = bg_color_dark, highlightbackground = 'black', border = 1, highlightthickness = 0, fg = fg_color, activeforeground = fg_color)
-    option_menu["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color,)
-    option_menu_size.configure(bg = bg_color, activebackground = bg_color_dark, highlightbackground = 'black', border = 1, highlightthickness = 0, fg = fg_color, activeforeground = fg_color)
-    option_menu_size["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color,)
+    option_menu.configure(bg = bg_color, activebackground = bg_color_dark, highlightbackground = 'black', border = 1, highlightthickness = 0, fg = fg_color, activeforeground = fg_color, font = (fonts,font_size))
+    option_menu["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color,)
+    option_menu_size.configure(bg = bg_color, activebackground = bg_color_dark, highlightbackground = 'black', border = 1, highlightthickness = 0, fg = fg_color, activeforeground = fg_color, font = (fonts,font_size))
+    option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color,)
     frame_button_color.configure(bg=bg_color_dark)
     settings_window.configure(bg=bg_color_dark)
     frame_button_color.configure(bg=bg_color_dark)
@@ -474,8 +478,8 @@ def update_chenkgpt():
 
  # добавим настройки окна
 def settings():
-    y = compare_versions(version, latest_version)
-    # y = -1
+    # y = compare_versions(version, latest_version)
+    y = 1
     print(y)
     global bg_color
     global fg_color
@@ -489,10 +493,10 @@ def settings():
     if y == -1:
         print(f"{latest_version} больше чем {version}")
         btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
-        lbl_news_update.config(text = 'Доступно обновление!')
+        lbl_news_update.configure(text = 'Доступно обновление!')
         lbl_news_update.pack(side=BOTTOM)
     else:
-        lbl_news_update.config(text = 'Обновлений не найдено')
+        lbl_news_update.configure(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
         print(f"{latest_version} равны {version}")
     
@@ -501,11 +505,11 @@ def animations_text():
 
     if (delay_state == "ВКЛ"):
       delay_state="ВЫКЛ"
-      btn_delay.config(text=delay_state)
+      btn_delay.configure(text=delay_state)
       delay = 0
     else:
       delay_state = "ВКЛ"
-      btn_delay.config(text=delay_state)
+      btn_delay.configure(text=delay_state)
       delay = 25
 
 def close_setting():
@@ -526,22 +530,13 @@ def expand_text_input():
     global expand_button_text
     if (expand_button_text == "↑"):
         expand_button_text = "↓"
-        expand_button.config(text = expand_button_text)
-        message_input.config(height=20)  # увеличиваем высоту окна ввода сообщений
+        expand_button.configure(text = expand_button_text)
+        message_input.configure(height=20)  # увеличиваем высоту окна ввода сообщений
 
     elif (expand_button_text == "↓"):
         expand_button_text = '↑'
-        expand_button.config(text = expand_button_text)
-        message_input.config(height=2)
-
-
-
-
-
-
-
-
-
+        expand_button.configure(text = expand_button_text)
+        message_input.configure(height=2)
 
 
 def check_duplicate_login(login):
@@ -575,7 +570,7 @@ def save_data():
     login = entry_username.get()
 
     if check_duplicate_login(login):
-        error_message_login.config(text='Пользователь с таким логином уже зарегистрирован')
+        error_message_login.configure(text='Пользователь с таким логином уже зарегистрирован')
         os.remove("data.txt")
         return
     passw = entry_password.get()
@@ -587,26 +582,26 @@ def save_data():
 
     # проверяем совпадение паролей
     if passw != confirm_password:
-        error_message_login.config(text='Пароли не совпадают')
+        error_message_login.configure(text='Пароли не совпадают')
         os.remove("data.txt")
         return
     # проверяем длину пароля
     if len(passw) < 5:
-        error_message_login.config(text='Пароль должен быть не короче 5 символов')
+        error_message_login.configure(text='Пароль должен быть не короче 5 символов')
         os.remove("data.txt")
         return
     # проверяем логин на английские символы
     if not all(c.isalpha() and ord(c) < 128 for c in login):
-        error_message_login.config(text='Логин может содержать только английские буквы')
+        error_message_login.configure(text='Логин может содержать только английские буквы')
         os.remove("data.txt")
         return
     # проверяем длину api ключа
     if len(api) < 40:
-        error_message_login.config(text='API ключ должен быть не короче 40 символов')
+        error_message_login.configure(text='API ключ должен быть не короче 40 символов')
         os.remove("data.txt")
         return
 
-    success_message_login.config(text='Регистрация прошла успешно')
+    success_message_login.configure(text='Регистрация прошла успешно')
     user = 'User'
     bot = 'Bot'
 
@@ -623,8 +618,6 @@ def save_data():
     root_login.pack_forget()
     frame_root_chat.pack(fill=BOTH, expand=YES)
     root_chat.resizable(True, True)
-
-
 
 
 def check_data():
@@ -665,7 +658,7 @@ def check_data():
                 api = decrypt(text_api, shift)
                 print (api)
                 if username_sign == login and password_sign == passw:
-                    success_message_sign.config(text='Авторизация успешна')
+                    success_message_sign.configure(text='Авторизация успешна')
                     openai.api_key = api
                     root_login.pack_forget()
                     frame_root_chat.pack(fill=BOTH, expand=YES)
@@ -678,30 +671,28 @@ def check_data():
                     return
                     
     except Exception as e:
-        error_message_sign.config(text='Неверный логин или пароль')
-    error_message_sign.config(text='Неверный логин или пароль')
+        error_message_sign.configure(text='Неверный логин или пароль')
+    error_message_sign.configure(text='Неверный логин или пароль')
     file.close()
     os.remove("data.txt")
 
 
-    
-
 def clear_error_message(event):
-    error_message_login.config(text='')
-    error_message_sign.config(text='')
+    error_message_login.configure(text='')
+    error_message_sign.configure(text='')
 
 
 def login():
-  btn_sign.config(state = 'normal')
-  btn_login.config(state = 'disabled')
+  btn_sign.configure(state = 'normal')
+  btn_login.configure(state = 'disabled')
   sign_frame.pack_forget()
   login_frame.pack(pady=20)
   button_submit_sign.pack_forget()
   button_submit_login.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 def sign():
-  btn_sign.config(state = 'disabled')
-  btn_login.config(state = 'normal')
+  btn_sign.configure(state = 'disabled')
+  btn_login.configure(state = 'normal')
   sign_frame.pack(pady=20)
   login_frame.pack_forget()
   button_submit_login.pack_forget()
@@ -725,7 +716,7 @@ def sapper():
                 row = []
                 for j in range(self.width):
                     button = tk.Button(self.master, width=2, bg='grey')
-                    button.config(font = ("Arial", 12, "bold"), width = 2)
+                    button.configure(font = ("Arial", 12, "bold"), width = 2)
                     button.grid(row=i, column=j)
                     button.bind('<Button-1>', lambda e, i=i, j=j: self.button_click(i, j))
                     button.bind('<Button-3>', lambda e, i=i, j=j: self.button_flag(i, j))
@@ -861,7 +852,7 @@ root_chat.title('ChenkGPT')
 root_chat.geometry('400x600')
 root_chat.wm_minsize(400, 600)
 root_chat.resizable(False, False)
-root_chat.config(bg=bg_color_dark)
+root_chat.configure(bg=bg_color_dark)
 # root_chat.bind("<Configure>", on_resize) Доделать
 
 screen_width = root_chat.winfo_screenwidth()
@@ -891,7 +882,7 @@ text_chat = Text(
     cursor="arrow")
 
 frame_chat.pack(fill=BOTH, expand=True)
-text_chat.config(state='disabled',fg=bg_color_dark)
+text_chat.configure(state='disabled',fg=bg_color_dark)
 
 lbl_copy = Label(text='Текст скопирован')
 
@@ -903,14 +894,13 @@ scrollbar_chat = Scrollbar(
      troughcolor = 'red')
 scrollbar_chat.pack(side=RIGHT, fill='y')
 # устанавливаем связь между слайдером и текстом чата
-scrollbar_chat.config(command=text_chat.yview)
+scrollbar_chat.configure(command=text_chat.yview)
 # устанавливаем параметры для текстового поля и добавляем на главное окно
-text_chat.config(yscrollcommand=scrollbar_chat.set)
+text_chat.configure(yscrollcommand=scrollbar_chat.set)
 # устанавливаем параметры для слайдера и добавляем на главное окно
 text_chat.pack(fill=BOTH, expand=True)
 expand_button_frame = Frame(frame_root_chat, bg = bg_color_dark)
 # создаем кнопку для изменения размера окна ввода сообщений
-
 
 
 frame_btn = Frame(frame_root_chat,height=40)
@@ -932,14 +922,14 @@ message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
 
 
 
-frame_btn.config(bg=bg_color_dark)
+frame_btn.configure(bg=bg_color_dark)
 # создаем кнопки с помощью функции
 btn_settings = create_button(frame_btn, '\u2699', settings)
 btn_send = create_button(frame_btn, '→', btn_send_command)
 
 
 expand_button = create_button(frame_btn, text=expand_button_text, command=expand_text_input)
-expand_button.config(font=(fonts, 16,"bold"))
+expand_button.configure(font=(fonts, 16,"bold"))
 expand_button.pack(side=LEFT, padx = 5)
 
 btn_settings.pack(side=LEFT)
@@ -953,7 +943,7 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
 
 
-# Насройки------------------
+# Настройки------------------
 settings_window = Frame(root_chat, bg=bg_color_dark)
 settings_window.pack(side = LEFT, fill='y')
 settings_window.pack_propagate(0)
@@ -977,7 +967,7 @@ var = StringVar()
 var.set(options[0])  # Задаем начальное значение
 # Создаем виджет OptionMenu
 option_menu = OptionMenu(frame_font_setting, var, *options, command=select_fonts,)
-option_menu.config(
+option_menu.configure(
     font = (fonts, font_size),
     relief='solid',
     border=1,
@@ -985,14 +975,14 @@ option_menu.config(
     activebackground = bg_color_dark,
     highlightbackground = 'black',
     highlightthickness = 0)
-option_menu["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
+option_menu["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
 option_menu.grid(row=0, column=1, padx=5, pady=5)
 
 var_size = StringVar()
 var_size.set(options_size[4])
 
 option_menu_size = OptionMenu(frame_font_setting, var_size, *options_size, command=select_font_size)
-option_menu_size.config(
+option_menu_size.configure(
     font = (fonts, font_size),
     relief='solid',
     border=1,
@@ -1000,7 +990,7 @@ option_menu_size.config(
     activebackground = bg_color_dark, 
     highlightbackground = 'black',
     highlightthickness = 0)
-option_menu_size["menu"].config(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
+option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
 option_menu_size.grid(row=0, column=2, padx=5, pady=5)
 
 frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
@@ -1050,11 +1040,6 @@ btn_sapper.pack(pady = 10, fill=X)
 
 
 
-
-
-
-
-
 # Регистрация------------------
 root_login = Frame(root_chat)
 root_login.pack(side = RIGHT, fill=BOTH, expand=YES)###########################################
@@ -1085,7 +1070,7 @@ btn_help = create_button(shift_frame,text = "?", command = open_help)
 btn_sign.pack(side=LEFT)
 shift_text.pack(side=LEFT)
 btn_login.pack(side=LEFT)
-btn_help.pack(side = RIGHT, padx = (0, 5))
+btn_help.pack(side = RIGHT, padx = (0, 1))
 shift_frame.pack(side="top", anchor="nw", fill='x')
 
 
@@ -1100,13 +1085,13 @@ entry_username_sign.pack(pady=10)
 label_password_sign = label_design(sign_frame, text='Пароль:')
 label_password_sign.pack(side=TOP)
 entry_password_sign = entry_design(sign_frame)
-entry_password_sign.config(show='*')
+entry_password_sign.configure(show='*')
 entry_password_sign.pack(pady=10)
 
 
 # создаем кнопку для отправки данных
 button_submit_sign = create_button(root_login, text='Войти', command=check_data)
-button_submit_sign.config()
+button_submit_sign.configure()
 button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
@@ -1134,13 +1119,13 @@ entry_username.pack(pady=10)
 label_password = label_design(login_frame, text='Пароль:')
 label_password.pack()
 entry_password = entry_design(login_frame)
-entry_password.config(show='*')
+entry_password.configure(show='*')
 entry_password.pack(pady=10)
 
 label_confirm_password = label_design(login_frame, text='Подтвердите пароль:')
 label_confirm_password.pack()
 entry_confirm_password = entry_design(login_frame)
-entry_confirm_password.config(show='*')
+entry_confirm_password.configure(show='*')
 entry_confirm_password.pack(pady=10)
 
 label_api_key = label_design(login_frame, text='API ключ:')
