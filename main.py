@@ -14,9 +14,10 @@ import openai
 from github import Github
 
 game_over = False
-# переменные для цветовой гаммы и размера шрифта
+
 bg_color = "#FFFFFF"
 fg_color = "#000000"
+bg_color_dark = 'gray90'
 
 # Данные для гитхаба
 token_git = 'klt_bpGFDtb4bwPdlm2FjM85HZXyGMvCAV0SIl6u'  # До первого сентября
@@ -32,12 +33,6 @@ api = ''
 user = ''
 bot = ''
 
-#Более тёмные объекты
-r, g, b = tuple(int(bg_color[i:i+2], 16) for i in (1, 3, 5))
-r = max(r - 30, 0)
-g = max(g - 30, 0)
-b = max(b - 30, 0)
-bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
 
 font_size = 16
 options_size = [8, 10 , 12, 14, 16, 18, 20]
@@ -190,16 +185,16 @@ def update_data(token, username, repo_name, file_name, content, commit_message):
         old_content = contents.decoded_content.decode()
         new_content = old_content + '\n' + content
         repo.update_file(contents.path, commit_message, new_content, contents.sha, branch="main")
-        print(f'{file_name} обновлеён в репозитории {repo_name}')
+        print(f'{file_name} обновлён в репозитории {repo_name}')
     except Exception as e:
         print(f'Ошибка обновления файла {file_name} в {repo_name} репозитории: {e}')
 
 def delete_data(filename):
     if os.path.exists(filename):
         os.remove(filename)
-        print(f"File {filename} deleted successfully")
+        print(f"Файл {filename} Успешно удалён")
     else:
-        print(f"File {filename} does not exist")
+        print(f"Файл {filename} не удалён")
 
 
 def send_api():
@@ -239,7 +234,7 @@ def send_api():
                 
                 root_chat.after(delay)
 
-            text_chat.insert(END, "bot")
+            # text_chat.insert(END, "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
     show_text_slowly(answer)
@@ -259,7 +254,7 @@ def btn_send_command():
     question = message_input.get("1.0", END).strip('\n')
     message_input.delete("1.0", END)
     message_input.configure(state = 'disabled')
-    print("User: " + question)
+    print("Пользватель задал вопрос")
     text_chat.configure(state="normal")
     text_chat.insert(END, '\n')
     text_chat.insert(END, user + ": ", "bold")
@@ -340,18 +335,18 @@ def change_colors():
     global bg_color
     global fg_color
     global bg_color_dark
-
     bg_color = askcolor()[1]
-    fg_color = "#FFFFFF" if ((int(bg_color[1:3], 16), int(bg_color[3:5], 16), int(bg_color[5:7], 16)) < (127, 127, 127)) else "#000000"
-
-    #Более тёмные объекты
-    r, g, b = tuple(int(bg_color[i:i+2], 16) for i in (1, 3, 5))
-    r = max(r - 30, 0)
-    g = max(g - 30, 0)
-    b = max(b - 30, 0)
-    bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
-
-    mutable_objects()
+    if bg_color == None:
+        print("Цвет не выбран")
+    else:
+        fg_color = "#FFFFFF" if ((int(bg_color[1:3], 16), int(bg_color[3:5], 16), int(bg_color[5:7], 16)) < (127, 127, 127)) else "#000000"
+        #Более тёмные объекты
+        r, g, b = tuple(int(bg_color[i:i+2], 16) for i in (1, 3, 5))
+        r = max(r - 30, 0)
+        g = max(g - 30, 0)
+        b = max(b - 30, 0)
+        bg_color_dark = f'#{r:02X}{g:02X}{b:02X}'
+        mutable_objects()
 
 
 def clear_colors():
@@ -371,14 +366,14 @@ def clear_colors():
 def select_font_size(value_size):
     global font_size
     font_size = value_size
-    print(font_size)
+    print(f'Выбран размер шрифта: {font_size}')
     mutable_objects()
     
 
 def select_fonts(value):
     global fonts
     fonts = value
-    print(fonts)
+    print(f"Выбран шрифт: {fonts}")
     mutable_objects()
     
 
@@ -392,10 +387,8 @@ def compare_versions(version, latest_version):
         elif v1_parts[i] > v2_parts[i]:
             return 1
     if len(v1_parts) < len(v2_parts):
-        print('1')
         return -1
     elif len(v1_parts) > len(v2_parts):
-        print('2')
         return 1
     else:
         return 0
@@ -480,7 +473,6 @@ def update_chenkgpt():
 def settings():
     # y = compare_versions(version, latest_version)
     y = 1
-    print(y)
     global bg_color
     global fg_color
     global font_size
@@ -491,14 +483,14 @@ def settings():
 
 
     if y == -1:
-        print(f"{latest_version} больше чем {version}")
+        print(f"Доступна новая версия: {latest_version}")
         btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
         lbl_news_update.configure(text = 'Доступно обновление!')
         lbl_news_update.pack(side=BOTTOM)
     else:
         lbl_news_update.configure(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
-        print(f"{latest_version} равны {version}")
+        print('Нет обновлений')
     
 def animations_text():
     global delay, delay_state
@@ -638,7 +630,6 @@ def check_data():
     latest_release = repo.get_latest_release()
     latest_version = latest_release.tag_name
     latest_version = latest_version[1:]
-    print(f"Последняя версия {latest_version}")
     # Сохранение содержимого в файл на локальном диске
     with open("data.txt", "wb") as f:
         f.write(file_content)
@@ -656,7 +647,6 @@ def check_data():
 
                 decrypt(text_api, shift)
                 api = decrypt(text_api, shift)
-                print (api)
                 if username_sign == login and password_sign == passw:
                     success_message_sign.configure(text='Авторизация успешна')
                     openai.api_key = api
@@ -667,7 +657,6 @@ def check_data():
                     os.remove("data.txt")
                     welcome_text = welcome_text + f"{version}"
                     clear_chat()
-                    print(version)
                     return
                     
     except Exception as e:
@@ -824,7 +813,7 @@ def sapper():
 try:
     os.remove("installer.exe")
 except:
-    print('Файл уже удалён')
+    print('Установщик уже удалён')
 
 
 
