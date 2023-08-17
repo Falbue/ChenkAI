@@ -204,7 +204,7 @@ def send_api():
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
             )
-        print(completion.choices[0].message.content)
+        print("Бот дал ответ")
         answer = completion.choices[0].message.content
     except Exception as e:
         answer = e
@@ -223,7 +223,6 @@ def send_api():
                 if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``":
                     in_triple_quotes = not in_triple_quotes
                     if in_triple_quotes:
-                        print(line_number)
                         text_chat.tag_add("quote", "end")  # добавляем тег "quote" на следующую строку
                     else:
                         text_chat.tag_remove("quote", "end-1c")  # удаляем тег "quote", если уже вышли за пределы тройных кавычек
@@ -231,10 +230,9 @@ def send_api():
                 text_chat.see("end")
                 root_chat.update()
                 text_chat.tag_configure("quote", background="black", foreground='white', selectbackground="#87CEFA")
-                
                 root_chat.after(delay)
 
-            # text_chat.insert(END, "bot")
+            text_chat.insert(END, "\n", "bot")
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
     show_text_slowly(answer)
