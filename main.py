@@ -20,7 +20,7 @@ fg_color = "#000000"
 bg_color_dark = 'gray90'
 
 # Данные для гитхаба
-token_git = 'klt_bpGFDtb4bwPdlm2FjM85HZXyGMvCAV0SIl6u'  # До первого сентября
+token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'  # До первого сентября
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
@@ -876,10 +876,11 @@ lbl_copy = Label(text='Текст скопирован')
 # создаем слайдер для текст чата
 scrollbar_chat = Scrollbar(
     frame_chat,
-     width=20,
-     background = 'red',
-     troughcolor = 'red')
+    width=10,
+    bg='red',
+    troughcolor='red')
 scrollbar_chat.pack(side=RIGHT, fill='y')
+scrollbar_chat.bind("<FocusIn>", lambda event: scrollbar_chat.configure(width = 20))
 # устанавливаем связь между слайдером и текстом чата
 scrollbar_chat.configure(command=text_chat.yview)
 # устанавливаем параметры для текстового поля и добавляем на главное окно
@@ -924,9 +925,6 @@ message_input.pack(side='left', fill='both', expand=True, padx=5)
 btn_send.pack(side=LEFT)
 
 frame_btn.pack(fill='x', padx=(0, 5), pady=5)
-
-
-
 
 
 
