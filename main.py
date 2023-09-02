@@ -1073,12 +1073,16 @@ label_username_sign = label_design(sign_frame, text='Логин:')
 label_username_sign.pack(side=TOP)
 entry_username_sign = entry_design(sign_frame)
 entry_username_sign.pack(pady=10)
+entry_username_sign.focus_set()
 
 label_password_sign = label_design(sign_frame, text='Пароль:')
 label_password_sign.pack(side=TOP)
 entry_password_sign = entry_design(sign_frame)
 entry_password_sign.configure(show='*')
 entry_password_sign.pack(pady=10)
+# добавляем обработчик события нажатия на клавишу enter для каждого текстового поля
+entry_username_sign.bind('<Return>', lambda event: entry_password_sign.focus())
+entry_password_sign.bind('<Return>', lambda event: check_data())
 
 
 # создаем кнопку для отправки данных
