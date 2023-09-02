@@ -206,8 +206,13 @@ def send_api():
             )
         print("Бот дал ответ")
         answer = completion.choices[0].message.content
+        message_input.configure(state = "normal")
     except Exception as e:
-        answer = e
+        answer = str(f'Произошла ошибка: {e}')
+        btn_send.configure(state="normal")
+        print(f"Произошла ошибка: {e}")
+        message_input.configure(state = "normal")
+    
 
 
     def show_text_slowly(text):
@@ -236,7 +241,8 @@ def send_api():
             text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
             text_chat.configure(state="disabled")
     show_text_slowly(answer)
-    message_input.configure(state = 'normal')
+    btn_send.configure(state="normal")
+
 
 
 
@@ -251,7 +257,8 @@ def btn_send_command():
         text_chat.configure(state="disabled")
     question = message_input.get("1.0", END).strip('\n')
     message_input.delete("1.0", END)
-    message_input.configure(state = 'disabled')
+    message_input.configure(state = "disabled")
+    btn_send.configure(state='disabled')
     print("Пользватель задал вопрос")
     text_chat.configure(state="normal")
     text_chat.insert(END, '\n')
