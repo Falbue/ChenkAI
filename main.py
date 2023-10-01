@@ -925,11 +925,11 @@ btn_send = create_button(frame_btn, '→', btn_send_command)
 
 expand_button = create_button(frame_btn, text=expand_button_text, command=expand_text_input)
 expand_button.configure(font=(fonts, 16,"bold"))
-expand_button.pack(side=LEFT, padx = 5)
+expand_button.pack(side=LEFT, padx = (5, 0))
 
-btn_settings.pack(side=LEFT)
-message_input.pack(side='left', fill='both', expand=True, padx=5)
-btn_send.pack(side=LEFT)
+btn_settings.pack(side=LEFT, padx = (5, 0))
+btn_send.pack(side=RIGHT)
+message_input.pack(side='right', fill='both', expand=True, padx=5)
 
 frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
@@ -937,11 +937,7 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
 # Настройки------------------
 settings_window = Frame(root_chat, bg=bg_color_dark)
-settings_window.pack(side = LEFT, fill='y')
-settings_window.pack_propagate(0)
-
 setting_frame = Frame(settings_window, bg=bg_color_dark)
-
 frame_font_setting = Frame(setting_frame, bg = bg_color_dark)
 frame_font_setting.pack(fill=X)
 lbl_font = Label(
@@ -1035,7 +1031,7 @@ btn_sapper.pack(pady = 10, fill=X)
 # Регистрация------------------
 root_login = Frame(root_chat)
 root_login.pack(side = RIGHT, fill=BOTH, expand=YES)###########################################
-# frame_root_chat.pack(fill=BOTH, expand=YES)
+# frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
 shift_frame = Frame(root_login)
 
 btn_sign = Button(
