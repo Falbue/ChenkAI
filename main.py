@@ -15,6 +15,8 @@ from github import Github
 
 game_over = False
 
+active_setting = True
+
 bg_color = "#FFFFFF"
 fg_color = "#000000"
 bg_color_dark = 'gray90'
@@ -483,7 +485,7 @@ def settings():
     global font_size
 
     frame_root_chat.pack_forget()
-    settings_window.pack(fill=BOTH, expand=YES)
+    settings_window.pack(fill=BOTH, expand=Y)
     root_chat.resizable(False, False)
 
 
@@ -510,8 +512,8 @@ def animations_text():
       delay = 25
 
 def close_setting():
-    frame_root_chat.pack(fill=BOTH, expand=YES)
     settings_window.pack_forget()
+    frame_root_chat.pack(fill = BOTH, expand = True)
     root_chat.resizable(True, True)
     
 
@@ -822,15 +824,7 @@ except:
 
 
 
-def on_resize(event):
-    width = event.width
-    if width > max_width:
-        settings_window.configure(width=400)
-        btn_settings.place_forget()
-    else:
-        # settings_window.pack_forget()
-        settings_window.pack_propagate(0)
-        settings_window.configure(width=0)
+
               
 
 # -------------------------------------
@@ -845,21 +839,35 @@ except:
 root_chat.title('ChenkGPT')
 root_chat.geometry('400x600')
 root_chat.wm_minsize(400, 600)
-root_chat.resizable(False, False)
+# root_chat.resizable(False, False)
 root_chat.configure(bg=bg_color_dark)
-# root_chat.bind("<Configure>", on_resize) Доделать
 
-screen_width = root_chat.winfo_screenwidth()
-max_width = int(screen_width * 0.7)
 
+
+
+def on_resize(event):
+    global active_setting
+    root_chat.update_idletasks()
+    screen_width = root_chat.winfo_screenwidth()
+    max_width = int(screen_width * 0.7)
+    width = root_chat.winfo_width()
+    if width > max_width:
+        btn_settings.pack_forget()
+        settings_window.pack(side = LEFT, fill=BOTH)
+        settings_window.configure(width = 350)
+        btn_close.pack_forget()
+    else:
+        # close_setting()
+        btn_settings.pack(side=LEFT, padx = (5, 0))
+        btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+
+if active_setting == False: # менять на тру, что бы работало
+    root_chat.bind("<Configure>", on_resize)
 
 frame_root_chat = Frame(root_chat, bg = bg_color_dark)
 
 
-
-
 frame_chat = Frame(frame_root_chat)
-
 # создаем текстовое поле для чата
 text_chat = Text(
     frame_chat,
