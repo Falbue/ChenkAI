@@ -9,9 +9,12 @@ from tkinter.simpledialog import askinteger
 import time
 import requests
 import threading
-
+from pygments.lexers import PythonLexer
+from pygments.token import Token
 import openai
 from github import Github
+from data.design_elements import *
+
 
 game_over = False
 
@@ -395,7 +398,7 @@ def update_chenkgpt():
     lines = contents.split("\n")
 
     # Изменение строки номер 5
-    lines[stroke+5] = f'version: {updating_vesion}'
+    lines[stroke+5] = f'version: {version}'
 
     # Объединение строк в новый контент файла
     new_contents = "\n".join(lines)
