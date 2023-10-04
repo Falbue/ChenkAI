@@ -249,7 +249,6 @@ def btn_send_command():
         text_chat.configure(state="disabled")
     question = message_input.get("1.0", END).strip('\n')
     message_input.delete("1.0", END)
-    message_input.configure(state = "disabled")
     btn_send.configure(state='disabled')
     print("Пользватель задал вопрос")
     text_chat.configure(state="normal")
