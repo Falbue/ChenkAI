@@ -39,7 +39,7 @@ bot = ''
 font_size = 16
 options_size = [8, 10 , 12, 14, 16, 18, 20]
 fonts = "Arial"
-options = ["Arial", "Consolas", "Calibri", "Courier"]
+options = ["Arial", "Consolas", "Calibri", "Courier", "Times New Roman", "Verdana", "Tahoma"]
 
 
 delay = 25
