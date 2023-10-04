@@ -467,8 +467,8 @@ def update_chenkgpt():
 
  # добавим настройки окна
 def settings():
-    # y = compare_versions(version, latest_version)
-    y = 1
+    y = compare_versions(version, latest_version)
+    # y = 1
     global bg_color
     global fg_color
     global font_size
