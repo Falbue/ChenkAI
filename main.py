@@ -925,11 +925,11 @@ message_input.bind('<<Modified>>', on_edit)
 
 frame_btn.configure(bg=bg_color_dark)
 # создаем кнопки с помощью функции
-btn_settings = create_button(frame_btn, '\u2699', settings)
-btn_send = create_button(frame_btn, '→', btn_send_command)
+btn_settings = button(frame_btn, '\u2699', settings)
+btn_send = button(frame_btn, '→', btn_send_command)
 
 
-expand_button = create_button(frame_btn, text=expand_button_text, command=expand_text_input)
+expand_button = button(frame_btn, text=expand_button_text, command=expand_text_input)
 expand_button.configure(font=(fonts, 16,"bold"))
 expand_button.pack(side=LEFT, padx = (5, 0))
 
@@ -988,8 +988,8 @@ option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), 
 option_menu_size.pack(side = RIGHT)
 
 frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
-btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
-btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
+btn_color = button(frame_button_color, text="Изменить цвет", command=change_colors)
+btn_clear = button(frame_button_color, text="Сбросить", command=clear_colors)
 btn_color.pack(side = LEFT)
 btn_clear.pack(padx=(10,0),side=RIGHT)
 
@@ -1000,18 +1000,18 @@ label_delay = Label(
   bg = bg_color_dark,
   text = "Анимация текста:",
   font=(fonts, 16,"bold"))
-btn_delay = create_button(
+btn_delay = button(
   frame_delay,
   text = delay_state,
   command = animations_text)
 label_delay.pack(side = LEFT)
 btn_delay.pack(side = RIGHT)
 
-btn_clear_chat = create_button(setting_frame, 'Очистить чат', clear_chat)
+btn_clear_chat = button(setting_frame, 'Очистить чат', clear_chat)
 
-btn_sapper = create_button(setting_frame, 'Сапёр', sapper)
+btn_sapper = button(setting_frame, 'Сапёр', sapper)
 
-btn_close = create_button(settings_window, text="Закрыть", command=close_setting)
+btn_close = button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
 
 lbl_news_update = Label(
@@ -1020,7 +1020,7 @@ lbl_news_update = Label(
     fg = bg_color,
     bg = bg_color_dark,
     font=(fonts, font_size,"bold"))
-btn_update = create_button(settings_window, text='Обновить', command = update_chenkgpt)
+btn_update = button(settings_window, text='Обновить', command = update_chenkgpt)
 
 
 # Установка фреймов
@@ -1059,7 +1059,7 @@ btn_login = Button(
     relief = 'solid',
     border = 0,
     command = login)
-btn_help = create_button(shift_frame,text = "?", command = open_help)
+btn_help = button(shift_frame,text = "?", command = open_help)
 
 btn_sign.pack(side=LEFT)
 shift_text.pack(side=LEFT)
@@ -1071,15 +1071,15 @@ shift_frame.pack(side="top", anchor="nw", fill='x')
 sign_frame = Frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
-label_username_sign = label_design(sign_frame, text='Логин:')
+label_username_sign = label(sign_frame, text='Логин:')
 label_username_sign.pack(side=TOP)
-entry_username_sign = entry_design(sign_frame)
+entry_username_sign = entry(sign_frame)
 entry_username_sign.pack(pady=10)
 entry_username_sign.focus_set()
 
-label_password_sign = label_design(sign_frame, text='Пароль:')
+label_password_sign = label(sign_frame, text='Пароль:')
 label_password_sign.pack(side=TOP)
-entry_password_sign = entry_design(sign_frame)
+entry_password_sign = entry(sign_frame)
 entry_password_sign.configure(show='*')
 entry_password_sign.pack(pady=10)
 # добавляем обработчик события нажатия на клавишу enter для каждого текстового поля
@@ -1088,7 +1088,7 @@ entry_password_sign.bind('<Return>', lambda event: check_data())
 
 
 # создаем кнопку для отправки данных
-button_submit_sign = create_button(root_login, text='Войти', command=check_data)
+button_submit_sign = button(root_login, text='Войти', command=check_data)
 button_submit_sign.configure()
 button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
@@ -1109,30 +1109,30 @@ sign_frame.pack(side=TOP, fill=BOTH, expand=True, pady=20)
 login_frame = Frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
-label_username = label_design(login_frame, text='Логин:')
+label_username = label(login_frame, text='Логин:')
 label_username.pack()
-entry_username = entry_design(login_frame)
+entry_username = entry(login_frame)
 entry_username.pack(pady=10)
 
-label_password = label_design(login_frame, text='Пароль:')
+label_password = label(login_frame, text='Пароль:')
 label_password.pack()
-entry_password = entry_design(login_frame)
+entry_password = entry(login_frame)
 entry_password.configure(show='*')
 entry_password.pack(pady=10)
 
-label_confirm_password = label_design(login_frame, text='Подтвердите пароль:')
+label_confirm_password = label(login_frame, text='Подтвердите пароль:')
 label_confirm_password.pack()
-entry_confirm_password = entry_design(login_frame)
+entry_confirm_password = entry(login_frame)
 entry_confirm_password.configure(show='*')
 entry_confirm_password.pack(pady=10)
 
-label_api_key = label_design(login_frame, text='API ключ:')
+label_api_key = label(login_frame, text='API ключ:')
 label_api_key.pack()
-entry_api_key = entry_design(login_frame)
+entry_api_key = entry(login_frame)
 entry_api_key.pack(pady=10)
 
 # создаем кнопку для отправки данных
-button_submit_login = create_button(root_login, text='Зарегистрироваться', command=save_data)
+button_submit_login = button(root_login, text='Зарегистрироваться', command=save_data)
 
 
 # создаем метку для вывода сообщений об ошибках или успехе
@@ -1158,7 +1158,7 @@ lbl_info = Label(
     wraplength=390, justify=LEFT)
 lbl_info.pack()
 
-btn_exit = create_button(frame_info, text = "Выйти", command = close_info)
+btn_exit = button(frame_info, text = "Выйти", command = close_info)
 btn_exit.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
