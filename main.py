@@ -872,6 +872,54 @@ message_input = Text(
 message_input.focus()
 # устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
 message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
+lexer = PythonLexer()
+# Создаем теги с разными свойствами, которые будем присваивать соответствующим типам токенов
+message_input.tag_config("blue_tag", foreground="#67d8ef")
+message_input.tag_config("yellow_tag", foreground='#e7c855')
+message_input.tag_config("red_tag", foreground='#f9245e')
+message_input.tag_config("green_tag", foreground='#a6e22b')
+message_input.tag_config("orange_tag", foreground='#fd8a22')
+message_input.tag_config("purple_tag", foreground='#ac80ff')
+message_input.tag_config("comment_tag", foreground="#808080")
+token_type_to_tag = {
+    Token.Keyword: "blue_tag", # ключевые слова
+    Token.Literal.String.Single: "yellow_tag", # цвет в ковычках
+    Token.Literal.String.Double: "yellow_tag",
+    Token.Comment.Single: "comment_tag", # комментарии
+    Token.Name.Builtin: "blue_tag", # встроенные функции
+    Token.Operator: "red_tag", # операторы
+    Token.Literal.Number.Integer: "purple_tag", # числа
+    Token.Name.Function: "green_tag",
+    Token.Literal.Number.Float: "purple_tag",
+    Token.Keyword.Constant: "purple_tag"
+}
+def get_text_coord(s: str, i: int):
+    """
+    Из индекса символа получить "координату" в виде "номер_строки_текста.номер_символа_в_строке"
+    """
+    for row_number, line in enumerate(s.splitlines(keepends=True), 1):
+        if i < len(line):
+            return f'{row_number}.{i}'
+        
+        i -= len(line)
+def on_edit(event):
+    # Удалить все имеющиеся теги из текста
+    for tag in message_input.tag_names():
+        message_input.tag_remove(tag, 1.0, tk.END)
+    
+    # Разобрать текст на токены
+    s = message_input.get(1.0, tk.END)
+    tokens = lexer.get_tokens_unprocessed(s)
+    
+    for i, token_type, token in tokens:
+        print(i, token_type, repr(token))  # Отладочный вывод - тут видно какие типы токенов выдаются
+        j = i + len(token)
+        if token_type in token_type_to_tag:
+            message_input.tag_add(token_type_to_tag[token_type], get_text_coord(s, i), get_text_coord(s, j))
+
+    # Сбросить флаг редактирования текста
+    message_input.edit_modified(0)
+message_input.bind('<<Modified>>', on_edit)
 
 
 
