@@ -897,7 +897,7 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 settings_window = Frame(root_chat, bg=bg_color_dark)
 setting_frame = Frame(settings_window, bg=bg_color_dark)
 frame_font_setting = Frame(setting_frame, bg = bg_color_dark)
-frame_font_setting.pack(fill=X)
+frame_font_setting.pack(fill=X,pady=(10,5))
 lbl_font = Label(
     frame_font_setting,
     bg = bg_color_dark,
@@ -905,7 +905,7 @@ lbl_font = Label(
     text = "Шрифт:",
     font = (fonts, font_size, "bold")
     )
-lbl_font.grid(row=0, column=0, padx=(0, 5), pady=5)
+lbl_font.pack(side = LEFT)
 
 
 # Создаем переменную tk.StringVar
@@ -922,7 +922,7 @@ option_menu.configure(
     highlightbackground = 'black',
     highlightthickness = 0)
 option_menu["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
-option_menu.grid(row=0, column=1, padx=5, pady=5)
+option_menu.pack(side=LEFT, padx=5)
 
 var_size = StringVar()
 var_size.set(options_size[4])
@@ -937,13 +937,13 @@ option_menu_size.configure(
     highlightbackground = 'black',
     highlightthickness = 0)
 option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
-option_menu_size.grid(row=0, column=2, padx=5, pady=5)
+option_menu_size.pack(side = RIGHT)
 
 frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
 btn_color = create_button(frame_button_color, text="Изменить цвет", command=change_colors)
 btn_clear = create_button(frame_button_color, text="Сбросить", command=clear_colors)
-btn_color.grid(row=0, column=0, padx=(0, 5), pady=5)
-btn_clear.grid(row=0, column=1, padx=5, pady=5)
+btn_color.pack(side = LEFT)
+btn_clear.pack(padx=(10,0),side=RIGHT)
 
     
 frame_delay = Frame(setting_frame, bg=bg_color_dark)
@@ -956,8 +956,8 @@ btn_delay = create_button(
   frame_delay,
   text = delay_state,
   command = animations_text)
-label_delay.grid(row=0, column=0, padx=(0, 5), pady=5)
-btn_delay.grid(row=0, column=1, padx=5, pady=10)
+label_delay.pack(side = LEFT)
+btn_delay.pack(side = RIGHT)
 
 btn_clear_chat = create_button(setting_frame, 'Очистить чат', clear_chat)
 
@@ -979,7 +979,7 @@ btn_update = create_button(settings_window, text='Обновить', command = u
 setting_frame.pack()
 frame_button_color.pack(side=TOP, pady=5, fill=X)
 frame_delay.pack( pady=5, fill=X)
-btn_clear_chat.pack(pady=10, fill=X)
+btn_clear_chat.pack(pady=5, fill=X)
 btn_sapper.pack(pady = 10, fill=X)
 
 
