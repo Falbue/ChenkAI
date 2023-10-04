@@ -821,7 +821,7 @@ except:
 # создаем главное окно
 root_chat = Tk()
 try:
-    icon = PhotoImage(file = "ico.png")
+    icon = PhotoImage(file = "data/imgico.png")
     root_chat.iconphoto(False, icon)
 except:
     print("Ошибка загрузки иконки")
