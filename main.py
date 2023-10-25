@@ -61,24 +61,8 @@ answer = ''
 with open("data/hello_text.txt", "r", encoding="utf-8") as file:
     welcome_text = file.read()
 
-info = f'''Что это?
-
-ChenkGPT - это бот, созданный на основе api компании "openai"
-Модель, на которой работает ChenkGPT, аналогична модели ChatGPT
-
-Для чего предназначен ChenkGPT?
-
-ChenkGPT был создан, для студентов ЧэНКа, что бы облегчить создание сайтов, и написание кода
-Ботом так же можно пользоваться и дома, если Вам нужно
-
-Как пользоваться?
-
-Нужно зарегестрироваться или войти, и можно приступать к взаимодействию с Ботом
-
-
-
-По всем вопросом обращаться:
-chenkgpt@gmail.com'''
+with open("data/info_text.txt", "r", encoding="utf-8") as file:
+    info = file.read()
 
 
 def open_help():
