@@ -780,12 +780,9 @@ frame_btn.configure(bg=bg_color_dark)
 # создаем кнопки с помощью функции
 btn_settings = button(frame_btn, '\u2699', settings)
 btn_send = button(frame_btn, '→', btn_send_command)
+expand_button = button(frame_btn, expand_button_text, expand_text_input)
 
-
-expand_button = button(frame_btn, text=expand_button_text, command=expand_text_input)
-expand_button.configure(font=(fonts, 16,"bold"))
 expand_button.pack(side=LEFT, padx = (5, 0))
-
 btn_settings.pack(side=LEFT, padx = (5, 0))
 btn_send.pack(side=RIGHT)
 message_input.pack(side='right', fill='both', expand=True, padx=5)
