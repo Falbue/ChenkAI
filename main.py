@@ -627,6 +627,19 @@ def sign():
   button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
+def copy_text():
+    selected_text = message_input.get("sel.first", "sel.last")
+    root_chat.clipboard_clear()
+    root_chat.clipboard_append(selected_text)
+def insert_text():
+    text = root_chat.clipboard_get()
+    message_input.insert(tk.END, text)
+def copy_text2():
+    selected_text = text_chat.get("sel.first", "sel.last")
+    root_chat.clipboard_clear()
+    root_chat.clipboard_append(selected_text)
+
+
 try:
     os.remove("installer.exe")
 except:
