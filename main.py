@@ -155,30 +155,30 @@ def send_api():
 
 
     def show_text_slowly(text):
-            global delay
-            text_chat.configure(state="normal")
-            text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
-            text_chat.insert(END, bot + ": ", "bold")
-            in_quotes = False
-            in_triple_quotes = False
-            line_number = 0
-            for i, char in enumerate(text):
-                line_number += 1
-                if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``":
-                    in_triple_quotes = not in_triple_quotes
-                    if in_triple_quotes:
-                        text_chat.tag_add("quote", "end")  # добавляем тег "quote" на следующую строку
-                    else:
-                        text_chat.tag_remove("quote", "end-1c")  # удаляем тег "quote", если уже вышли за пределы тройных кавычек
-                text_chat.insert(END, char, "bot" if not in_quotes and not in_triple_quotes else "quote")  # проверяем значение переменных и добавляем соответствующий тег
-                text_chat.see("end")
-                root_chat.update()
-                text_chat.tag_configure("quote", background="black", foreground='white', selectbackground="#87CEFA")
-                root_chat.after(delay)
+        global delay
+        text_chat.configure(state="normal")
+        text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
+        text_chat.insert(END, bot + ": ", "bold")
+        in_quotes = False
+        in_triple_quotes = False
+        line_number = 0
+        for i, char in enumerate(text):
+            line_number += 1
+            if char == "`" and i < len(text)-2 and text[i+1:i+3] == "``":
+                in_triple_quotes = not in_triple_quotes
+                if in_triple_quotes:
+                    text_chat.tag_add("quote", "end")  # добавляем тег "quote" на следующую строку
+                else:
+                    text_chat.tag_remove("quote", "end-1c")  # удаляем тег "quote", если уже вышли за пределы тройных кавычек
+            text_chat.insert(END, char, "bot" if not in_quotes and not in_triple_quotes else "quote")  # проверяем значение переменных и добавляем соответствующий тег
+            text_chat.see("end")
+            root_chat.update()
+            text_chat.tag_configure("quote", background="black", foreground='white', selectbackground="#87CEFA")
+            root_chat.after(delay)
 
-            text_chat.insert(END, "\n", "bot")
-            text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
-            text_chat.configure(state="disabled")
+        text_chat.insert(END, "\n", "bot")
+        text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
+        text_chat.configure(state="disabled")
     show_text_slowly(answer)
     btn_send.configure(state="normal")
 
