@@ -13,6 +13,7 @@ from pygments.lexers import PythonLexer
 from pygments.token import Token
 import openai
 from github import Github
+
 from data.design_elements import *
 from data.sapper import *
 
@@ -26,7 +27,7 @@ fg_color = "#000000"
 bg_color_dark = 'gray90'
 
 # Данные для гитхаба
-token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'  # До первого сентября
+token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
