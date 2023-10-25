@@ -5,8 +5,10 @@ from tkinter import *
 import tkinter as tk
 import threading
 import time
+from tqdm import tqdm
 
-token_git = 'klt_bpGFDtb4bwPdlm2FjM85HZXyGMvCAV0SIl6u'
+
+token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'
 shift = 4
 
 def decrypt(text_api, shift):
@@ -21,6 +23,7 @@ def decrypt(text_api, shift):
         else:
             result += char
     return result
+
 text_api = token_git
 text_api = decrypt(text_api, shift)
 token_git = text_api
@@ -45,21 +48,19 @@ def update():
     total_files = len(assets)
     downloaded_files = 0
 
-    for asset in latest_release.get_assets():
-        if asset.name.endswith(".exe"):
-            file_url = asset.browser_download_url
-            r = requests.get(file_url)
-            with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
-                f.write(r.content)
-                downloaded_files += 1
-                progress = f"Загрузка файлов: {downloaded_files}/{total_files}"
-                lbl_progress.config(text=progress)
-                btn_cancel.config(state=tk.DISABLED)
+    with tqdm(total=total_files, unit="file") as pbar:
+        for asset in latest_release.get_assets():
+            if asset.name.endswith(".exe"):
+                file_url = asset.browser_download_url
+                r = requests.get(file_url)
+                with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
+                    f.write(r.content)
+                    downloaded_files += 1
+                    pbar.update(1)
 
-                if downloaded_files == total_files:
-                    lbl_progress.config(text="Обновление завершено.")
-                    btn_run.pack(expand=True)
-                    btn_cancel.pack_forget()
+    lbl_progress.config(text="Обновление завершено.")
+    btn_run.pack(expand=True)
+    btn_cancel.pack_forget()
 
 def close():
     path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe"
@@ -68,10 +69,7 @@ def close():
     root.destroy()
 
 def cancel():
-    lbl_progress.config(text="Обновление отменено.")
-    btn_cancel.config(state=tk.DISABLED)
-    btn_run.pack(expand=True)
-    btn_cancel.pack_forget()
+    root.destroy()
 
 root = tk.Tk()
 root.geometry('300x200')
