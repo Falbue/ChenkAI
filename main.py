@@ -221,32 +221,28 @@ def btn_send_command():
 
 
 def mutable_objects(): # Изменяемые объекты
+    # Кнопки
+    def set_button_properties(button, bg_color, fg_color, bg_color_dark, fonts, font_size):
+        button.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font=(fonts, font_size))
+        button.bind("<Enter>", lambda event: button.configure(bg=bg_color_dark))
+        button.bind("<Leave>", lambda event: button.configure(bg=bg_color))
+    buttons = [btn_send, btn_clear, btn_sapper, btn_close, btn_delay, btn_update, btn_settings, btn_clear_chat, btn_color, expand_button]
+    for button in buttons:
+        set_button_properties(button, bg_color, fg_color, bg_color_dark, fonts, font_size)
+
     text_chat.configure(bg=bg_color, fg=fg_color, font = (fonts, font_size-4))
     text_chat.tag_configure("quote", font = (fonts, font_size-4))
     text_chat.tag_configure("bold", font = (fonts, font_size-4, "bold"))
     message_input.configure(bg=bg_color, fg=fg_color, font = (fonts, font_size-4))
     scrollbar_chat.configure(background = bg_color, troughcolor = bg_color_dark)
 
-    btn_send.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color, font = (fonts, font_size))
-    btn_settings.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color, font = (fonts, font_size))
-    btn_clear_chat.configure(bg=bg_color, activebackground=bg_color_dark, fg=fg_color, font = (fonts, font_size))
-    expand_button.configure(bg = bg_color, activebackground = bg_color_dark, fg = fg_color, font = (fonts, font_size))
-
     root_chat.configure(bg=bg_color_dark)
 
     frame_root_chat.configure(bg = bg_color_dark)
     frame_btn.configure(bg=bg_color_dark)
     frame_chat.configure(bg=bg_color_dark)
-    expand_button_frame.configure(bg = bg_color_dark)
 
-
-    btn_color.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
-    btn_clear.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
-    btn_sapper.configure(bg = bg_color, fg = fg_color, activebackground = bg_color_dark, font = (fonts, font_size))
-    btn_close.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
-    btn_delay.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font = (fonts, font_size))
     label_delay.configure(fg = fg_color, bg = bg_color_dark, font = (fonts, font_size, "bold"))
-    btn_update.configure(fg = fg_color, bg = bg_color, activebackground=bg_color_dark, font = (fonts, font_size))
 
     setting_frame.configure(bg = bg_color_dark)
     frame_font_setting.configure(bg = bg_color_dark)
