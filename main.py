@@ -765,7 +765,7 @@ def on_edit(event):
     tokens = lexer.get_tokens_unprocessed(s)
     
     for i, token_type, token in tokens:
-        print(i, token_type, repr(token))  # Отладочный вывод - тут видно какие типы токенов выдаются
+        # print(i, token_type, repr(token))  # Отладочный вывод - тут видно какие типы токенов выдаются
         j = i + len(token)
         if token_type in token_type_to_tag:
             message_input.tag_add(token_type_to_tag[token_type], get_text_coord(s, i), get_text_coord(s, j))
