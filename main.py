@@ -698,6 +698,11 @@ text_chat = Text(
     selectbackground="#87CEFA",
     cursor="arrow")
 
+popup_menu = Menu(frame_chat, tearoff=0)
+popup_menu.add_command(label="Копировать", command = copy_text2)
+text_chat.bind("<Button-3>", lambda e: popup_menu.post(e.x_root, e.y_root))
+text_chat.bind("<Button-1>", lambda e: popup_menu.unpost())
+
 frame_chat.pack(fill=BOTH, expand=True)
 text_chat.configure(state='disabled',fg=bg_color_dark)
 
@@ -733,6 +738,13 @@ message_input = Text(
     bg=bg_color,
     fg=fg_color,
     relief = 'solid', )
+# Создаем контекстное меню
+popup_menu_input = Menu(frame_btn, tearoff=0)
+popup_menu_input.add_command(label="Копировать", command = copy_text)
+popup_menu_input.add_command(label="Вставить", command = insert_text)
+message_input.bind("<Button-3>", lambda e: popup_menu_input.post(e.x_root, e.y_root))
+message_input.bind("<Button-1>", lambda e: popup_menu_input.unpost())
+
 # устанавливаем фокус на окно ввода сообщений
 message_input.focus()
 # устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
