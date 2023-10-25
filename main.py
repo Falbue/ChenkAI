@@ -675,7 +675,6 @@ def on_resize(event):
         btn_settings.pack(side=LEFT, padx = (5, 0))
         btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
         settings_window.pack_forget()
-        print(width)
 
 if active_setting == True: # менять на тру, что бы работало
     frame_root_chat.bind("<Configure>", on_resize)
