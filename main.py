@@ -445,7 +445,7 @@ def animations_text():
 
 def close_setting():
     settings_window.pack_forget()
-    frame_root_chat.pack(fill = BOTH, expand = True)
+    frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
     root_chat.resizable(True, True)
     
 
@@ -547,7 +547,7 @@ def save_data():
 
 
     root_login.pack_forget()
-    frame_root_chat.pack(fill=BOTH, expand=YES)
+    frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
     root_chat.resizable(True, True)
 
 
@@ -590,7 +590,7 @@ def check_data():
                     success_message_sign.configure(text='Авторизация успешна')
                     openai.api_key = api
                     root_login.pack_forget()
-                    frame_root_chat.pack(fill=BOTH, expand=YES)
+                    frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
                     root_chat.resizable(True, True)
                     file.close()
                     os.remove("data.txt")
@@ -646,27 +646,28 @@ root_chat.configure(bg=bg_color_dark)
 
 
 
-
+frame_root_chat = Frame(root_chat, bg = bg_color_dark)
 def on_resize(event):
     global active_setting
-    root_chat.update_idletasks()
     screen_width = root_chat.winfo_screenwidth()
-    max_width = int(screen_width * 0.7)
+    max_width = int(screen_width * 0.6)
     width = root_chat.winfo_width()
     if width > max_width:
-        btn_settings.pack_forget()
         settings_window.pack(side = LEFT, fill=BOTH)
-        settings_window.configure(width = 350)
+        btn_settings.pack_forget()
         btn_close.pack_forget()
+        lbl_news_update.pack_forget()
+        settings_window.configure(width = 350)
     else:
-        # close_setting()
         btn_settings.pack(side=LEFT, padx = (5, 0))
         btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+        settings_window.pack_forget()
+        print(width)
 
-if active_setting == False: # менять на тру, что бы работало
-    root_chat.bind("<Configure>", on_resize)
+if active_setting == True: # менять на тру, что бы работало
+    frame_root_chat.bind("<Configure>", on_resize)
 
-frame_root_chat = Frame(root_chat, bg = bg_color_dark)
+
 
 
 frame_chat = Frame(frame_root_chat)
