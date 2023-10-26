@@ -450,6 +450,7 @@ def close_setting():
     settings_window.pack_forget()
     frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
     root_chat.resizable(True, True)
+    message_input.focus()
     
 
 def clear_chat():
@@ -549,9 +550,10 @@ def save_data():
     os.remove("data.txt")
 
 
+    root_chat.resizable(True, True)
     root_login.pack_forget()
     frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
-    root_chat.resizable(True, True)
+    message_input.focus() # фокус не работает
 
 
 def check_data():
@@ -753,8 +755,6 @@ popup_menu_input.add_command(label="Вставить", command = insert_text)
 message_input.bind("<Button-3>", lambda e: popup_menu_input.post(e.x_root, e.y_root))
 message_input.bind("<Button-1>", lambda e: popup_menu_input.unpost())
 
-# устанавливаем фокус на окно ввода сообщений
-message_input.focus()
 # устанавливаем сочетание клавиш для отправки сообщения (Ctrl + Enter)
 message_input.bind('<Control-Return>', lambda event: btn_send.invoke())
 lexer = PythonLexer()
