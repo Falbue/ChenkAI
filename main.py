@@ -716,7 +716,7 @@ lbl_copy = Label(text='Текст скопирован')
 # создаем слайдер для текст чата
 scrollbar_chat = Scrollbar(
     frame_chat,
-    width=10,
+    width=12,
     bg='red',
     troughcolor='red')
 scrollbar_chat.pack(side=RIGHT, fill='y')
