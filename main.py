@@ -145,12 +145,10 @@ def send_api():
             )
         print("Бот дал ответ")
         answer = completion.choices[0].message.content
-        message_input.configure(state = "normal")
     except Exception as e:
         answer = str(f'Произошла ошибка: {e}')
         btn_send.configure(state="normal")
         print(f"Произошла ошибка: {e}")
-        message_input.configure(state = "normal")
     
 
 
