@@ -451,6 +451,14 @@ def update_chenkgpt():
 
  # добавим настройки окна
 def settings():
+    if premium == False:
+        print("sdfsdf")
+        frame_button_color.pack_forget()
+        frame_delay.pack_forget()
+        btn_clear_chat.pack_forget()
+        btn_sapper.pack_forget()
+        frame_font_setting.pack_forget()
+
     y = compare_versions(version, latest_version)
     # y = 1
     global bg_color
