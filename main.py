@@ -22,6 +22,8 @@ from data.sapper import *
 game_over = False
 
 active_setting = True
+premium = True
+premium_time = 0
 
 bg_color = "#FFFFFF"
 fg_color = "#000000"
@@ -154,7 +156,7 @@ def send_api():
 
 
     def show_text_slowly(text):
-        global delay
+        global delay, premium_time
         text_chat.configure(state="normal")
         text_chat.delete("bot_placeholder.first", "bot_placeholder.last")
         text_chat.insert(END, bot + ": ", "bold")
@@ -180,44 +182,64 @@ def send_api():
         text_chat.configure(state="disabled")
     show_text_slowly(answer)
     btn_send.configure(state="normal")
+    if premium == False:
+        countdown(300)
 
 
-
+def countdown(n):
+    global premium_time
+    premium_time = n
+    print("Таймер запущен")
+    while premium_time > 0:
+        premium_time -= 1
+        time.sleep(1)
+    print('Время вышло')
 
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
     global text_error, question
     text_chat.configure(bg=bg_color, fg=fg_color)
     check = text_chat.get("1.0", END).strip('\n')
+    question = message_input.get("1.0", END).strip('\n')
+    message_input.delete("1.0", END)
     if check == welcome_text:
         text_chat.configure(state="normal")
         text_chat.delete("1.0", END)
         text_chat.configure(state="disabled")
-    question = message_input.get("1.0", END).strip('\n')
-    message_input.delete("1.0", END)
-    message_input.configure(state='disabled')
-    btn_send.configure(state='disabled')
-    print("Пользватель задал вопрос")
-    text_chat.configure(state="normal")
-    text_chat.insert(END, '\n')
-    text_chat.insert(END, user + ": ", "bold")
-    text_chat.tag_configure("bold", font = (fonts, font_size-4, "bold"))
-    text_chat.insert(END, question, "user")
-    text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
-    text_chat.insert(END, '\n')
-    text_chat.configure(state="disabled")
-    text_chat.tag_configure("bold", font=(fonts, font_size - 4, "bold"))
-    text_chat.configure(state="normal")
-    text_chat.insert(END, '\n')
-    text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
-    text_chat.configure(state="disabled")
-    text_chat.see(END)
-    root_chat.update()
-    thread = threading.Thread(target=send_api)
-    thread.start() 
-    text_chat.see(END)
-    root_chat.update()
-    message_input.configure(state="normal")
+
+    if premium == False and premium_time > 0:
+        text_chat.configure(state="normal")
+        text_chat.tag_configure("bold", font = (fonts, font_size-4, "bold"))
+        text_chat.insert(END, bot + ": ", "bold")
+        text_chat.insert(END, '\n')
+        text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
+        text_chat.insert(END, f"До ввода следующего сообщения осталось: {premium_time} секунд.\n", "bot")
+        text_chat.configure(state="disabled")
+    else:
+        print(f"Время премиума: {premium_time}")
+        message_input.configure(state='disabled')
+        btn_send.configure(state='disabled')
+        print("Пользватель задал вопрос")
+        text_chat.configure(state="normal")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, user + ": ", "bold")
+        text_chat.tag_configure("bold", font = (fonts, font_size-4, "bold"))
+        text_chat.insert(END, question, "user")
+        text_chat.tag_configure("user", background=bg_color, selectbackground="#87CEFA")
+        text_chat.insert(END, '\n')
+        text_chat.configure(state="disabled")
+        text_chat.tag_configure("bold", font=(fonts, font_size - 4, "bold"))
+        text_chat.configure(state="normal")
+        text_chat.insert(END, '\n')
+        text_chat.insert(END, bot + " печатает...", "bot_placeholder bold")
+        text_chat.configure(state="disabled")
+        text_chat.see(END)
+        root_chat.update()
+        thread = threading.Thread(target=send_api)
+        thread.start() 
+        text_chat.see(END)
+        root_chat.update()
+        message_input.configure(state="normal")
     
 
 
@@ -511,10 +533,6 @@ def save_data():
         return
     passw = entry_password.get()
     confirm_password = entry_confirm_password.get()
-    api = entry_api_key.get()
-
-
-    
 
     # проверяем совпадение паролей
     if passw != confirm_password:
@@ -531,34 +549,28 @@ def save_data():
         error_message_login.configure(text='Логин может содержать только английские буквы')
         os.remove("data.txt")
         return
-    # проверяем длину api ключа
-    if len(api) < 40:
-        error_message_login.configure(text='API ключ должен быть не короче 40 символов')
-        os.remove("data.txt")
-        return
 
     success_message_login.configure(text='Регистрация прошла успешно')
     user = 'User'
     bot = 'Bot'
 
-    text_api = api
-    encrypted_api = encrypt(text_api, shift)
-
-    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + encrypted_api + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n'
+    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + "none" + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n' + "version: " + version
     commit_message = login + ' зарегистрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
-    # file.close()
+    file.close()
     os.remove("data.txt")
+    welcome_text = welcome_text + f"{version}"
+    clear_chat()
 
 
     root_chat.resizable(True, True)
     root_login.pack_forget()
     frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
-    message_input.focus() # фокус не работает
+    message_input.focus()
 
 
 def check_data():
-    global login, passw, api, user, bot, version, welcome_text, latest_version
+    global login, passw, api, user, bot, version, welcome_text, latest_version, premium
     # получаем данные из текстовых полей
     username_sign = entry_username_sign.get()
     password_sign = entry_password_sign.get()
@@ -590,8 +602,15 @@ def check_data():
                 user = lines[i+3].replace('user: ','').strip()
                 bot = lines[i+4].replace('bot: ','').strip()
 
-                decrypt(text_api, shift)
-                api = decrypt(text_api, shift)
+                if text_api == 'none':
+                    premium = False
+                    decrypt(text_api, shift)
+                    text_api = lines[2].replace('api: ','').strip()
+                    api = decrypt(text_api, shift)
+                    print (api)
+                else:
+                    decrypt(text_api, shift)
+                    api = decrypt(text_api, shift)
                 if username_sign == login and password_sign == passw:
                     success_message_sign.configure(text='Авторизация успешна')
                     openai.api_key = api
@@ -602,10 +621,12 @@ def check_data():
                     os.remove("data.txt")
                     welcome_text = welcome_text + f"{version}"
                     clear_chat()
+                    message_input.focus()
                     return
                     
     except Exception as e:
         error_message_sign.configure(text='Неверный логин или пароль')
+        print (e)
     error_message_sign.configure(text='Неверный логин или пароль')
     file.close()
     os.remove("data.txt")
@@ -1009,10 +1030,6 @@ entry_confirm_password = entry(login_frame)
 entry_confirm_password.configure(show='*')
 entry_confirm_password.pack(pady=10)
 
-label_api_key = label(login_frame, text='API ключ:')
-label_api_key.pack()
-entry_api_key = entry(login_frame)
-entry_api_key.pack(pady=10)
 
 # создаем кнопку для отправки данных
 button_submit_login = button(root_login, text='Зарегистрироваться', command=save_data)
@@ -1027,7 +1044,7 @@ success_message_login.pack(pady=20)
 entry_username.bind('<Button-1>', clear_error_message)
 entry_password.bind('<Button-1>', clear_error_message)
 entry_confirm_password.bind('<Button-1>', clear_error_message)
-entry_api_key.bind('<Button-1>', clear_error_message)
+# entry_api_key.bind('<Button-1>', clear_error_message)
 
 
 
