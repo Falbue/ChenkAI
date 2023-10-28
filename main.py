@@ -280,8 +280,8 @@ def mutable_objects(): # Изменяемые объекты
     frame_delay.configure(bg=bg_color_dark)
     lbl_news_update.configure(fg = bg_color, bg = bg_color_dark, font = (fonts, font_size,"bold"))
 
-    popup_menu_input.configure(bg=bg_color_dark, font=(fonts, font_size-8), fg = fg_color,activebackground = bg_color)
-    popup_menu.configure(bg=bg_color_dark, font=(fonts, font_size-8), fg = fg_color,activebackground = bg_color)
+    popup_menu_input.configure(bg=bg_color_dark, font=(fonts, font_size-6), fg = fg_color,activebackground = bg_color)
+    popup_menu.configure(bg=bg_color_dark, font=(fonts, font_size-6), fg = fg_color,activebackground = bg_color)
 
 
     check = text_chat.get("1.0", END)
@@ -725,7 +725,7 @@ text_chat = Text(
     selectbackground="#87CEFA",
     cursor="arrow")
 
-popup_menu = Menu(frame_chat, tearoff=0, bg=bg_color_dark, font=(fonts, font_size-8), fg = fg_color,activebackground = bg_color)
+popup_menu = Menu(frame_chat, tearoff=0, bg=bg_color_dark, font=(fonts, font_size-6), fg = fg_color,activebackground = bg_color)
 popup_menu.add_command(label="Копировать", command = copy_text2)
 text_chat.bind("<Button-3>", lambda e: popup_menu.post(e.x_root, e.y_root))
 text_chat.bind("<Button-1>", lambda e: popup_menu.unpost())
@@ -771,7 +771,7 @@ popup_menu_input = Menu(frame_btn,
    relief = 'solid',
    activebackground=bg_color_dark,
    bg = bg_color,
-   font = (fonts, font_size-8))
+   font = (fonts, font_size-6))
 popup_menu_input.add_command(label="Копировать", command = copy_text)
 popup_menu_input.add_command(label="Вставить", command = insert_text)
 message_input.bind("<Button-3>", lambda e: popup_menu_input.post(e.x_root, e.y_root))
