@@ -23,7 +23,7 @@ game_over = False
 
 active_setting = True
 premium = True
-premium_time = 0
+countdown_running = False
 
 bg_color = "#FFFFFF"
 fg_color = "#000000"
@@ -185,15 +185,28 @@ def send_api():
     if premium == False:
         countdown(300)
 
-
 def countdown(n):
-    global premium_time
+    global premium_time, countdown_running
+    countdown_running = True
     premium_time = n
+    with open('data/time.hui', 'w') as file:
+        file.write(str(premium_time))
     print("Таймер запущен")
     while premium_time > 0:
+        with open('data/time.hui', 'r') as file:
+            premium_time = int(file.read())
         premium_time -= 1
+        print(premium_time)
         time.sleep(1)
+        with open('data/time.hui', 'w') as file:
+            file.write(str(premium_time))
     print('Время вышло')
+
+if os.path.exists('data/time.hui'):
+    with open('data/time.hui', 'r') as file:
+        premium_time = int(file.read())
+else:
+    premium_time = 0
 
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
@@ -210,13 +223,15 @@ def btn_send_command():
     if premium == False and premium_time > 0:
         text_chat.configure(state="normal")
         text_chat.tag_configure("bold", font = (fonts, font_size-4, "bold"))
-        text_chat.insert(END, bot + ": ", "bold")
         text_chat.insert(END, '\n')
+        text_chat.insert(END, bot + ": ", "bold")
         text_chat.tag_configure("bot", background=bg_color_dark, selectbackground="#87CEFA")
         text_chat.insert(END, f"До ввода следующего сообщения осталось: {premium_time} секунд.\n", "bot")
         text_chat.configure(state="disabled")
+        if countdown_running == False:
+            thread_premium = threading.Thread(target=countdown, args=(premium_time,))
+            thread_premium.start()
     else:
-        print(f"Время премиума: {premium_time}")
         message_input.configure(state='disabled')
         btn_send.configure(state='disabled')
         print("Пользватель задал вопрос")
