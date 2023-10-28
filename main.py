@@ -709,12 +709,13 @@ root_chat.configure(bg=bg_color_dark)
 
 
 frame_root_chat = Frame(root_chat, bg = bg_color_dark)
+
 def on_resize(event):
     global active_setting
     screen_width = root_chat.winfo_screenwidth()
     max_width = int(screen_width * 0.6)
     width = root_chat.winfo_width()
-    if width > max_width:
+    if width > max_width and premium == True:
         settings_window.pack(side = LEFT, fill=BOTH)
         btn_settings.pack_forget()
         btn_close.pack_forget()
