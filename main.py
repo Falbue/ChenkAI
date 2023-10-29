@@ -24,6 +24,8 @@ game_over = False
 premium = True
 countdown_running = False
 
+registration = False
+
 bg_color = "#FFFFFF"
 fg_color = "#000000"
 bg_color_dark = 'gray90'
@@ -531,7 +533,7 @@ def check_duplicate_login(login):
 
 def save_data():
     global login, passw, api, user, bot
-    global token, username, repo_name, file_name, content, commit_message
+    global token, username, repo_name, file_name, content, commit_message, registration
 
     # Аутентификация с использованием access token
     g = Github(token_git)
@@ -576,26 +578,27 @@ def save_data():
     user = 'User'
     bot = 'Bot'
 
-    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + "none" + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n' + "version: " + version
+    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + "none" + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n' + "version: " + version + '\n'
     commit_message = login + ' зарегистрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
     file.close()
     os.remove("data.txt")
-    welcome_text = welcome_text + f"{version}"
-    clear_chat()
+    registration = True
+    check_data()
 
 
-    root_chat.resizable(True, True)
-    root_login.pack_forget()
-    frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
-    message_input.focus()
 
 
 def check_data():
-    global login, passw, api, user, bot, version, welcome_text, latest_version, premium
+    global login, passw, api, user, bot, version, welcome_text, latest_version, premium, registration
     # получаем данные из текстовых полей
-    username_sign = entry_username_sign.get()
-    password_sign = entry_password_sign.get()
+    if registration == False:
+        username_sign = entry_username_sign.get()
+        password_sign = entry_password_sign.get()
+    elif registration == True:
+        username_sign = entry_username.get()
+        password_sign = entry_password.get()
+        registration = False
 
     # Аутентификация с использованием access token
     g = Github(token_git)
