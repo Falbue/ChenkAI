@@ -455,11 +455,15 @@ def update_chenkgpt():
 def settings():
     if premium == False:
         print("sdfsdf")
-        frame_button_color.pack_forget()
+        btn_color.pack_forget()
+        btn_clear.pack_forget()
         frame_delay.pack_forget()
         btn_clear_chat.pack_forget()
         btn_sapper.pack_forget()
         frame_font_setting.pack_forget()
+        lbl_premium.pack()
+        btn_link.pack(side = LEFT)
+        btn_qr.pack(padx=(10,0),side=RIGHT)
 
     y = compare_versions(version, latest_version)
     # y = 1
@@ -495,6 +499,10 @@ def animations_text():
       delay = 25
 
 def close_setting():
+    if premium == False:
+        lbl_premium.pack_forget()
+        btn_link.pack_forget()
+        btn_qr.pack_forget()
     settings_window.pack_forget()
     frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
     root_chat.resizable(True, True)
@@ -917,10 +925,16 @@ option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), 
 option_menu_size.pack(side = RIGHT)
 
 frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
+frame_button_color = frame(setting_frame)
+frame_button_color.configure(height=30)
 btn_color = button(frame_button_color, text="Изменить цвет", command=change_colors)
 btn_clear = button(frame_button_color, text="Сбросить", command=clear_colors)
 btn_color.pack(side = LEFT)
 btn_clear.pack(padx=(10,0),side=RIGHT)
+
+lbl_premium = label(frame_button_color, "Полная версия:")
+btn_link = button(frame_button_color, text = "Открыть ссылку", command=open_link)
+btn_qr = button(frame_button_color, text = "Открыть qr код", command = open_qr)
 
     
 frame_delay = Frame(setting_frame, bg=bg_color_dark)
