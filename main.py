@@ -734,7 +734,7 @@ root_chat.configure(bg=bg_color_dark)
 
 
 
-frame_root_chat = Frame(root_chat, bg = bg_color_dark)
+frame_root_chat = frame(root_chat)
 
 def on_resize(event):
     global active_setting
@@ -756,7 +756,7 @@ frame_root_chat.bind("<Configure>", on_resize)
 
 
 
-frame_chat = Frame(frame_root_chat)
+frame_chat = frame(frame_root_chat)
 # создаем текстовое поле для чата
 text_chat = Text(
     frame_chat,
@@ -796,11 +796,12 @@ scrollbar_chat.configure(command=text_chat.yview)
 text_chat.configure(yscrollcommand=scrollbar_chat.set)
 # устанавливаем параметры для слайдера и добавляем на главное окно
 text_chat.pack(fill=BOTH, expand=True)
-expand_button_frame = Frame(frame_root_chat, bg = bg_color_dark)
+expand_button_frame = frame(frame_root_chat)
 # создаем кнопку для изменения размера окна ввода сообщений
 
 
-frame_btn = Frame(frame_root_chat,height=40)
+frame_btn = frame(frame_root_chat)
+frame_btn.configure(height=40)
 # создаем окно ввода сообщений
 message_input = Text(
     frame_btn,
@@ -893,9 +894,9 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
 
 # Настройки------------------
-settings_window = Frame(root_chat, bg=bg_color_dark)
-setting_frame = Frame(settings_window, bg=bg_color_dark)
-frame_font_setting = Frame(setting_frame, bg = bg_color_dark)
+settings_window = frame(root_chat)
+setting_frame = frame(settings_window)
+frame_font_setting = frame(setting_frame)
 frame_font_setting.pack(fill=X,pady=(10,5))
 lbl_font = Label(
     frame_font_setting,
@@ -938,7 +939,6 @@ option_menu_size.configure(
 option_menu_size["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
 option_menu_size.pack(side = RIGHT)
 
-frame_button_color = Frame(setting_frame, height=30, bg=bg_color_dark)
 frame_button_color = frame(setting_frame)
 frame_button_color.configure(height=30)
 btn_color = button(frame_button_color, text="Изменить цвет", command=change_colors)
@@ -951,7 +951,7 @@ btn_link = button(frame_button_color, text = "Открыть ссылку", comm
 btn_qr = button(frame_button_color, text = "Открыть qr код", command = open_qr)
 
     
-frame_delay = Frame(setting_frame, bg=bg_color_dark)
+frame_delay = frame(setting_frame)
 label_delay = Label(
   frame_delay,
   bg = bg_color_dark,
@@ -992,10 +992,10 @@ btn_sapper.pack(pady = 10, fill=X)
 
 
 # Регистрация------------------
-root_login = Frame(root_chat)
+root_login = frame(root_chat)
 root_login.pack(side = RIGHT, fill=BOTH, expand=YES)###########################################
 # frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
-shift_frame = Frame(root_login)
+shift_frame = frame(root_login)
 
 btn_sign = Button(
     shift_frame,
@@ -1004,18 +1004,23 @@ btn_sign = Button(
     relief = 'solid',
     border = 0,
     state = 'disabled',
-    command = sign)
+    command = sign,
+    bg = bg_color_dark,
+    activebackground=bg_color_dark)
 shift_text = Label(
     shift_frame,
     font=(fonts, 16),
-    text=' / ')
-btn_login = Button(
-    shift_frame,
+    text=' / ',
+    bg = bg_color_dark)
+
+btn_login = Button(shift_frame,
     text='Регистрация',
     font=(fonts, 16),
     relief = 'solid',
     border = 0,
-    command = login)
+    command = login,
+    bg = bg_color_dark,
+    activebackground=bg_color_dark)
 btn_help = button(shift_frame,text = "?", command = open_help)
 
 btn_sign.pack(side=LEFT)
@@ -1025,7 +1030,7 @@ btn_help.pack(side = RIGHT, padx = (0, 1))
 shift_frame.pack(side="top", anchor="nw", fill='x')
 
 
-sign_frame = Frame(root_login)
+sign_frame = frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
 label_username_sign = label(sign_frame, text='Логин:')
@@ -1051,9 +1056,9 @@ button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 
 # создаем метку для вывода сообщений об ошибках или успехе
-error_message_sign = Label(sign_frame, fg='red', font=("System",16), wraplength=300)
+error_message_sign = Label(sign_frame, fg='red', font=("System",16), wraplength=300, bg = bg_color_dark)
 error_message_sign.pack(side=TOP, pady=50)
-success_message_sign = Label(sign_frame, fg='green', font=("System",16), wraplength=300)
+success_message_sign = Label(sign_frame, fg='green', font=("System",16), wraplength=300, bg = bg_color_dark)
 success_message_sign.pack(side=TOP, pady=50)
 
 entry_username_sign.bind('<Button-1>', clear_error_message)
@@ -1063,7 +1068,7 @@ sign_frame.pack(side=TOP, fill=BOTH, expand=True, pady=20)
 
 
 
-login_frame = Frame(root_login)
+login_frame = frame(root_login)
 
 # создаем метки и текстовые поля для ввода данных
 label_username = label(login_frame, text='Логин:')
@@ -1089,26 +1094,26 @@ button_submit_login = button(root_login, text='Зарегистрировать�
 
 
 # создаем метку для вывода сообщений об ошибках или успехе
-error_message_login = Label(login_frame, fg='red', wraplength=300, font=("System",16))
+error_message_login = Label(login_frame, fg='red', wraplength=300, font=("System",16), bg = bg_color_dark) 
 error_message_login.pack(pady=20)
-success_message_login = Label(login_frame, fg='green', font=("System",16), wraplength=300)
+success_message_login = Label(login_frame, fg='green', font=("System",16), wraplength=300, bg = bg_color_dark) 
 success_message_login.pack(pady=20)
 
 entry_username.bind('<Button-1>', clear_error_message)
 entry_password.bind('<Button-1>', clear_error_message)
 entry_confirm_password.bind('<Button-1>', clear_error_message)
-# entry_api_key.bind('<Button-1>', clear_error_message)
 
 
 
-frame_info = Frame(root_login)
+frame_info = frame(root_login)
 
 lbl_info = Label(
     frame_info,
     text = info,
     font = (fonts, font_size-4),
     anchor="e",
-    wraplength=390, justify=LEFT)
+    wraplength=390, justify=LEFT,
+    bg = bg_color_dark)
 lbl_info.pack()
 
 btn_exit = button(frame_info, text = "Выйти", command = close_info)
