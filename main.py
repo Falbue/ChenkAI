@@ -14,6 +14,7 @@ from pygments.token import Token
 import openai
 from github import Github
 import time
+import webbrowser
 
 from data.design_elements import *
 from data.sapper import *
