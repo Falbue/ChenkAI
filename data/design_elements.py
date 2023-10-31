@@ -4,7 +4,7 @@ bg_color_dark = 'gray90'
 font_size = 16
 fonts = "Arial"
 
-from tkinter import Button, Label, Entry
+from tkinter import Button, Label, Entry, Frame
 def button(frame, text, command):
     button = Button(
         frame,
@@ -39,6 +39,14 @@ def label(frame, text):
     label = Label(
         frame,
         text=text,
-        font=('Arial',14)
+        font=('Arial',16, "bold"),
+        bg = bg_color_dark,
+        fg =fg_color,
         )
     return label
+
+def frame(x):
+    frame = Frame(
+        x,
+        bg = bg_color_dark)
+    return frame
