@@ -700,6 +700,20 @@ def copy_text2():
     root_chat.clipboard_clear()
     root_chat.clipboard_append(selected_text)
 
+def open_link():
+    webbrowser.open("https://t.me/ChenkGPT_bot")
+def open_qr():
+    btn_qr.configure(state = "disabled")
+    root = Tk()
+    root.geometry('1x1')
+    image = PhotoImage(file="tg_link.png")
+    image = image.subsample(x=3, y=3)
+    label = Label(settings_window, image=image)
+    label.pack()
+    root.after(1, root.destroy)  # Закрыть окно через 3 секунды
+    root.mainloop()
+    print("qr")
+
 
 try:
     os.remove("installer.exe")
