@@ -706,7 +706,7 @@ def open_qr():
     btn_qr.configure(state = "disabled")
     root = Tk()
     root.geometry('1x1')
-    image = PhotoImage(file="tg_link.png")
+    image = PhotoImage(file="data/img/tg_link.png")
     image = image.subsample(x=3, y=3)
     label = Label(settings_window, image=image)
     label.pack()
