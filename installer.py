@@ -6,10 +6,19 @@ import tkinter as tk
 import threading
 import time
 from tqdm import tqdm
-
+import zipfile
+import pylnk3
+import shutil
 
 token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'
 shift = 4
+
+try:
+    folder_name = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT"
+    # Используем функцию os.rmdir() для удаления папки
+    shutil.rmtree(folder_name)
+except:
+    print("Папка уже удалена")
 
 def decrypt(text_api, shift):
     result = ""
@@ -34,10 +43,10 @@ def update():
     folder_name = 'ChenkGPT'
     new_folder_path = os.path.join(desktop_path, folder_name)
 
-    if not os.path.exists(new_folder_path):
-        os.mkdir(new_folder_path)
+    if not os.path.exists(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download"):
+        os.mkdir(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download")
     else:
-        print(f"Папка {folder_name} уже существует на рабочем столе.")
+        print(f"Папка уже есть")
 
     g = Github(token_git)
     repo_name = "Falbue/ChenkGPT"
@@ -50,21 +59,24 @@ def update():
 
     with tqdm(total=total_files, unit="file") as pbar:
         for asset in latest_release.get_assets():
-            if asset.name.endswith(".exe"):
+            if asset.name.endswith(".zip"):
                 file_url = asset.browser_download_url
                 r = requests.get(file_url)
-                with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/{asset.name}", "wb") as f:
+                with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download/{asset.name}", "wb") as f:
                     f.write(r.content)
                     downloaded_files += 1
                     pbar.update(1)
 
-    lbl_progress.config(text="Обновление завершено.")
+    lbl_progress.config(text="Обновление завершено!")
     btn_run.pack(expand=True)
     btn_cancel.pack_forget()
 
 def close():
-    path = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe"
-    os.startfile(path)
+    path_zip = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download/ChenkGPT.zip"
+    destination = f"C:/Users/{os.getlogin()}/Desktop"
+    with zipfile.ZipFile(path_zip, 'r') as zip_ref:
+        zip_ref.extractall(destination)
+    os.startfile(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe")
     time.sleep(1)
     root.destroy()
 

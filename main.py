@@ -15,6 +15,7 @@ import openai
 from github import Github
 import time
 import webbrowser
+import shutil
 
 from data.design_elements import *
 from data.sapper import *
