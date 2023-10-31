@@ -717,9 +717,16 @@ def open_qr():
 
 
 try:
-    os.remove("installer.exe")
+    os.remove("installer.exe")# Указываем имя папки, которую нужно удалить
 except:
     print('Установщик уже удалён')
+try:
+    folder_name = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download"
+    # Используем функцию os.rmdir() для удаления папки
+    shutil.rmtree(folder_name)
+except:
+    print("Папка уже удалена")
+
 
 # -------------------------------------
 # hello_window()
