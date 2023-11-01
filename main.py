@@ -134,12 +134,12 @@ def update_data(token, username, repo_name, file_name, content, commit_message):
     except Exception as e:
         print(f'Ошибка обновления файла {file_name} в {repo_name} репозитории: {e}')
 
-def delete_data(filename):
-    if os.path.exists(filename):
-        os.remove(filename)
-        print(f"Файл {filename} Успешно удалён")
+def delete_data():
+    if os.path.exists("data/data.txt"):
+        os.remove("data/data.txt")
+        print(f"Файл data/data.txt Успешно удалён")
     else:
-        print(f"Файл {filename} не удалён")
+        print(f"Файл data/data.txt не удалён")
 
 
 def send_api():
@@ -411,10 +411,10 @@ def update_chenkgpt():
 
     repo = g.get_repo("Falbue/chenk-data")
     file_content = repo.get_contents("data.txt").decoded_content
-    with open("data.txt", "wb") as f:
+    with open("data/data.txt", "wb") as f:
         f.write(file_content)
 
-    with open("data.txt", "r") as f:
+    with open("data/data.txt", "r") as f:
         for i, line in enumerate(f):
             if f"login: {login}" in line:
                 stroke = i
@@ -447,7 +447,7 @@ def update_chenkgpt():
         window.set_foreground()
     except:
         print('Похуй')
-    os.remove("data.txt")
+    os.remove("data/data.txt")
     root_chat.destroy()
     
 
@@ -532,7 +532,7 @@ def expand_text_input():
 
 
 def check_duplicate_login(login):
-    with open(file_name, 'r') as f:
+    with open("data/data.txt", 'r') as f:
         for line in f:
             if 'login: ' in line:
                 saved_login = line.replace('login: ','').strip()
@@ -540,6 +540,47 @@ def check_duplicate_login(login):
                     return True
     return False
 
+def chek_online(user_login, text):
+    print("Запус смены статуса")
+    g = Github(token_git)
+    repo = g.get_repo("Falbue/chenk-data")
+    file_content = repo.get_contents("data.txt").decoded_content
+    with open("data/data.txt", "wb") as f:
+        f.write(file_content)
+    try:
+        with open('data/data.txt', 'r') as file:
+            lines = file.readlines()
+            for i in range(0, len(lines), 8):
+                login_data = lines[i+0].replace('login: ','').strip()
+                online = lines[i+6].replace('on-line: ','').strip()
+                if user_login == login_data:
+                    online = text
+                    with open("data/data.txt", "r") as f:
+                        for i, line in enumerate(f):
+                            if f"login: {login_data}" in line:
+                                stroke = i
+                                print(f"Строка c логином '{f.name}' на {i+1}-й строке")
+                    file = repo.get_contents("data.txt")
+                    contents = file.decoded_content.decode("utf-8")
+                    lines = contents.split("\n")
+                    # Изменение строки номер 5
+                    lines[stroke+6] = f'on-line: {online}'
+                    # Объединение строк в новый контент файла
+                    new_contents = "\n".join(lines)
+                    if (text == "yes"):
+                        commit_text = "вошёл в сеть"
+                    if (text == "no"):
+                        commit_text = "вышел из сети"
+                        root_chat.destroy()
+                    repo.update_file(
+                        path="data.txt",
+                        message=f"{login_data} {commit_text}",
+                        content=new_contents,
+                        sha=file.sha
+                    )
+    except Exception as e:
+        print("Ошибка: "+str(e))
+    delete_data()
 
 def save_data():
     global login, passw, api, user, bot
@@ -555,7 +596,7 @@ def save_data():
     file_content = repo.get_contents("data.txt").decoded_content
 
     # Сохранение содержимого в файл на локальном диске
-    with open("data.txt", "wb") as f:
+    with open("data/data.txt", "wb") as f:
         f.write(file_content)
 
 
@@ -563,7 +604,7 @@ def save_data():
 
     if check_duplicate_login(login):
         error_message_login.configure(text='Пользователь с таким логином уже зарегистрирован')
-        os.remove("data.txt")
+        os.remove("data/data.txt")
         return
     passw = entry_password.get()
     confirm_password = entry_confirm_password.get()
@@ -571,28 +612,28 @@ def save_data():
     # проверяем совпадение паролей
     if passw != confirm_password:
         error_message_login.configure(text='Пароли не совпадают')
-        os.remove("data.txt")
+        os.remove("data/data.txt")
         return
     # проверяем длину пароля
     if len(passw) < 5:
         error_message_login.configure(text='Пароль должен быть не короче 5 символов')
-        os.remove("data.txt")
+        os.remove("data/data.txt")
         return
     # проверяем логин на английские символы
     if not all(c.isalpha() and ord(c) < 128 for c in login):
         error_message_login.configure(text='Логин может содержать только английские буквы')
-        os.remove("data.txt")
+        os.remove("data/data.txt")
         return
 
     success_message_login.configure(text='Регистрация прошла успешно')
     user = 'User'
     bot = 'Bot'
 
-    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + "none" + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n' + "version: " + version + '\n'
+    content = 'login: ' + login + '\n' + 'password: ' + passw + '\n' + 'api: ' + "none" + '\n' + 'user: ' + user + '\n' + 'bot: ' + bot + '\n' + "version: " + version + '\n' + "on-line: no"+ "\n"
     commit_message = login + ' зарегистрировался'
     update_data(token_git, username_git, repo_name, file_name, content, commit_message)
     file.close()
-    os.remove("data.txt")
+    os.remove("data/data.txt")
     registration = True
     check_data()
 
@@ -623,48 +664,57 @@ def check_data():
     latest_version = latest_release.tag_name
     latest_version = latest_version[1:]
     # Сохранение содержимого в файл на локальном диске
-    with open("data.txt", "wb") as f:
+    with open("data/data.txt", "wb") as f:
         f.write(file_content)
 
     # проверяем совпадение логинов и паролей
     try:
-        with open('data.txt', 'r') as file:
+        with open('data/data.txt', 'r') as file:
             lines = file.readlines()
-            for i in range(0, len(lines), 7):
+            for i in range(0, len(lines), 8):
                 login = lines[i+0].replace('login: ','').strip()
                 passw = lines[i+1].replace('password: ','').strip()
                 text_api = lines[i+2].replace('api: ','').strip()
                 user = lines[i+3].replace('user: ','').strip()
                 bot = lines[i+4].replace('bot: ','').strip()
-
-                if text_api == 'none': # исправить условие
-                    premium = False
-                    decrypt(text_api, shift)
-                    text_api = lines[2].replace('api: ','').strip()
-                    api = decrypt(text_api, shift)
-                    print (api)
-                else:
-                    decrypt(text_api, shift)
-                    api = decrypt(text_api, shift)
-                if username_sign == login and password_sign == passw:
-                    success_message_sign.configure(text='Авторизация успешна')
-                    openai.api_key = api
-                    root_login.pack_forget()
-                    frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
-                    root_chat.resizable(True, True)
-                    file.close()
-                    os.remove("data.txt")
-                    welcome_text = welcome_text + f"{version}"
-                    clear_chat()
-                    message_input.focus()
+                online = lines[i+6].replace('on-line: ','').strip()
+                if username_sign == login and online == "no":  
+                    if username_sign == login and text_api == 'none': # исправить условие
+                        premium = False
+                        decrypt(text_api, shift)
+                        text_api = lines[2].replace('api: ','').strip()
+                        api = decrypt(text_api, shift)
+                        print (api)
+                    else:
+                        decrypt(text_api, shift)
+                        api = decrypt(text_api, shift)
+                    if username_sign == login and password_sign == passw:
+                        success_message_sign.configure(text='Авторизация успешна')
+                        openai.api_key = api
+                        root_login.pack_forget()
+                        frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
+                        root_chat.resizable(True, True)
+                        file.close()
+                        os.remove("data/data.txt")
+                        chek_online(login, "yes")
+                        welcome_text = welcome_text + f"{version}"
+                        clear_chat()
+                        message_input.focus()
+                        return
+                if username_sign == login and online == "yes": 
+                    error_message_sign.configure(text='Вы уже вошли свой аккаунт на другом устройсте!')
                     return
                     
     except Exception as e:
-        error_message_sign.configure(text='Неверный логин или пароль')
-        print (e)
+        error_message_sign.configure(text='Данная версия больше не поддерживается!\nПросьба обновить версию в ручную')
+        btn_offline_update = button(sign_frame, "Ручное обновление", github_link)
+        btn_offline_update.pack(side=BOTTOM, fill = "x", padx=5)
+        print(e)
+        return
+
     error_message_sign.configure(text='Неверный логин или пароль')
     file.close()
-    os.remove("data.txt")
+    os.remove("data/data.txt")
 
 
 def clear_error_message(event):
@@ -715,6 +765,8 @@ def open_qr():
     root.mainloop()
     print("qr")
 
+def github_link():
+    webbrowser.open("https://github/Falbue/ChenkGPT/releases")
 
 try:
     os.remove("installer.exe")# Указываем имя папки, которую нужно удалить
@@ -729,9 +781,9 @@ except:
 
 
 # -------------------------------------
-# hello_window()
 # создаем главное окно
 root_chat = Tk()
+root_chat.protocol("WM_DELETE_WINDOW", lambda: chek_online(login, "no"))
 icon = PhotoImage(file = "data/img/ico.png")
 root_chat.iconphoto(False, icon)
 root_chat.title('ChenkGPT')
@@ -1065,9 +1117,9 @@ button_submit_sign.pack(side=BOTTOM, fill='x', pady=5, padx=5)
 
 # создаем метку для вывода сообщений об ошибках или успехе
 error_message_sign = Label(sign_frame, fg='red', font=("System",16), wraplength=300, bg = bg_color_dark)
-error_message_sign.pack(side=TOP, pady=50)
+error_message_sign.pack(side=TOP, pady=30)
 success_message_sign = Label(sign_frame, fg='green', font=("System",16), wraplength=300, bg = bg_color_dark)
-success_message_sign.pack(side=TOP, pady=50)
+success_message_sign.pack(side=TOP, pady=30)
 
 entry_username_sign.bind('<Button-1>', clear_error_message)
 entry_password_sign.bind('<Button-1>', clear_error_message)
