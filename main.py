@@ -637,7 +637,7 @@ def check_data():
                 user = lines[i+3].replace('user: ','').strip()
                 bot = lines[i+4].replace('bot: ','').strip()
 
-                if text_api == 'none':
+                if text_api == 'none': # исправить условие
                     premium = False
                     decrypt(text_api, shift)
                     text_api = lines[2].replace('api: ','').strip()
