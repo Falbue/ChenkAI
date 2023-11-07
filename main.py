@@ -185,6 +185,7 @@ def send_api():
         text_chat.configure(state="disabled")
     show_text_slowly(answer)
     btn_send.configure(state="normal")
+    message_input.configure(state='normal', cursor = "xterm")
     if premium == False:
         countdown(300)
 
@@ -218,6 +219,7 @@ def btn_send_command():
     check = text_chat.get("1.0", END).strip('\n')
     question = message_input.get("1.0", END).strip('\n')
     message_input.delete("1.0", END)
+    message_input.configure(state='disabled', cursor = 'arrow')
     if check == welcome_text:
         text_chat.configure(state="normal")
         text_chat.delete("1.0", END)
@@ -235,7 +237,6 @@ def btn_send_command():
             thread_premium = threading.Thread(target=countdown, args=(premium_time,))
             thread_premium.start()
     else:
-        message_input.configure(state='disabled')
         btn_send.configure(state='disabled')
         print("Пользватель задал вопрос")
         text_chat.configure(state="normal")
@@ -257,7 +258,6 @@ def btn_send_command():
         thread.start() 
         text_chat.see(END)
         root_chat.update()
-        message_input.configure(state="normal")
     
 
 
