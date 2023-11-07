@@ -221,7 +221,7 @@ def btn_send_command():
     if check == welcome_text:
         text_chat.configure(state="normal")
         text_chat.delete("1.0", END)
-        text_chat.configure(state="disabled")
+        text_chat.configure(state="disabled", cursor="xterm")
 
     if premium == False and premium_time > 0:
         text_chat.configure(state="normal")
@@ -514,7 +514,7 @@ def clear_chat():
     text_chat.configure(state="normal")
     text_chat.delete("1.0", END)
     text_chat.insert(END,welcome_text)
-    text_chat.configure(state="disabled",fg=bg_color_dark)
+    text_chat.configure(state="disabled",fg=bg_color_dark, cursor="arrow")
 
 
 # создаем функцию для изменения размера окна ввода сообщений
@@ -709,6 +709,8 @@ def check_data():
         error_message_sign.configure(text='Данная версия больше не поддерживается!\nПросьба обновить версию в ручную')
         btn_offline_update = button(sign_frame, "Ручное обновление", github_link)
         btn_offline_update.pack(side=BOTTOM, fill = "x", padx=5)
+        button_submit_sign.configure(state = "disabled")
+        button_submit_login.configure(state = "disabled")
         print(e)
         return
 
