@@ -567,9 +567,9 @@ def chek_online(user_login, text):
                     lines[stroke+6] = f'on-line: {online}'
                     # Объединение строк в новый контент файла
                     new_contents = "\n".join(lines)
-                    if (text == "yes"):
+                    if text == "yes":
                         commit_text = "вошёл в сеть"
-                    if (text == "no"):
+                    if text == "no":
                         commit_text = "вышел из сети"
                         root_chat.destroy()
                     repo.update_file(
