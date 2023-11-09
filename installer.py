@@ -38,46 +38,48 @@ token_git = text_api
 print(token_git)
 
 def update():
-    desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-    folder_name = 'ChenkGPT'
-    new_folder_path = os.path.join(desktop_path, folder_name)
-
-    if not os.path.exists(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download"):
-        os.mkdir(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download")
-    else:
-        print(f"Папка уже есть")
-
-    g = Github(token_git)
-    repo_name = "Falbue/ChenkGPT"
-    repo = g.get_repo(repo_name)
-    releases = repo.get_releases()
-    latest_release = releases[0]
-    assets = list(latest_release.get_assets())
-    total_files = len(assets)
-    downloaded_files = 0
-
-    with tqdm(total=total_files, unit="file") as pbar:
+    try:  
+        desktop_path = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+        folder_name = 'ChenkGPT'
+        new_folder_path = os.path.join(desktop_path, folder_name)
+        if not os.path.exists(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download"):
+            os.mkdir(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download")
+        else:
+            print(f"Папка уже есть")
+        g = Github(token_git)
+        repo_name = "Falbue/ChenkGPT"
+        repo = g.get_repo(repo_name)
+        releases = repo.get_releases()
+        latest_release = releases[0]
+        lbl_r = Label(
+            text = latest_release)
+        lbl_r.pack(expand=True)
+        assets = list(latest_release.get_assets())
+        total_files = len(assets)
         for asset in latest_release.get_assets():
             if asset.name.endswith(".zip"):
                 file_url = asset.browser_download_url
                 r = requests.get(file_url)
                 with open(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download/{asset.name}", "wb") as f:
                     f.write(r.content)
-                    downloaded_files += 1
-                    pbar.update(1)
 
-    lbl_progress.config(text="Обновление завершено!")
-    btn_run.pack(expand=True)
-    btn_cancel.pack_forget()
-
+        lbl_progress.config(text="Обновление завершено!")
+        btn_run.pack(expand=True)
+        btn_cancel.pack_forget()
+    except Exception as e:
+        lbl_progress.config(text=e)
 def close():
     path_zip = f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT_download/ChenkGPT.zip"
     destination = f"C:/Users/{os.getlogin()}/Desktop"
-    with zipfile.ZipFile(path_zip, 'r') as zip_ref:
-        zip_ref.extractall(destination)
-    os.startfile(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe")
-    time.sleep(1)
-    root.destroy()
+    try:
+        with zipfile.ZipFile(path_zip, 'r') as zip_ref:
+            zip_ref.extractall(destination)
+        os.startfile(f"C:/Users/{os.getlogin()}/Desktop/ChenkGPT/ChenkGPT.exe")
+        time.sleep(1)
+        root.destroy()
+    except Exception as e:
+        print(e)
+        root.destroy()
 
 def cancel():
     root.destroy()
