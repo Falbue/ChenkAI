@@ -5,7 +5,6 @@ from tkinter import *
 import tkinter as tk
 import threading
 import time
-from tqdm import tqdm
 import zipfile
 import pylnk3
 import shutil
