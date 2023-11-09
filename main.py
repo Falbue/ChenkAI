@@ -33,7 +33,7 @@ fg_color = "#000000"
 bg_color_dark = 'gray90'
 
 # Данные для гитхаба
-token_git = 'klt_Jfj6NuRT0XWBEyeBu9AVPw24XLYGWy4jIJg2'
+token_git = ''
 username_git = 'Falbue'
 repo_name = 'chenk-data'
 file_name = 'data.txt'
