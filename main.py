@@ -655,7 +655,10 @@ def check_data():
     g = Github(token_git)
 
     # Получение репозитория по имени владельца и имени репозитория
-    repo = g.get_repo("Falbue/chenk-data")
+    try:
+        repo = g.get_repo("Falbue/chenk-data")
+    except:
+        error_message_sign.configure(text='Подключение к Интернету отсутсвует!')
     # Получение содержимого файла по его имени и SHA-хешу последнего коммита
     file_content = repo.get_contents("data.txt").decoded_content
 
