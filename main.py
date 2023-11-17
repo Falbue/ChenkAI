@@ -796,6 +796,19 @@ except:
     print("Папка уже удалена")
 
 
+def open_menu_chat():
+    frame_select_chat.pack(fill=BOTH, expand=Y)
+    settings_window.pack_forget()
+    find_server()
+
+def exit_chat():
+    frame_select_chat.pack_forget()
+    settings_window.pack(fill=BOTH, expand=Y)
+
+def write_server():
+
+    print("Сервер выбран")
+
 def create_server():
     btn_create_server.configure(state="disabled")
     btn_create_server.bind("<Leave>", lambda event: btn_create_server.configure(bg=bg_color_dark))
@@ -807,6 +820,10 @@ def create_server():
 def create_thread_server():
     server_thread = threading.Thread(target=create_server)
     server_thread.start()
+
+def next_local_chat():
+    print("Переход в другой чат")
+    from data.local_chat import client
 
 def select_find_server(value):
     if value == "Серверов нет":
@@ -849,6 +866,8 @@ def update_servers():
     select_server.pack_forget()
     btn_update_server.pack_forget()
     find_server()
+
+
 # -------------------------------------
 # создаем главное окно
 root_chat = Tk()
