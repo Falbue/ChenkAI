@@ -1043,6 +1043,7 @@ frame_btn.pack(fill='x', padx=(0, 5), pady=5)
 
 # Настройки------------------
 settings_window = frame(root_chat)
+settings_window.configure(width = 350)
 setting_frame = frame(settings_window)
 frame_font_setting = frame(setting_frame)
 frame_font_setting.pack(fill=X,pady=(10,5))
