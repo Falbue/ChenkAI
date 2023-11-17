@@ -796,6 +796,29 @@ except:
     print("Папка уже удалена")
 
 
+def find_server():
+    global activate_find_server
+    if activate_find_server == True:
+        def find_server_thread():
+            global result_server, server_open
+            from data.local_chat import find_server
+            from data.local_chat.find_server import open_servers
+            server_open = open_servers
+            if len(server_open) == 0:
+                server_open = ["Серверов нет"]
+            else:
+                server_open = open_servers
+                result = [item.split()[0] for item in server_open]
+                result_server = [item.split()[1] for item in server_open]
+                select_server.configure(value = server_open)
+            btn_placebo.pack_forget()
+            select_server.pack(side=LEFT)
+            btn_update_server.pack(side=RIGHT)
+            btn_create_server.configure(state='normal')
+            activate_find_server = False
+        find = threading.Thread(target=find_server_thread)
+        find.start()
+
 def update_servers():
     global activate_find_server
     activate_find_server = True
