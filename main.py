@@ -796,6 +796,17 @@ except:
     print("Папка уже удалена")
 
 
+def select_find_server(value):
+    if value == "Серверов нет":
+        print("Не подключится")
+    else:
+        result_server = value
+        result = result_server.split()[1]
+        with open('data/local_chat/data.txt', 'w') as file:
+            file.write(str(result))
+        from data.local_chat import client
+        ip_adress = result
+
 def find_server():
     global activate_find_server
     if activate_find_server == True:
