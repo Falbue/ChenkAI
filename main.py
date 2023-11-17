@@ -796,6 +796,13 @@ except:
     print("Папка уже удалена")
 
 
+def update_servers():
+    global activate_find_server
+    activate_find_server = True
+    btn_placebo.pack(side=LEFT)
+    select_server.pack_forget()
+    btn_update_server.pack_forget()
+    find_server()
 # -------------------------------------
 # создаем главное окно
 root_chat = Tk()
