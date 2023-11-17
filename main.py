@@ -1,6 +1,7 @@
 version = '1.2.0'
 
 import os
+import sys
 from tkinter import *
 import tkinter as tk
 import random
@@ -16,6 +17,7 @@ from github import Github
 import time
 import webbrowser
 import shutil
+import socket
 
 from data.design_elements import *
 from data.sapper import *
