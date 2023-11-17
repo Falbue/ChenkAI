@@ -586,9 +586,12 @@ def chek_online(user_login, text):
                         content=new_contents,
                         sha=file.sha
                     )
+                    client_socket.close()
     except Exception as e:
         print("Ошибка: "+str(e))
     delete_data()
+    if text == 'no':
+        sys.exit()
 
 def save_data():
     global login, passw, api, user, bot
