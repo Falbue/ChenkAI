@@ -68,6 +68,9 @@ online = ''
 question = ''
 answer = ''
 
+result_server = []
+server_open = []
+
 with open("data/hello_text.txt", "r", encoding="utf-8") as file:
     welcome_text = file.read()
 
