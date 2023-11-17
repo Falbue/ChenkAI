@@ -796,6 +796,18 @@ except:
     print("Папка уже удалена")
 
 
+def create_server():
+    btn_create_server.configure(state="disabled")
+    btn_create_server.bind("<Leave>", lambda event: btn_create_server.configure(bg=bg_color_dark))
+    print("Сервер создан")
+    with open('data/local_chat/data.txt', 'w') as file:
+        file.write(str(login))
+    from data.local_chat import server
+
+def create_thread_server():
+    server_thread = threading.Thread(target=create_server)
+    server_thread.start()
+
 def select_find_server(value):
     if value == "Серверов нет":
         print("Не подключится")
