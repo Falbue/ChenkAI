@@ -1166,7 +1166,8 @@ setting_frame.pack()
 frame_button_color.pack(side=TOP, pady=5, fill=X)
 frame_delay.pack( pady=5, fill=X)
 btn_clear_chat.pack(pady=5, fill=X)
-btn_sapper.pack(pady = 10, fill=X)
+btn_sapper.pack(pady = (10,5), fill=X)
+frame_local_chat.pack(pady=5, fill=X)
 
 
 
