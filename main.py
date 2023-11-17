@@ -492,6 +492,8 @@ def settings():
         lbl_news_update.configure(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
         print('Нет обновлений')
+
+    find_server()
     
 def animations_text():
     global delay, delay_state
