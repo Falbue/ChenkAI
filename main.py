@@ -29,6 +29,7 @@ premium = True
 countdown_running = False
 
 registration = False
+activate_find_server = True
 
 bg_color = "#FFFFFF"
 fg_color = "#000000"
