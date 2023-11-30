@@ -709,11 +709,11 @@ def check_data():
                         welcome_text = welcome_text + f"{version}"
                         clear_chat()
                         message_input.focus()
-                        return
                 if username_sign == login and online == "yes": 
+                    file.close()
+                    os.remove("data/data.txt")
                     error_message_sign.configure(text='Вы уже вошли свой аккаунт на другом устройсте!')
                     return
-        os.remove("data/data.txt")
                     
     except Exception as e:
         error_message_sign.configure(text='Данная версия больше не поддерживается!\nПросьба обновить версию в ручную')
@@ -721,7 +721,7 @@ def check_data():
         btn_offline_update.pack(side=BOTTOM, fill = "x", padx=5)
         button_submit_sign.configure(state = "disabled")
         button_submit_login.configure(state = "disabled")
-        print(e)
+        print(f"Ошибка в проверке онлайна: {e}")
         return
 
     error_message_sign.configure(text='Неверный логин или пароль')
