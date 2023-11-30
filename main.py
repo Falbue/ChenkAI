@@ -487,8 +487,6 @@ def settings():
         lbl_news_update.configure(text = 'Обновлений не найдено')
         lbl_news_update.pack(side=BOTTOM)
         print('Нет обновлений')
-
-    find_server()
     
 def animations_text():
     global delay, delay_state
@@ -581,7 +579,6 @@ def chek_online(user_login, text):
                         content=new_contents,
                         sha=file.sha
                     )
-                    client_socket.close()
     except Exception as e:
         print("Ошибка: "+str(e))
     delete_data()
