@@ -13,6 +13,7 @@ import threading
 from pygments.lexers import PythonLexer
 from pygments.token import Token
 import openai
+from openai import *
 from github import Github
 import time
 import webbrowser
@@ -151,7 +152,7 @@ def delete_data():
 def send_api():
     global answer
     try:
-        completion = openai.ChatCompletion.create(
+        completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
             )
