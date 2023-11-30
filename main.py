@@ -186,6 +186,7 @@ def send_api():
         text_chat.configure(state="disabled")
     show_text_slowly(answer)
     btn_send.configure(state="normal")
+    btn_clear_chat.configure(state='normal')
     message_input.configure(state='normal', cursor = "xterm")
     if premium == False:
         countdown(300)
@@ -216,6 +217,7 @@ else:
 # функция, которая вызывается при нажатии кнопки "Отправить"
 def btn_send_command():
     global text_error, question
+    btn_clear_chat.configure(state='disabled')
     text_chat.configure(bg=bg_color, fg=fg_color)
     check = text_chat.get("1.0", END).strip('\n')
     question = message_input.get("1.0", END).strip('\n')
