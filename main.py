@@ -726,7 +726,10 @@ def check_data():
 
     error_message_sign.configure(text='Неверный логин или пароль')
     file.close()
-    os.remove("data/data.txt")
+    try:
+        os.remove("data/data.txt")
+    except:
+        print("Файл уже удалён")
 
 
 def clear_error_message(event):
