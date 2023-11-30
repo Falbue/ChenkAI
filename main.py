@@ -146,7 +146,7 @@ def delete_data():
 def send_api():
     global answer
     try:
-        completion = client.chat.completions.create(
+        completion = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
             )
@@ -155,7 +155,7 @@ def send_api():
     except Exception as e:
         answer = str(f'Произошла ошибка: {e}')
         btn_send.configure(state="normal")
-        print(f"Произошла ошибка: {e}")
+        print(f"Произошла ошибка в api openai: {e}")
     
 
 
