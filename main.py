@@ -1127,37 +1127,6 @@ lbl_news_update = Label(
     font=(fonts, font_size,"bold"))
 btn_update = button(settings_window, text='Обновить', command = update_chenkgpt)
 
-frame_local_chat = frame(setting_frame)
-frame_find_server = frame(frame_local_chat)
-frame_find_server.pack(pady = 10, fill=X)
-btn_create_server = button(frame_local_chat, "Создать сервер", create_thread_server)
-btn_create_server.configure(state='disabled')
-
-var_servers = StringVar()
-var_servers.set("Выберите чат")  # Задаем начальное значение
-select_server = OptionMenu(frame_find_server, var_servers, value = 'Сервера не не найдены', command = select_find_server)
-select_server.configure(
-    font = (fonts, font_size),
-    relief='solid',
-    border=1,
-    bg = bg_color,
-    activebackground = bg_color_dark,
-    highlightbackground = 'black',
-    highlightthickness = 0)
-select_server["menu"].configure(bg=bg_color_dark, font=(fonts, font_size-4), fg = fg_color,activebackground = bg_color, activeforeground = fg_color)
-
-def placebo():
-    print()
-btn_placebo = button(frame_find_server, "Поиск...", placebo)
-btn_placebo.configure(state = 'disabled')
-
-lbl_select_server = label(frame_find_server, "Чат:")
-lbl_select_server.pack(side = LEFT, padx = (5, 0))
-
-btn_update_server = button(frame_find_server, "Обновить", update_servers)
-
-btn_placebo.pack(side = LEFT, padx = (5, 0))
-btn_create_server.pack(fill=X)
 
 
 # Установка фреймов
@@ -1166,7 +1135,6 @@ frame_button_color.pack(side=TOP, pady=5, fill=X)
 frame_delay.pack( pady=5, fill=X)
 btn_clear_chat.pack(pady=5, fill=X)
 btn_sapper.pack(pady = (10,5), fill=X)
-frame_local_chat.pack(pady=5, fill=X)
 
 
 
