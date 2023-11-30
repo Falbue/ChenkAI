@@ -25,12 +25,9 @@ from data.sapper import *
 
 
 game_over = False
-
 premium = True
 countdown_running = False
-
 registration = False
-activate_find_server = True
 
 bg_color = "#FFFFFF"
 fg_color = "#000000"
@@ -793,78 +790,6 @@ try:
     shutil.rmtree(folder_name)
 except:
     print("Папка уже удалена")
-
-
-def open_menu_chat():
-    frame_select_chat.pack(fill=BOTH, expand=Y)
-    settings_window.pack_forget()
-    find_server()
-
-def exit_chat():
-    frame_select_chat.pack_forget()
-    settings_window.pack(fill=BOTH, expand=Y)
-
-def write_server():
-
-    print("Сервер выбран")
-
-def create_server():
-    btn_create_server.configure(state="disabled")
-    btn_create_server.bind("<Leave>", lambda event: btn_create_server.configure(bg=bg_color_dark))
-    print("Сервер создан")
-    with open('data/local_chat/data.txt', 'w') as file:
-        file.write(str(login))
-    from data.local_chat import server
-
-def create_thread_server():
-    server_thread = threading.Thread(target=create_server)
-    server_thread.start()
-
-def next_local_chat():
-    print("Переход в другой чат")
-    from data.local_chat import client
-
-def select_find_server(value):
-    if value == "Серверов нет":
-        print("Не подключится")
-    else:
-        result_server = value
-        result = result_server.split()[1]
-        with open('data/local_chat/data.txt', 'w') as file:
-            file.write(str(result))
-        from data.local_chat import client
-        ip_adress = result
-
-def find_server():
-    global activate_find_server
-    if activate_find_server == True:
-        def find_server_thread():
-            global result_server, server_open
-            from data.local_chat import find_server
-            from data.local_chat.find_server import open_servers
-            server_open = open_servers
-            if len(server_open) == 0:
-                server_open = ["Серверов нет"]
-            else:
-                server_open = open_servers
-                result = [item.split()[0] for item in server_open]
-                result_server = [item.split()[1] for item in server_open]
-                select_server.configure(value = server_open)
-            btn_placebo.pack_forget()
-            select_server.pack(side=LEFT)
-            btn_update_server.pack(side=RIGHT)
-            btn_create_server.configure(state='normal')
-            activate_find_server = False
-        find = threading.Thread(target=find_server_thread)
-        find.start()
-
-def update_servers():
-    global activate_find_server
-    activate_find_server = True
-    btn_placebo.pack(side=LEFT)
-    select_server.pack_forget()
-    btn_update_server.pack_forget()
-    find_server()
 
 
 # -------------------------------------
