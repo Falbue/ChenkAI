@@ -778,7 +778,7 @@ def open_qr():
     print("qr")
 
 def github_link():
-    webbrowser.open("https://github/Falbue/ChenkGPT/releases")
+    webbrowser.open("https://github.com/Falbue/ChenkGPT/releases")
 
 try:
     os.remove("installer.exe")# Указываем имя папки, которую нужно удалить
