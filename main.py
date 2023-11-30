@@ -718,6 +718,7 @@ def check_data():
                 if username_sign == login and online == "yes": 
                     error_message_sign.configure(text='Вы уже вошли свой аккаунт на другом устройсте!')
                     return
+     os.remove("data/data.txt")
                     
     except Exception as e:
         error_message_sign.configure(text='Данная версия больше не поддерживается!\nПросьба обновить версию в ручную')
