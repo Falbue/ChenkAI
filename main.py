@@ -783,6 +783,28 @@ def open_qr():
 def github_link():
     webbrowser.open("https://github.com/Falbue/ChenkGPT/releases")
 
+def info_vpn():
+    with open("data/info_vpn.txt", "r", encoding="utf-8") as file:
+        info_vpn = file.read()
+    frame_info_vpn = frame(root_chat)
+    lbl_info_vpn = Label(
+        frame_info_vpn,
+        text = info_vpn,
+        font = (fonts, font_size-4),
+        anchor="e",
+        wraplength=390, justify=LEFT,
+        bg = bg_color_dark)
+    settings_window.pack_forget()
+    frame_info_vpn.pack(fill=BOTH, expand=Y)
+    lbl_info_vpn.pack()
+
+    def close_info_vpn():
+        frame_info_vpn.pack_forget()
+        settings_window.pack(fill=BOTH, expand=Y)
+
+    btn_exit_info_vpn = button(frame_info_vpn, text = "Выйти", command = close_info_vpn)
+    btn_exit_info_vpn.pack(side=BOTTOM, fill='x', pady=5, padx=5)
+
 try:
     os.remove("installer.exe")# Указываем имя папки, которую нужно удалить
 except:
@@ -820,11 +842,13 @@ def on_resize(event):
         settings_window.pack(side = LEFT, fill=BOTH)
         btn_settings.pack_forget()
         btn_close.pack_forget()
+        btn_info_vpn.pack_forget()
         lbl_news_update.pack_forget()
         settings_window.configure(width = 350)
     else:
         btn_settings.pack(side=LEFT, padx = (5, 0))
         btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+        btn_info_vpn.pack(pady = 10, fill=X)
         settings_window.pack_forget()
 frame_root_chat.bind("<Configure>", on_resize)
 
@@ -1044,8 +1068,11 @@ btn_clear_chat = button(setting_frame, 'Очистить чат', clear_chat)
 
 btn_sapper = button(setting_frame, 'Сапёр', sapper)
 
+btn_info_vpn = button(setting_frame, 'Информация для подключения', info_vpn)
+
 btn_close = button(settings_window, text="Закрыть", command=close_setting)
 btn_close.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+
 
 lbl_news_update = Label(
     settings_window, 
@@ -1063,6 +1090,7 @@ frame_button_color.pack(side=TOP, pady=5, fill=X)
 frame_delay.pack( pady=5, fill=X)
 btn_clear_chat.pack(pady=5, fill=X)
 btn_sapper.pack(pady = (10,5), fill=X)
+btn_info_vpn.pack(pady = 10, fill=X)
 
 
 
