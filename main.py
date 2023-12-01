@@ -550,6 +550,7 @@ def check_duplicate_login(login):
     return False
 
 def chek_online(user_login, text):
+    print(f"В проверке оналайна {user_login}")
     print("Запус смены статуса")
     g = Github(token_git)
     repo = g.get_repo("Falbue/chenk-data")
