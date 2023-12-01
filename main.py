@@ -153,9 +153,15 @@ def send_api():
         print("Бот дал ответ")
         answer = completion.choices[0].message.content
     except Exception as e:
-        answer = str(f'Произошла ошибка: {e}')
-        btn_send.configure(state="normal")
-        print(f"Произошла ошибка в api openai: {e}")
+        new_text_error = str(e).split()
+        word = new_text_error[0]
+        print(word)
+        if word == "<!DOCTYPE":
+            answer = str(f'Нужно подключится к VPN. Для получения подробной информации перейдите в настройки')
+        else:
+            answer = str(f'Произошла ошибка: {e}')
+            btn_send.configure(state="normal")
+            print(f"Произошла ошибка в api openai: {e}")
     
 
 
