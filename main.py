@@ -708,6 +708,7 @@ def check_data():
                         welcome_text = welcome_text + f"{version}"
                         clear_chat()
                         message_input.focus()
+                    break
                 if username_sign == login and online == "yes": 
                     file.close()
                     os.remove("data/data.txt")
