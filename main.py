@@ -12,8 +12,7 @@ import requests
 import threading
 from pygments.lexers import PythonLexer
 from pygments.token import Token
-import openai
-from openai import *
+from openai import OpenAI
 from github import Github
 import time
 import webbrowser
@@ -23,6 +22,7 @@ import socket
 from data.design_elements import *
 from data.sapper import *
 
+client = '' 
 
 game_over = False
 premium = True
@@ -146,7 +146,7 @@ def delete_data():
 def send_api():
     global answer
     try:
-        completion = openai.chat.completions.create(
+        completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "assistant", "content": question}]
             )
@@ -158,6 +158,8 @@ def send_api():
         print(word)
         if word == "<!DOCTYPE":
             answer = str(f'Нужно подключится к VPN. Для получения подробной информации перейдите в настройки')
+        elif word == ' Error code: 429':
+            answer = str('Срок действия подписки закончился!')
         else:
             answer = str(f'Произошла ошибка: {e}')
             btn_send.configure(state="normal")
@@ -653,7 +655,7 @@ def save_data():
 
 
 def check_data():
-    global login, passw, api, user, bot, version, welcome_text, latest_version, premium, registration
+    global login, passw, api, user, bot, version, welcome_text, latest_version, premium, registration, client
     # получаем данные из текстовых полей
     if registration == False:
         username_sign = entry_username_sign.get()
@@ -696,16 +698,13 @@ def check_data():
                 if username_sign == login and online == "no":  
                     if username_sign == login and text_api == 'none': # исправить условие
                         premium = False
-                        decrypt(text_api, shift)
                         text_api = lines[2].replace('api: ','').strip()
-                        api = decrypt(text_api, shift)
+                        api = text_api
                         print (api)
                     else:
-                        decrypt(text_api, shift)
-                        api = decrypt(text_api, shift)
+                        api = text_api
                     if username_sign == login and password_sign == passw:
-                        success_message_sign.configure(text='Авторизация успешна')
-                        openai.api_key = api
+                        client = OpenAI(api_key = api)
                         root_login.pack_forget()
                         frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
                         root_chat.resizable(True, True)
