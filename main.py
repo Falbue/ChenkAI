@@ -158,6 +158,8 @@ def send_api():
         print(word)
         if word == "<!DOCTYPE":
             answer = str(f'Нужно подключится к VPN. Для получения подробной информации перейдите в настройки')
+        elif word == ' Error code: 429':
+            answer = str('Срок действия подписки закончился!')
         else:
             answer = str(f'Произошла ошибка: {e}')
             btn_send.configure(state="normal")
