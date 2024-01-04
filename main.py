@@ -696,16 +696,12 @@ def check_data():
                 if username_sign == login and online == "no":  
                     if username_sign == login and text_api == 'none': # исправить условие
                         premium = False
-                        decrypt(text_api, shift)
                         text_api = lines[2].replace('api: ','').strip()
-                        api = decrypt(text_api, shift)
+                        api = text_api
                         print (api)
                     else:
-                        decrypt(text_api, shift)
-                        api = decrypt(text_api, shift)
+                        api = text_api
                     if username_sign == login and password_sign == passw:
-                        success_message_sign.configure(text='Авторизация успешна')
-                        openai.api_key = api
                         client = OpenAI(api_key = api)
                         root_login.pack_forget()
                         frame_root_chat.pack(side = RIGHT,fill=BOTH, expand=YES)
