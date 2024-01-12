@@ -278,7 +278,7 @@ def mutable_objects(): # Изменяемые объекты
         button.configure(bg=bg_color, fg=fg_color, activebackground=bg_color_dark, font=(fonts, font_size))
         button.bind("<Enter>", lambda event: button.configure(bg=bg_color_dark))
         button.bind("<Leave>", lambda event: button.configure(bg=bg_color))
-    buttons = [btn_send, btn_clear, btn_sapper, btn_close, btn_delay, btn_update, btn_settings, btn_clear_chat, btn_color, expand_button]
+    buttons = [btn_send, btn_clear, btn_sapper, btn_close, btn_delay, btn_update, btn_settings, btn_clear_chat, btn_color, expand_button, btn_info_vpn]
     for button in buttons:
         set_button_properties(button, bg_color, fg_color, bg_color_dark, fonts, font_size)
 
