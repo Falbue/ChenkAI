@@ -490,7 +490,7 @@ def settings():
 
     if y == -1:
         print(f"Доступна новая версия: {latest_version}")
-        btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
+        # btn_update.pack(side=BOTTOM, fill=X, padx=5, pady=5)
         lbl_news_update.configure(text = 'Доступно обновление!')
         lbl_news_update.pack(side=BOTTOM)
     else:
